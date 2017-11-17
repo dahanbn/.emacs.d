@@ -10,8 +10,11 @@
 # Undo-tree save-files
 *.~undo-tree
 
-# not the folder nor the content of auto-save-list
+# not the folder nor the content of
+# auto-save-list
+# server
 auto-save-list
+server
 
 # don't track config.el - it's auto-generated
 config.el

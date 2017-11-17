@@ -10,11 +10,14 @@ It should work under Linux (tested), Mac (not tested) and a recent Windows in a
 portable setup (tested). For my portable setup you can look at the following
 repo:
 - https://github.com/dahanbn/portable-emacs-win64
-
+- https://magit.vc/manual/magit/index.html#SEC_Contents
 
 *Warning:* Some headings have the status ~DISABLED~. They don't will be tangled
 into ~config.el~. Unfortunately, Github doesn't display that status here. To be
 sure you should look at ~config.org~ best within Emacs or as a raw file [[https://raw.githubusercontent.com/dahanbn/.emacs.d/master/config.org][here]].
+
+I am still learning Magit therefore here links to its documentation:
+- https://magit.vc/manual/magit/Getting-Started.html#Getting-Started
 
 * Links to useful Emacs related stuff
 
@@ -1615,6 +1618,7 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
        (setq magit-completing-read-function 'ivy-completing-read)
        ;; setting kbd
        (global-set-key (kbd "C-x g") 'magit-status)
+       (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 ))
 #+END_SRC
 

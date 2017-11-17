@@ -1,2 +1,3 @@
 # .emacs.d
-my multiplatform emacs configuration
+
+This contains my personal Emacs configuration. 

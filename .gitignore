@@ -9,3 +9,6 @@
 
 # Undo-tree save-files
 *.~undo-tree
+
+# not the folder nor the content of auto-save-list
+auto-save-list

@@ -1,0 +1,10 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: Daily Battery
+# key: gmbdb
+# group: GMB-Log
+# expand-env: ((yas-indent-line 'fixed))
+# --
++ **Daily Battery**
+    + about ${1:minutes} mins, after waking up
+    + bodyweight exercise: ${2:bodyweight exercise$(yas-choose-value '("squats" "crow pose" "double arm lever" "push-ups"))}
+    + stretch: ${3:stretch$(yas-choose-value '("lunge" "side bend" "glute" "forward-fold"))}

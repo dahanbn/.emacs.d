@@ -1,0 +1,1829 @@
+# -*- mode: org; coding: utf-8; -*-
+#+LANGUAGE: en
+#+TODO: ACTIVE | DISABLED
+#+STARTUP: align fold nodlcheck lognotestate content
+
+Nützliche Configs im WWW:  
+- http://writequit.org/org/settings.html
+- http://doc.norang.ca/org-mode.html
+- http://pages.sachachua.com/.emacs.d/Sacha.html
+- https://github.com/novoid/dot-emacs
+
+- https://github.com/grettke/help
+
+ELisp guide:
+- https://github.com/chrisdone/elisp-guide
+
+* Key bindings & commands
+Exported stands for exported to Anki! To export a table use M-x org-table-export.
+The default export format is orgtbl-to-tsv and I can use it perfectly with Anki.
+
+To edit various table entries I can use multiple cursors or macros F3 F4
+** Useful standard key bindings
+| kbd       | command                              | description                                                                                 | scope       | package | tags | exported |
+|-----------+--------------------------------------+---------------------------------------------------------------------------------------------+-------------+---------+------+----------|
+| C-f       | forward-char                         | Move forward one character (right)                                                          | Motion      |         |      | X        |
+| C-b       | backward-char                        | Move backwards one character (left)                                                         | Motion      |         |      | X        |
+| C-p       | previous-line                        | Move to previous line (up)                                                                  | Motion      |         |      | X        |
+| C-n       | next-line                            | Move to next line (down)                                                                    | Motion      |         |      | X        |
+| M-f       | forward-word                         | Move on word forward                                                                        | Motion      |         |      | X        |
+| M-b       | backward-word                        | Move one word backward                                                                      | Motion      |         |      | X        |
+| C-a       | beginning-of-line                    | Move to beginning of line                                                                   | Motion      |         |      | X        |
+| C-e       | end-of-line                          | Move to end of line                                                                         | Motion      |         |      | X        |
+| M-e       | forward-sentence                     | Move forward one sentence                                                                   | Motion      |         |      | X        |
+| M-a       | backward-sentence                    | Move backward on sentence                                                                   | Motion      |         |      | X        |
+| M-{       | forward-paragraph                    | Move forward one paragraph                                                                  | Motion      |         |      | X        |
+| M-}       | backward-paragraph                   | Move backward one paragraph                                                                 | Motion      |         |      | X        |
+| C-v       | scroll-up                            | Move forward one screen                                                                     | Motion      |         |      | X        |
+| M-v       | scroll-down                          | Move backward one screen                                                                    | Motion      |         |      | X        |
+| C-x ]     | forward-page                         | Move forward one page                                                                       | Motion      |         |      | X        |
+| C-x [     | backward-page                        | Move backward one page                                                                      | Motion      |         |      | X        |
+| M-<       | beginning-of-buffer                  | Move to beginning of file                                                                   | Motion      |         |      | X        |
+| M->       | end-of-buffer                        | Move to end of file                                                                         | Motion      |         |      | X        |
+| C-l       | recenter                             | Redraw screen with current line in the center                                               | Motion      |         |      | X        |
+| M-n       | digit-argument                       | Repeat the next command n times                                                             | Repetition  |         |      | X        |
+| C-u n     | universal-argument                   | Repeat the next command n times (four times without n)                                      | Repetition  |         |      | X        |
+| C-o       | open-line                            | Opens a new line at the cursor position                                                     | Editing     |         |      | X        |
+| M-g g     | goto-line                            | Go to line n of file                                                                        | Motion      |         |      | X        |
+| M-g c     | goto-char                            | Go to character n of file                                                                   | Motion      |         |      | X        |
+| C-h k     | describe-key                         | shows the command that a key runs                                                           | Help        |         |      | X        |
+| C-h f     | describe-function                    | describes a function                                                                        | Help        |         |      | X        |
+| C-h v     | describe-variable                    | describes a variable                                                                        | Help        |         |      | X        |
+| C-h ?     | help-for-help                        | describes the various help functions                                                        | Help        |         |      | X        |
+| C-h m     | describe-mode                        | Display documentation of current major mode and minor modes.                                | Help        |         |      | X        |
+| C-M-v     | scroll-other-window                  | scrolls the other window / help window                                                      | Windows     |         |      | X        |
+| C-x C-s   | save-buffer                          | saves a file back to disk                                                                   | Files       |         |      | X        |
+| C-x C-f   | find-file                            | read a file into Emacs                                                                      | Files       |         |      | X        |
+| C-x s     | save-some-buffers                    | Save some modified file-visiting buffers.  Asks user about each one.                        | Files       |         |      | X        |
+| C-x i     | insert-file                          | Insert contents of file FILENAME into buffer after point. Set mark after the inserted text. | Files       |         |      | X        |
+| C-x C-v   | find-alternate-file                  | Find file FILENAME, select its buffer, kill previous buffer.                                | Files       |         |      | X        |
+| C-x C-w   | write file                           | Write current buffer into file FILENAME.                                                    | Files       |         |      | X        |
+| C-x 0     | delete-windows                       | delete this window                                                                          | Windows     |         |      | X        |
+| C-x 1     | delete-other-windows                 | delete all other windows                                                                    | Windows     |         |      | X        |
+| C-x 2     | split-window-below                   | split window, above and below                                                               | Windows     |         |      | X        |
+| C-x 3     | split-window-right                   | split window, side by side                                                                  | Windows     |         |      | X        |
+| C-x o     | other-window                         | switch cursor to another window                                                             | Windows     |         |      | X        |
+| C-x h     | mark-whole-buffer                    | mark all text in the buffer                                                                 | Selecting   |         |      | X        |
+| F3        | kmacro-start-macro-or-insert-counter | start definining a macro or insert a counter during recording a macro                       | Macros      |         |      | X        |
+| F4        | kmacro-end-or-call-macro             | end the definition of a macro or executes the most recent one                               | Macros      |         |      | X        |
+| C-x C-k r | apply-macro-to-region-lines          | Run the last keyboard macro on each line that begins in the region                          | Macros      |         |      | X        |
+| M-d       | kill-word                            | kill word forward                                                                           | Cut & Paste |         |      | X        |
+| M-DEL     | backward-kill-word                   | kill word backward                                                                          | Cut & Paste |         |      | X        |
+| C-k       | kill-line                            | kill to the end of line                                                                     | Cut & Paste |         |      | X        |
+|           |                                      |                                                                                             |             |         |      |          |
+
+** Useful commands without key bindings
+| command          | description                                               | scope  | package | tags | exported |
+|------------------+-----------------------------------------------------------+--------+---------+------+----------|
+| org-table-export | exports an OrgTbl                                         | OrgTbl | org     |      | X        |
+| org-table-import | imports a table into OrgTbl. Items must be tabs-separated | OrgTbl | org     |      | X        |
+| org-info         | read the org documentation                                | Org    | org     |      | X        |
+|                  |                                                           |        |         |      |          |
+
+** Custom key bindings
+| kbd              | command                        | description                                                                                             | scope       | package          | tags | exported |
+|------------------+--------------------------------+---------------------------------------------------------------------------------------------------------+-------------+------------------+------+----------|
+| C-j              | iedit-mode                     | edits all occurencies of the word under the point                                                       | Multiple    | iedit            |      | X        |
+| C-x C-r          | recentf-open-files             | shows the recently opened files                                                                         | Files       | recentf          |      | X        |
+| C-S-o            | dh/insert-line-before          | Saves the cursor position and inserts a new line (or multiple with C-n as prefix)                       | Repetition  | dh/custom        |      | X        |
+| C->              | mc/mark-next-like-this         | Adds a cursor and region at the next part of the buffer forwards that matches the current region        | Multiple    | multiple-cursors |      | X        |
+| C-<              | mc/mark-previous-like-this     | Adds a cursor and region at the next part of the buffer backwards that matches the current region       | Multiple    | multiple-cursors |      | X        |
+| C-S-<mouse-1>    | mc/add-cursor-on-click         | adds a multiple cursor by clicking                                                                      | Multiple    | multiple-cursors |      | X        |
+| C-x d            | dh/visit-favourite-directories | ido listing of predefined favourite directories (overwrites dired mapping / with prefix it lists files) | Files       | dh/custom        |      | X        |
+| C-u C-x d        | dh/visit-favourite-directories | ido listing of files predefined favourite directories (C-u is prefix argument)                          | Files       | dh/custom        |      | X        |
+| M-p              | ace-window                     | easier switching between more windows in an Emacs frame                                                 | Windows     | ace-window       |      | X        |
+| C-u M-p          | ace-window                     | wap windows by calling ace-window with a prefix argument                                                | Windows     | ace-window       |      | X        |
+| C-u C-u M-p      | ace-window                     | delete the selected window by calling ace-window with a double prefix argument                          | Windows     | ace-window       |      | X        |
+| M-o              | ace-org-link                   | quickly jumping to different links in an org-file                                                       | Links       | ace-link         |      | X        |
+| o (in help-mode) | ace-link-help                  | quickly jumping to different links (l is back)                                                          | Links       | ace-link         |      | X        |
+| o (in Info-mode) | ace-link-info                  | quickly jumping to different links (l is back)                                                          | Links       | ace-link         |      | X        |
+| M-up             | move-text-up                   | moves the line or selected region up (works also in org-mode)                                           | Motion      | move-text        |      | X        |
+| M-down           | move-text-down                 | moves the line or selected region down (works also in org-mode)                                         | Motion      | move-text        |      | X        |
+| M-y              | browse-kill-ring               | a visual approach to see & select content of the kill ring                                              | Cut & Paste | browse-kill-ring |      | X        |
+| C-x g            | google-this-mode-submap        | shows various options to start a google search in the default browser                                   | Search      | google-this      |      | X        |
+| M-j              | join-line                      | joins the following line onto this one                                                                  | Editing     | dh/custom        |      | X        |
+| F12              | dh/open-sys-file-manager       | opens the Windows explorer in the directory of the current buffer and selects the buffer file           | OS:Windows  | dh/custom        |      | X        |
+| S-F1             | dh/open-my-init-file           | opens my init-file in a new buffer                                                                      | Config      | dh/custom        |      | X        |
+| M-F1             | dh/open-emacs-idea-file        | opens my file with ideas about future customization                                                     | Config      | dh/custom        |      |          |
+| F2               | hydra text-scale               | hydra that allows changing the text-scale                                                               | Windows     | hydra            |      |          |
+| t (in Info-mode) | hydra various info manuals     | hydra that opens various info manuals                                                                   | Help        | hydra            |      |          |
+| F10              | dh-vergabesnippets-main/body   | complex hydra to easily access my snippets                                                              | Snippets    | hydra            |      |          |
+| S-F11            | dh-hydra-modes/body            | hydra to switch between frequently used major/minor modes                                               | Config      | hydra            |      |          |
+| M-s              | avi-goto-char-1                | select a char & provide an easy jump to it                                                              | Motion      | ace-window       |      |          |
+| F11              | hydra                          | dh-hydra-markdown-mode/body                                                                             | Editing     | hydra            |      |          |
+| S-F12            | dh/open-my-current-taskfile    | opens my current-tasks.org at work                                                                      | Files       | dh/custom        |      |          |
+| C-F12            | xah-make-backup                | make a backup of the current file or in dired selected files                                            | Files       | dh/custom        |      |          |
+
+
+
+
+
+* Initial settings
+
+Here, I do set some very general settings for my GNU/Emacs.
+
+** profiling:
+#+BEGIN_SRC emacs-lisp
+(defvar my-config-el-start-time (current-time) "Time when config.el was started")
+;(profiler-start 'cpu);; test startup performance - create report with M-x profiler-report
+#+END_SRC
+
+** Debugging on
+Turn on debugging, it will be turned off at the end. In case something happens
+during loading that breaks something, it's nice to have a debug information.
+
+#+BEGIN_SRC emacs-lisp
+(setq debug-on-error t)
+#+END_SRC
+** custom startup message
+#+begin_src emacs-lisp
+(message "[dh] Running Emacs %s" (emacs-version))
+(message "[dh] Loading %s - %s on %s" (expand-file-name "config.org" user-emacs-directory) (system-name) (getenv "OS"))
+(message "[dh] User: %s" (user-login-name))
+(message "[dh] Emacs_Dir: %s" (getenv "emacs_dir"))
+#+end_src
+
+** Always loading newer files
+Don't use outdated compiled files. Load the .el-file if it's newer.
+
+#+BEGIN_SRC emacs-lisp
+(setq load-prefer-newer t)
+#+END_SRC
+** Setting dh/emacs-local-dir and dh/user-dir path
++ dh/emacs-local-dir is a directory that contains local emacs directories of files, e.g. elpa, recentf, saveplace.
++ dh/user-dir contains the path to the user directory corresponding to the operating system, can't use "~" because that
+  is not always correct if I use emacs as a portable version under Windows where I set it differently. On Linux & Mac "~"
+  would be okay.
+
+Variable user-emacs-dir contains the path to the .emacs.d directory
+#+begin_src emacs-lisp
+;; check OS type
+(cond
+ ((string-equal system-type "windows-nt") ; Microsoft Windows
+  (progn
+    (defconst dh/emacs-local-dir (concat (getenv "USERPROFILE") "\\emacs-local") "contains the path to my device specific emacs files and directories")
+    (defconst dh/user-dir (getenv "USERPROFILE") "contains the path to my real operating system user directory")
+   ))
+ ;((string-equal system-type "darwin") ; Mac OS X
+ ; (progn
+ ;   (message "Mac OS X")
+ ; ))
+ ((string-equal system-type "gnu/linux") ; linux
+  (progn
+    (defconst dh/emacs-local-dir (concat (getenv "HOME") "/.emacs-local") "contains the path to my device specific emacs files and directories")
+    (defconst dh/user-dir (getenv "HOME") "contains the path to my real operating system user directory")
+  ))
+)
+
+;; create directory if it doesn't exist
+(unless (file-directory-p dh/emacs-local-dir)
+  (make-directory dh/emacs-local-dir)
+)
+#+end_src
+
+** figuring out if emacs should run portable on Windows
+I use Emacs only portable on Windows. The easiest way to run it portable to change the HOME environment variable
+to directory where emacs and all the other stuff is located. So in that directory Emacs will also look at if it searches
+for "~/.emacs.d". The caveat is that the "~" won't work as expected on Windows.
+
+I will also set DH_EMACS_PORTABLE_DIR to that directory. If that environment variable is set than I assume that I want to
+run emacs only in a portable way. In that case dh/emacs-local-dir should point to that directory, because the elpa and other 
+files (recentf, savespace) should point to there as well.
+
+#+begin_src emacs-lisp
+(cond
+ ((string-equal system-type "windows-nt") ; Microsoft Windows
+  (progn
+    (when (getenv "DH_EMACS_PORTABLE_DIR")
+        (defconst dh/emacs-local-dir (concat (getenv "DH_EMACS_PORTABLE_DIR") "\\emacs-local") "contains the path to my device specific emacs files and directories")
+        (defconst dh/user-dir (getenv "USERPROFILE") "contains the path to my real operating system user directory")
+        (defconst dh/emacs_is_portable t "boolean switch that reflects if emacs is used as a portable version" )
+    )))
+)
+#+end_src
+** Figuring out, if I am at work 	    :location_switch:
+#+BEGIN_SRC emacs-lisp
+;; setting me-at-work to true if I am at work
+;  I can check for it later to enable/disable config parts
+;(when (or 
+;       (string= system-name "PC-1316")
+;       (string= system-name "SRV-KON-XA1") ; CITRIX-Server
+;       (string= system-name "SRV-KON-XA2") ; CITRIX-Server
+;       (string= system-name "SRV-KON-XA3")) ; CITRIX-Server
+
+;; will be overwritten if I am at work
+(defconst dh/location-for-frame-title (concat "@NOT AT WORK") "contains the wording if I am at work or not for the frame-title") 
+(when (or (string= (getenv "USERNAME") "HannaskeD")
+          (string= (getenv "USERNAME") "hannasked"))       
+  (message "[dh] Setting const dahan/me-at-work to true")
+  (defconst dh/me-at-work t "boolean switch for work environment")
+  ;; directly setting proxy - otherwise url-package couldn't work
+  (setq url-proxy-services
+   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+     ("http" . "192.168.179.77:8080")
+     ("https" . "192.168.179.77:8080")))
+  (defconst dh/location-for-frame-title (concat "@WORK") "contains the wording if I am at work or not for the frame-title") 
+
+)
+#+END_SRC
+** setting dh/dropbox-dir and dh/onedrive-dir
+
+#+begin_src emacs-lisp
+(unless  (boundp 'dh/me-at-work)
+     (defconst dh/not-at-work t "boolean switch for not at work packages")
+     ;; setting path to Dropbox depending on user directory if it exists
+     (if (file-directory-p (expand-file-name "Dropbox" dh/user-dir))
+         (defconst dh/dropbox-dir (expand-file-name "Dropbox" dh/user-dir) "contains the path to my dropbox")
+     )
+     ;; setting path to Onedrive depending on user directory if it exists
+     (if (file-directory-p (expand-file-name "OneDrive" dh/user-dir))
+         (defconst dh/onedrive-dir (expand-file-name "OneDrive" dh/user-dir) "contains the path to my dropbox")
+     )     
+)
+#+end_src
+
+** DISABLED set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
+#+BEGIN_SRC emacs-lisp
+(setq calendar-week-start-day 1)
+#+END_SRC
+
+** DISABLED omit usage of TAB for =C-x r o=: indent-tabs-mode
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode t)
+#+END_SRC
+
+** DISABLED append and update time-stamps for =Time-stamp: <>= in headers:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'write-file-hooks 'time-stamp)
+#+END_SRC
+
+** set warning of opening large files to 100MB
+#+BEGIN_SRC emacs-lisp
+(setq large-file-warning-threshold 100000000)
+#+END_SRC
+
+** DISABLED do not add double space after periods [[http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/][Real sentence in Emacs : emacs]]
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
+#+END_SRC
+
+** inhibit the startup screen
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-screen t)
+#+END_SRC
+
+** English time-stamps in Org-mode (instead of localized German ones):
+- http://lists.gnu.org/archive/html/emacs-orgmode/2011-10/msg01046.html
+- «system locale to use for formatting time values (e.g., timestamps in Org mode files)»
+- "en_US.utf8" did not work for the weekday in the agenda!
+#+BEGIN_SRC emacs-lisp
+(setq system-time-locale "C")
+#+END_SRC
+
+** setting up UTF-8
+#+BEGIN_SRC emacs-lisp
+;; utf-8
+(prefer-coding-system 'utf-8)
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+#+END_SRC
+** Change yes or no to y or n
+Lazy people like me never want to type "yes" when "y" will suffice.
+
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** ignored file extensions for completions
+#+begin_src emacs-lisp
+(push ".out" completion-ignored-extensions)
+(push ".pdf" completion-ignored-extensions)
+(push ".synctex.gz" completion-ignored-extensions)
+#+end_src
+
+
+* Package and Use-Package configuration
+
+Configure the package manager of my GNU/Emacs.
+
+http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
+
+MELPA packages are usually built automatically from a project's
+repository; the GNU repository has stable releases that are explicitly
+submitted to it.
+
+=package-user-dir= holds the directory where Emacs package manager
+installs its local copies of the packages:
+
+#+BEGIN_SRC emacs-lisp
+(setq package-user-dir (concat dh/emacs-local-dir "/elpa"))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'package) ;; You might already have this line
+
+;; adding my lisp directory to the load-path
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
+
+;; adding the subdirectories of ~./.emacs.d/lisp/manually_installed_packages to the load-path
+;;(let ((default-directory "~/.emacs.d/lisp/manually_installed_packages/"))
+;;  (normal-top-level-add-subdirs-to-load-path))
+
+
+
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
+       (add-to-list 'package-archives (cons "melpa" url) t) 
+)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(package-initialize)
+
+;; (add-to-list 'load-path "~/elisp")
+(unless (package-installed-p 'use-package)
+	(package-refresh-contents)
+  	(package-install 'use-package))
+(setq use-package-verbose t)
+(setq use-package-always-ensure t) ;; install packages if not installed
+(require 'use-package)
+
+(eval-when-compile
+  (require 'use-package))
+(use-package delight
+   :ensure t)
+
+(use-package auto-compile
+  :ensure t
+  :config
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode)
+  (setq auto-compile-display-buffer nil))
+
+(setq load-prefer-newer t)
+#+END_SRC
+
+
+* dh/functions & custom bindings - various elisp functions
+** own functions
+*** DISABLED dh/byte-recompile
+#+BEGIN_SRC emacs-lisp
+;; Byte-compile my init files to speed things up next time
+(defun dh/byte-recompile ()
+  (interactive)
+  (byte-recompile-directory "~/.emacs.d" 0)
+)
+#+END_SRC
+*** dh/upgrade-packages
+#+BEGIN_SRC emacs-lisp
+;; automate the package upgrade process
+(defun dh/upgrade-packages ()
+  (pop-to-buffer "*scratch*")
+  (interactive)
+  (package-menu-mode)
+  (package-menu-refresh)
+  (package-menu-mark-upgrades)
+  (package-menu-executes)
+)
+#+END_SRC
+*** dh/insert-line-before
+#+BEGIN_SRC emacs-lisp
+(defun dh/insert-line-before (times)
+  "Insert a newline or multiple newlines above the line containing the cursor"
+  (interactive "p")
+  (save-excursion       ;store position
+     (move-beginning-of-line 1)
+     (newline times)
+  )
+)
+
+(global-set-key (kbd "C-S-o")
+                 'dh/insert-line-before)
+#+END_SRC
+*** dh/visit-favourite-directories
+Based on the following article: http://endlessparentheses.com/visit-directory-inside-a-set-of-directories.html
+#+begin_src emacs-lisp
+(defcustom dh/favourite-directories 
+
+  '( "C:/Users/Bine/Dropbox/portable_apps/portable_emacs/.emacs.d/"
+      "C:/Users/Bine/Dropbox/dahan_text/!notes/"
+      "C:/Users/Bine/Dropbox/dahan_text/"
+      "C:/Users/Bine/Dropbox/dahan_documents/"
+      "C:/Users/Bine/Dropbox/dahan_misc/"
+      "C:/Users/Bine/Dropbox/dahan_x_archiv/")
+  "List of favourite directories.
+Used in `dh/visit-favourite-dir'. The order here 
+affects the order that completions will be offered."
+  :type '(repeat directory)
+  :group 'dh)
+
+;; default is for dh/me-at-home-win
+(if (boundp 'dh/me-at-work)
+    (setq dh/favourite-directories '("I:/DATEN/BESCHAFF/2015/Beschaffungen_Daniel_in_Arbeit/"
+				     "I:/DATEN/_Daniel/!ORG/"
+				     "I:/DATEN/_Daniel/"
+				     "I:/DATEN/BESCHAFF/2015/Beschaffungen_Daniel_in_Vibe_hochgeladen/"
+				     "H:/Privat/"
+				     )))
+
+
+(defun dh/visit-favourite-dir (files-too)
+  "Offer all directories inside a set of directories.
+Compile a list of all directories inside each element of
+`dh/favourite-directories', and visit one of them with
+`ido-completing-read'.
+With prefix argument FILES-TOO also offer to find files."
+  (interactive "P")
+  (let ((completions
+         (mapcar #'abbreviate-file-name
+           (cl-remove-if-not
+            (if files-too #'file-readable-p
+              #'file-directory-p)
+            (apply #'append
+              (mapcar (lambda (x)
+                        (directory-files
+                         (expand-file-name x)
+                         t "^[^\.].*" t))
+                dh/favourite-directories))))))
+    (dired
+     (ido-completing-read "Open directory: "
+                          completions 'ignored nil ""))))
+
+;; Note that C-x d is usually bound to dired. I find
+;; this redundant with C-x C-f, so I don't mind
+;; overriding it, but you should know before you do.
+(define-key ctl-x-map "d" #'dh/visit-favourite-dir)
+#+end_src
+*** dh/open-sys-file-manager			       :bind:bind_documented:
+based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-windows/
+         http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+#+BEGIN_SRC emacs-lisp
+;; open-sys-file-manager
+;; ----------
+(defun dh/open-sys-file-manager ()
+  "Launch the system file manager in the current directory and selects current file"
+  (interactive)
+  (when (string= system-type "windows-nt")
+           (w32-shell-execute
+              "open"
+              "explorer"
+              (concat "/e,/select," (convert-standard-filename buffer-file-name)))))
+
+
+(global-set-key [f12]         'dh/open-sys-file-manager)        ; F12 - Open Explorer for the current file path)
+
+#+END_SRC
+*** dh/open-my-init-file			       :bind:bind_documented:
+#+BEGIN_SRC emacs-lisp
+(defun dh/open-my-init-file ()
+  "Open my init file dh_init.org"
+  (interactive)
+  (find-file (expand-file-name "config.org" user-emacs-directory))
+)
+
+(global-set-key [S-f1]         'dh/open-my-init-file)  
+
+#+END_SRC
+
+*** dh/open-my-current-taskfile			       :bind:bind_documented:
+#+BEGIN_SRC emacs-lisp
+(defun dh/open-my-current-taskfile ()
+  "Open my init file dh_init.org"
+  (interactive)
+  (when (boundp 'dh/me-at-work)
+  ;;; opening dired in !ORG
+  ;(dired org-directory)
+  
+  ;; open my BfN.org file as last command
+  (find-file (concat org-directory "/Current_Tasks.org")))
+)
+
+
+(global-set-key [S-f12] 'dh/open-my-current-taskfile) 
+#+END_SRC
+** copied functions
+*** join lines					       :bind:bind_documented:
+#+begin_src emacs-lisp :tangle yes
+;; joins the following line onto this one
+;; With point anywhere on the first line, I simply press M-j multiple times to pull the lines up. 
+(global-set-key (kbd "M-j")
+            (lambda ()
+                  (interactive)
+                  (join-line -1)))
+#+end_src
+
+
+
+
+
+
+
+
+
+*** xah-make-backup-and-save
+
+
+#+begin_src emacs-lisp
+(defun xah-make-backup ()
+  "Make a backup copy of current file or dired marked files.
+If in dired, backup current file or marked files.
+The backup file name is
+ ‹name›~‹timestamp›~
+example:
+ file.html~20150721T014457~
+in the same dir. If such a file already exist, it's overwritten.
+If the current buffer is not associated with a file, nothing's done.
+URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
+Version 2015-10-14"
+  (interactive)
+  (let (($fname (buffer-file-name)))
+    (if $fname
+        (let (($backup-name
+               (concat $fname "~" (format-time-string "%Y%m%dT%H%M%S") "~")))
+          (copy-file $fname $backup-name t)
+          (message (concat "Backup saved at: " $backup-name)))
+      (if (string-equal major-mode "dired-mode")
+          (progn
+            (mapc (lambda ($x)
+                    (let (($backup-name
+                           (concat $x "~" (format-time-string "%Y%m%dT%H%M%S") "~")))
+                      (copy-file $x $backup-name t)))
+                  (dired-get-marked-files))
+            (message "marked files backed up"))
+        (user-error "buffer not file nor dired")))))
+
+(defun xah-make-backup-and-save ()
+  "backup of current file and save, or backup dired marked files.
+For detail, see `xah-make-backup'.
+If the current buffer is not associated with a file, nothing's done.
+URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
+Version 2015-10-14"
+  (interactive)
+  (if (buffer-file-name)
+      (progn
+        (xah-make-backup)
+        (when (buffer-modified-p)
+          (save-buffer)))
+    (progn
+      (xah-make-backup))))
+#+end_src
+
+
+* General Appearance
+** full screen, global-font-lock and no startup-message
+#+BEGIN_SRC emacs-lisp
+;;;;;
+;; general appearance
+;;;;;
+
+;;; disabling the Emacs Welcome screen
+(setq inhibit-startup-message t)
+
+;; turn on syntax highlighting everywhere
+(global-font-lock-mode t)
+
+;; start in full screen
+;; Start maximised (cross-platf)
+(add-hook 'window-setup-hook 'toggle-frame-maximized t)
+#+END_SRC
+
+** cursor with adaptive width
+[[http://pragmaticemacs.com/emacs/adaptive-cursor-width/][Adaptive cursor width | Pragmatic Emacs]]: make cursor the width of the
+character it is under; i.e. full width of a TAB:
+#+BEGIN_SRC emacs-lisp
+(setq x-stretch-cursor t)
+#+END_SRC
+
+** smart-mode-line - initial settings
+#+BEGIN_SRC emacs-lisp
+;; smart-mode-line
+; setting the mode-line
+(use-package smart-mode-line-powerline-theme
+ :ensure t)
+
+(use-package smart-mode-line
+  :ensure t
+  :init
+  (progn
+     (setq powerline-arrow-shape 'curve
+           powerline-default-separator-dir '(right . left)
+           sml/theme 'powerline
+           ;sml/shorten-modes t
+           sml/name-width 24
+           sml/mode-width 'full
+           column-number-mode t)
+     (sml/setup)
+))
+#+END_SRC
+
+** smart-mode-line - regexp
+#+begin_src emacs-lisp
+;(setq sml/replacer-regexp-list (list)) ; start with an empty list
+;(if dh/dropbox-dir
+;     (add-to-list 'sml/replacer-regexp-list
+;                `((lambda (s) (concat "^" ,dh/dropbox-dir)) ":MYDB:") t)
+;)
+
+
+     (unless  (boundp 'dh/me-at-work)
+               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_portable_apps/portable_emacs/.emacs.d/" ":DB_ED:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DH_LaTeX:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t))
+     (when (boundp 'dh/me-at-work)
+               ;; order does matter, a few abbrevations are stacked 
+  	       (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
+	       (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/portable_emacs/.emacs.d/" ":ED:") t)
+	       (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/snippets-work/" ":WORKSNIPPETS:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:!ORG/" ":ORG:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/BESCHAFF/" ":BESCHAFF:") t)
+	       (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Arbeit" ":B_INARBEIT:") t)
+	       (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Vibe_hochgeladen" ":B_VIBE:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^H:/Privat/" ":H_PRIVAT:") t)
+               (add-to-list 'sml/replacer-regexp-list '("^L:/!_Z22/DOKU/" ":L_DOKU:") t))
+#+end_src
+** whitespace
+;; use whitespace mode, and mark lines longer than 80 characters
+#+BEGIN_SRC emacs-lisp
+(use-package whitespace
+  :ensure t
+  :init
+  (progn
+       ;; use whitespace mode, and mark lines longer than 80 characters
+       (setq whitespace-style '(face empty lines-tail trailing))
+       (setq whitespace-line-column 80)
+       (global-whitespace-mode)
+))
+#+END_SRC
+** settings for windowing system
+*** DISABLED Theme Monokai
+#+BEGIN_SRC emacs-lisp
+(use-package monokai-theme
+  :ensure t
+  :init (load-theme 'monokai t))
+#+END_SRC
+*** Theme Monokai
+#+BEGIN_SRC emacs-lisp
+(use-package dracula-theme
+  :ensure t
+  :init (load-theme 'dracula t))
+#+END_SRC
+*** Fonts
+#+BEGIN_SRC emacs-lisp
+;; setting fonts, the first find will be choosen
+(cond
+ ((find-font (font-spec :name "IBM Plex Mono"))
+  (set-frame-font "IBM Plex Mono-13"))
+ ((find-font (font-spec :name "CamingoCode"))
+  (set-frame-font "CamingoCode-13"))
+ ((find-font (font-spec :name "Consolas"))
+  (set-frame-font "Consolas-13")))
+#+END_SRC
+*** frame title of Emacs
+#+begin_src emacs-lisp
+;; setting the frame title
+(setq frame-title-format
+      '("%b  -  "
+	(:eval (if (buffer-file-name)
+		   (abbreviate-file-name (buffer-file-name))
+		 "%b")) "     Emacs " emacs-version dh/location-for-frame-title))
+#+end_src
+
+*** hide the tool-bar
+#+begin_src emacs-lisp
+(tool-bar-mode -1)
+#+end_src
+
+** terminal specific settings
+*** DISABLED hide the menu bar
+based on: https://emacs.stackexchange.com/a/29443
+
+It must be done on frame level if you run frames in tty and gui on emacs-server.
+#+begin_src emacs-lisp
+(defun contextual-menubar (&optional frame)
+  "Display the menubar in FRAME (default: selected frame) if on a
+    graphical display, but hide it if in terminal."
+  (interactive)
+  (set-frame-parameter frame 'menu-bar-lines 
+                             (if (display-graphic-p frame)
+                                  1 0)))
+
+(add-hook 'after-make-frame-functions 'contextual-menubar)
+#+end_src
+*** hide menu bar
+#+begin_src emacs-lisp
+(unless (display-graphic-p)
+ (menu-bar-mode -1))
+#+end_src
+
+
+* General settings
+** some ignored file extensions for completions
+#+begin_src emacs-lisp :tangle yes
+(push ".out" completion-ignored-extensions)
+(push ".pdf" completion-ignored-extensions)
+(push ".synctex.gz" completion-ignored-extensions)
+#+end_src
+** Recent files						    :location_switch:
+#+BEGIN_SRC emacs-lisp
+(use-package recentf
+  :ensure t
+  :init
+  (progn
+       (setq recentf-max-menu-items 200)
+       (setq recentf-max-saved-items 50)
+       (setq recentf-save-file (expand-file-name ".recentf" dh/emacs-local-dir))
+       (recentf-mode 1)
+   ))  
+#+END_SRC
+** bookmarks
+#+begin_src emacs-lisp
+       (setq bookmark-default-file (expand-file-name ".bookmarks" dh/emacs-local-dir))
+#+end_src
+** saveplace						    :location_switch:
+Navigates back to where you were editing a file next time you open it
+#+BEGIN_SRC emacs-lisp
+(use-package saveplace
+  :ensure t
+  :init
+  (progn
+       (setq save-place-file (expand-file-name ".places" dh/emacs-local-dir))
+       (save-place-mode 1)
+   ))
+#+END_SRC
+
+** smartparens
+#+begin_src emacs-lisp
+(use-package smartparens
+  :ensure t
+  :delight
+  :init (smartparens-global-mode t))
+#+end_src
+** undo-tree
+#+begin_src emacs-lisp
+;; Undo tree mode - visualize your undos and branches
+(use-package undo-tree
+  :ensure t
+  :delight
+  :init
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+#+end_src
+** ace-window							       :bind:
+When there are two windows, ace-window will call other-window. If there are more, each window will have its first character highlighted. Pressing that character will switch to that window. Note that, unlike ace-jump-mode, the point position will not be changed: it's the same behavior as that of other-window. The windows are ordered top-down, left-to-right. This means that if you remember your window layouts, you can switch windows without even looking at the leading char. For instance, the top left window will always be 1.
+- You can swap windows by calling ace-window with a prefix argument C-u.
+- You can delete the selected window by calling ace-window with a double prefix argument, i.e. C-u C-u.
+#+begin_src emacs-lisp
+(use-package ace-window
+  :ensure t
+  :bind ("C-x o" . ace-window) 
+  )
+#+end_src
+** ace-link					       :bind:bind_documented:
+ jump to a link in an Info-mode or help-mode or org-mode or eww-mode buffer, you can tab through the links to select the one you want. This is an O(N) operation, where the N is the amount of links. This package turns this into an O(1) operation, or at least O(log(N)) if you manage to squeeze thousands of links in one screen. It does so by assigning a letter to each link using ace-jump-mode.
+#+begin_src emacs-lisp
+(use-package ace-link
+  :ensure t
+  :init
+    (progn 
+       (ace-link-setup-default)
+       (define-key org-mode-map (kbd "M-o") 'ace-link-org)))
+#+end_src
+** Avy
+Avy is a replacement for ace-jump mode which is an implementation of easymotion, a vim plugin.
+#+begin_src emacs-lisp
+(use-package avy
+  :ensure t
+  :config
+  (avy-setup-default))
+#+end_src
+** iedit					       :bind:bind_documented:
+Iedit is interactive edit, where if you are on a word and you enter iedit-mode, you're basically editing every instance of that word/variable in the buffer.
+#+BEGIN_SRC emacs-lisp
+(use-package iedit
+  :ensure t
+  :bind ("C-;" . iedit-mode))
+#+END_SRC
+** multiple-cursors				       :bind:bind_documented:
+When you have an active region that spans multiple lines, the C-S-c C-S-c will add a cursor to each line.
+
+When you want to add multiple cursors not based on continuous lines, but based on keywords in the buffer, 
+use C->, C-< or C-c C-y. First mark the word, then add more cursors.
+
+To get out of multiple-cursors-mode, press <return> or C-g. The latter will first disable multiple regions 
+before disabling multiple cursors. If you want to insert a newline in multiple-cursors-mode, use C-j.
+
+#+begin_src emacs-lisp
+(use-package multiple-cursors
+   :ensure t
+   :bind ( ;("C-S-c C-S-c" . mc/edit-lines)
+           ("C->" . mc/mark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)  
+           ;("C-c C-<" . mc/mark-all-like-this)
+           ("C-S-<mouse-1>". mc/add-cursor-on-click) 
+         )
+ )
+#+end_src
+** move-text					       :bind:bind_documented:
+#+begin_src emacs-lisp
+;; move-text - allows to move region or line with M-up or M-down
+(use-package move-text
+  :ensure t
+  :init (move-text-default-bindings))
+#+end_src
+** hungrydelete
+Delete all whitespace in one direction.
+#+begin_src emacs-lisp
+;; hungry-delete
+; it makes backspace and C-d erase all consecutive white space in a given direction (instead of just one).
+(use-package hungry-delete
+  :ensure t
+  :delight
+  :init (global-hungry-delete-mode))
+#+end_src
+** rainbow-delimiters
+#+begin_src emacs-lisp
+;; rainbow-delimiters - colored delimeters e.g. parentheses
+(use-package rainbow-delimiters
+  :ensure t
+  :delight
+  :init
+     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+     (add-hook 'markdown-mode-hook #'rainbow-delimiters-mode)
+)
+#+end_src
+** dired-details+
+#+begin_src emacs-lisp :tangle yes
+(use-package dired-details+
+   :ensure t)
+#+end_src
+
+** Which-Key
+https://github.com/justbur/emacs-which-key
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :delight
+  :config
+	(which-key-mode)
+        (which-key-setup-minibuffer)
+)
+#+end_src
+
+** expand-region
+https://github.com/magnars/expand-region.el
+
+#+begin_src emacs-lisp
+; expand the marked region in semantic increments (negative prefix to reduce region)
+(use-package expand-region
+   :ensure t
+   :config
+       (global-set-key (kbd "C-=") 'er/expand-region)
+)
+#+end_src
+
+
+* ELISP - setting up Lisp editing
+
+** Eldoc
+Eldoc provides minibuffer hints when working with Emacs Lisp.
+#+begin_src emacs-lisp
+(use-package "eldoc"
+  :diminish eldoc-mode
+  :commands turn-on-eldoc-mode
+  :defer t
+  :init
+  (progn
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+#+end_src
+** DISABLED Paredit
+#+begin_src emacs-lisp
+ (use-package paredit)
+#+end_src
+** Lispy
+
+#+begin_src emacs-lisp
+(use-package lispy
+  :ensure t
+  :init
+  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+)
+#+end_src
+
+
+* Markup or programming languages
+** company mode - autocompletion
+e.g. used by emacs-racer (rust)
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+  :delight
+  :defer t
+  :config (global-company-mode))
+#+END_SRC
+** company-quickhelp
+Provides e.g. in elpy a quickhelp about the function. 
+#+BEGIN_SRC emacs-lisp
+(use-package company-quickhelp
+  :ensure t
+  :delight
+  :init
+    (progn
+      (company-quickhelp-mode 1)))
+#+END_SRC
+
+** company-auctex
+#+BEGIN_SRC emacs-lisp
+(use-package company-auctex
+  :if (boundp 'dh/not-at-work)
+  :delight
+  :ensure t
+  :init
+    (progn
+       (company-auctex-init)))
+#+END_SRC
+
+** json
+#+BEGIN_SRC emacs-lisp
+(use-package json-mode
+  :ensure t
+)
+#+END_SRC
+** yaml
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :ensure t
+  :init
+  (progn 
+       (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
+#+END_SRC
+** emmet
+#+begin_src emacs-lisp
+;; emmet css selectors for Markup
+(use-package emmet-mode
+  :ensure t
+  :init 
+    (progn
+        (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+        (add-hook 'html-mode-hook 'emmet-mode)
+        (add-hook 'css-mode-hook  'emmet-mode)))
+#+end_src
+** bat-mode Windows Batch files
+#+begin_src emacs-lisp
+;; bat-mode - for syntax highlighting of batch files
+(add-to-list 'auto-mode-alist '("\\.bat$" . bat-mode))
+#+end_src
+** markdown-mode
+
+#+BEGIN_SRC emacs-lisp
+;; markdown-mode
+(use-package markdown-mode
+  :ensure t
+  :delight
+  :init
+    (progn 
+       (autoload 'markdown-mode "markdown-mode"
+          "Major mode for editing Markdown files" t)
+       (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+       (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+       (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+       (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+       (setq markdown-command "multimarkdown")
+       ;; link to css-styles
+       ;; markdown-css-path - CSS file to link to in XHTML output (default: "").
+       ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
+       ;; meta element is necessary that utf-8 umlauts are displayed correctly in the browser
+       (setq markdown-xhtml-header-content "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />")  
+       ;; enable org-table mode in markdown
+       (add-hook 'markdown-mode-hook 'turn-on-orgtbl)))
+#+END_SRC
+** pandoc
+#+BEGIN_SRC emacs-lisp
+
+(defun dh/load-my-pandoc-settings ()
+  "Load my pandoc default settings"
+  (interactive)
+  (pandoc-set-write "docx")
+)
+
+
+(use-package pandoc-mode
+  :ensure t
+  :init
+  (progn 
+       (add-hook 'markdown-mode-hook 'pandoc-mode)
+       (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+       (add-hook 'pandoc-mode-hook 'dh/load-my-pandoc-settings)))
+#+END_SRC
+
+** textile
+#+begin_src emacs-lisp
+(use-package textile-mode
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+  :init
+  (progn
+       (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))))
+#+END_SRC
+#+end_src
+** restructured text
+It's already built in and no external package.
+#+begin_src emacs-lisp
+(require 'rst)
+(setq auto-mode-alist
+      (append '(("\\.txt\\'" . rst-mode)
+                ("\\.rst\\'" . rst-mode)
+                ("\\.rest\\'" . rst-mode)) auto-mode-alist))
+#+end_src
+** AUCTeX - LaTeX
+#+BEGIN_SRC emacs-lisp
+;; AUCTeX aktivieren - Hilfe C-h i m auctex
+;(load "auctex.el" nil t t)
+;(load "preview-latex.el" nil t t)
+;;  make AUCTeX aware of style files and multi-file documents
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(setq TeX-PDF-mode t)
+
+(add-hook 'LaTeX-mode-hook
+    (function
+        (lambda ()
+            (define-key LaTeX-mode-map (kbd "C-c C-a")
+                'align-current))))
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+#+END_SRC
+** Rust								:not_at_work:
+
+Enabling rust-mode for syntax highlighting
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+  :mode ("\\.rs\\'" . rust-mode)
+  :config
+  (setq rust-format-on-save t) ; enabling running rustfmt automatically on save
+)
+#+END_SRC
+
+rust-racer for autocompletion
+
+#+BEGIN_SRC emacs-lisp
+(use-package racer
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+  :init
+    (progn
+     (add-hook 'rust-mode-hook #'racer-mode)
+     (add-hook 'racer-mode-hook #'eldoc-mode)
+     (add-hook 'racer-mode-hook #'company-mode)
+
+     (require 'rust-mode)
+     (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+     (setq company-tooltip-align-annotations t)
+  ))
+#+END_SRC
+
+flycheck-rust
+
+#+begin_src emacs-lisp
+(use-package flycheck-rust
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+  :init
+    (progn (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+)
+#+end_src
+
+** TOML used by Rust cargo					:not_at_work:
+#+BEGIN_SRC emacs-lisp
+(use-package toml-mode
+  :if (boundp 'dh/not-at-work)
+  :ensure t)
+#+END_SRC
+
+** Python
+lpy by Abo Abo & company-jedi
+
+*** DISABLED lpy
+#+BEGIN_SRC emacs-lisp
+(use-package lpy
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+)
+#+END_SRC
+
+*** company-jedi
+company-jedi requires > pip install sexpdata epc virtualenv
+#+begin_src emacs-lisp
+(use-package company-jedi             ;;; company-mode completion back-end for Python JEDI
+  :if (boundp 'dh/not-at-work)
+  :delight
+  :config
+  (setq jedi:environment-virtualenv (list (expand-file-name "~/.emacs.d/.python-environments/")))
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)
+  (setq jedi:use-shortcuts t)
+  (defun config/enable-company-jedi ()
+    (add-to-list 'company-backends 'company-jedi))
+  (add-hook 'python-mode-hook 'config/enable-company-jedi))
+#+end_src
+
+
+* hydra
+https://github.com/abo-abo/hydra
+https://github.com/abo-abo/hydra/wiki
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :ensure t)
+#+END_SRC
+
+** own Hydras
+*** Vergabe-Templates Hauptmenü			  :hydrabind:hydradocumented:
+#+BEGIN_SRC emacs-lisp
+(defun dh/expand-snippet (str)
+  "Expand yas snippet template."
+  (insert str)
+  (yas-expand))
+
+(defhydra dh-vergabesnippets-main (:foreign-keys warn :exit t :hint nil)
+  "
+Vergabe-Snippets Hauptmenü
+
+_t_: Allgemeine Vergabe-Templates     
+
+_b_: Begründungen                      _a_: Vergabearten nach § 3 VOL/A
+
+
+_k_: Kurzbegründung                    _v_: Telefon/Gesprächsvermerk               _s_: Sonstige Templates
+
+"
+  ("t" dh-vergabesnippets-templates/body)
+  ("b" dh-vergabesnippets-begruendungen/body)  
+  ("a" dh-vergabesnippets-vergabearten/body)
+  ("k" (dh/expand-snippet "v_t_kb"))  
+  ("v" (dh/expand-snippet "w_tv"))
+  ("s" dh-vergabesnippets-sonstige/body)
+  ("q" nil "Quit"))
+
+(global-set-key [f10] 'dh-vergabesnippets-main/body)
+
+(defhydra dh-vergabesnippets-templates (:foreign-keys warn :exit t :hint nil)
+  "
+Vergabe-Snippets - Allgemeine Templates
+
+_k_: Kurzbegründung               _A_: Auftragserteilung (nach Auswertung)
+_a_: Angebotsabfrage              _r_: Angebotsabfrage aus RV                _c_: Angebotsabfrage RV Computacenter
+_b_: Beauftragung per E-Mail      _R_: Beauftragung aus RV per E-Mail                                     
+"
+  ("k" (dh/expand-snippet "v_t_kb"))
+  ("A" (dh/expand-snippet "v_t_auftragserteilung"))
+  ("a" (dh/expand-snippet "v_t_angebotsabfrage"))
+  ("r" (dh/expand-snippet "v_t_angebotsabfrage_rv"))
+  ("c" (dh/expand-snippet "v_t_angebotsabfrage_rv_20021"))    
+  ("b" (dh/expand-snippet "v_t_beauftragung_email"))    
+  ("R" (dh/expand-snippet "v_t_beauftragung_email_rv"))    
+  ("z" dh-vergabesnippets-main/body "Zurück zum Hauptmenü")
+  ("q" nil "Quit"))
+
+(defhydra dh-vergabesnippets-vergabearten (:foreign-keys warn :exit t :hint nil)
+  "
+Vergabe-Snippets - Vergabearten
+
+_r_: Abruf aus Rahmenvertrag                                                      _d_: Direktkauf - § 3 Abs. 6 VOL/A       
+
+_ö_: Öffentliche Ausschreibung - § 3 Abs. 2 i.V.m. Abs. 1 VOL/A     
+_b_: Beschränkte Ausschreibung mit Teilnahmewettbewerb - § 3 Abs. 3 a) VOL/A 
+_B_: Beschränkte Ausschreibung ohne Teilnahmewettbewerb - § 3 Abs. 4 b) VOL/A
+
+Freihändige Vergaben:
+---------------------
+_n_: geringfügige Nachbestellung - § 3 Abs. 5 c) VOL/A                            _D_: unverschuldete Dringlichkeit - § 3 Abs. 5 g) VOL/A
+_h_: bis Höchstwert 15.000 € lt. BMUB - § 3 Abs. 5 i) VOL/A                       _1_: nur 1 Unternehmen kommt in Betracht - § 3 Abs. 5 l) VOL/A
+"
+  ("r" (dh/expand-snippet "v_a_rahmenvertrag"))
+  ("d" (dh/expand-snippet "v_a_6_direktkauf"))
+  ;; Ausschreibungen
+  ("ö" (dh/expand-snippet "v_a_2_oeffentlich"))
+  ("b" (dh/expand-snippet "v_a_3a_beschraenkt"))  
+  ("B" (dh/expand-snippet "v_a_4b_beschraenkt"))
+  ;; Freihändige Vergaben
+  ("n" (dh/expand-snippet "v_a_5c_freihaendig"))
+  ("D" (dh/expand-snippet "v_a_5g_freihaendig"))
+  ("h" (dh/expand-snippet "v_a_5i_freihaendig"))
+  ("1" (dh/expand-snippet "v_a_5l_freihaendig"))
+  ("z" dh-vergabesnippets-main/body "Zurück zum Hauptmenü")
+  ("q" nil "Quit"))
+
+(defhydra dh-vergabesnippets-begruendungen (:foreign-keys warn :exit t :hint nil)
+  "
+Vergabe-Snippets - Begründungen
+
+_k_: Kurzbegründung (Template)
+
+_H_: Notwendigkeit von HP-CarePack Services
+
+_m_: Marktüblichkeit von Vorleistungen      _h_: Bezug von Hersteller 
+
+
+"
+  ("k" (dh/expand-snippet "v_t_kb"))
+  ("H" (dh/expand-snippet "v_b_hp_carepack"))
+  ("h" (dh/expand-snippet "v_b_hersteller"))
+  ("m" (dh/expand-snippet "v_b_marktueblich"))
+  ("z" dh-vergabesnippets-main/body "Zurück zum Hauptmenü")
+  ("q" nil "Quit"))
+
+(defhydra dh-vergabesnippets-sonstige (:foreign-keys warn :exit t :hint nil)
+  "
+Vergabe-Snippets - Sonstige Templates
+
+_v_: Telefon/Gesprächsvermerk
+
+_p_: Protokoll FGR Z 2.1
+
+"
+  ("v" (dh/expand-snippet "w_tv"))
+  ("p" (dh/expand-snippet "w_fgrZ2.2"))
+  ("z" dh-vergabesnippets-main/body "Zurück zum Hauptmenü")
+  ("q" nil "Quit"))
+#+END_SRC
+*** Major & minor modes				  :hydrabind:hydradocumented:
+A own hydra for switching to most used major or minor modes. 
+#+BEGIN_SRC emacs-lisp
+
+(defhydra dh-hydra-modes (:hint nil)
+  "
+╔═════════════════════════════════╗
+║ major & minor modes          ║
+╚═════════════════════════════════╝
+
+_t_ext        _m_arkdown     _o_rg        _e_lisp            _c_sv        _r_ust
+
+auto-_f_ill   _a_lign        _i_spell     visual-_l_ine     _L_inum       _w_hitespace
+"
+
+
+  ("t" text-mode)
+  ("m" markdown-mode)
+  ("o" org-mode)
+  ("e" lisp-mode)
+  ("c" csv-mode)
+  ("r" rust-mode)
+
+  ("f" auto-fill-mode)
+  ("a" align-regexp :color blue)
+  ("i" ispell-buffer :color blue)
+  ("l" visual-line-mode)
+  ("L" linum-mode)
+  ("w" whitespace-mode))
+
+(global-set-key [S-f11] 'dh-hydra-modes/body)
+#+END_SRC
+
+*** markdown
+#+BEGIN_SRC emacs-lisp
+(defhydra dh-hydra-markdown-mode (:hint nil)
+  "
+Formatting        C-c C-s    _s_: bold          _e_: italic     _b_: blockquote   _p_: pre-formatted    _c_: code
+
+Headings          C-c C-t    _h_: automatic     _1_: h1         _2_: h2           _3_: h3               _4_: h4
+
+Lists             C-c C-x    _m_: insert item   
+
+Demote/Promote    C-c C-x    _l_: promote       _r_: demote     _u_: move up      _d_: move down
+
+Links, footnotes  C-c C-a    _L_: link          _U_: uri        _F_: footnote     _W_: wiki-link      _R_: reference
+ 
+"
+
+
+  ("s" markdown-insert-bold)
+  ("e" markdown-insert-italic)
+  ("b" markdown-insert-blockquote :color blue)
+  ("p" markdown-insert-pre :color blue)
+  ("c" markdown-insert-code)
+
+  ("h" markdown-insert-header-dwim) 
+  ("1" markdown-insert-header-atx-1)
+  ("2" markdown-insert-header-atx-2)
+  ("3" markdown-insert-header-atx-3)
+  ("4" markdown-insert-header-atx-4)
+
+  ("m" markdown-insert-list-item)
+
+  ("l" markdown-promote)
+  ("r" markdown-demote)
+  ("d" markdown-move-down)
+  ("u" markdown-move-up)  
+
+  ("L" markdown-insert-link :color blue)
+  ("U" markdown-insert-uri :color blue)
+  ("F" markdown-insert-footnote :color blue)
+  ("W" markdown-insert-wiki-link :color blue)
+  ("R" markdown-insert-reference-link-dwim :color blue) 
+)
+
+
+(global-set-key [f11] 'dh-hydra-markdown-mode/body)
+#+END_SRC
+*** info-help
+A simple hydra that displays my hydras or other useful commands.
+
+#+BEGIN_SRC emacs-lisp
+(defhydra dh-hydra-info-help (:color blue
+                            :columns 3)
+  "dh - useful info"
+  ;("C-<f1>" 'dh-hydra-info-help/body "info help (hydra)")
+  ("S-<F1>" 'dh/open-my-init-file "open dh_init.org")
+  ("<F12>" 'dh/open-sys-file-manager "open current directory in explorer")
+  ("C-<F12>" 'xah-make-backup-and-save "make a backupfile for the current file")
+  ("S-<F12>" 'dh/open-my-current-taskfile "open Current_Tasks.org")
+  ("C-<F2>" 'dh-hydra-zoom/body "zoom (hydra)")
+
+  ("<F10>" 'dh-vergabesnippets-main/body "Vergabesnippets (hydra)")
+  ("<F11>" 'dh-hydra-markdown-mode/body "useful markdown commands (hydra)")
+  ("S-<F11>" 'dh-hydra-modes/body "mode switching (hydra)")
+  ("C-x SPC" 'dh-hydra-rectangle/body "rectangle (hydra)")
+  
+  ("q" nil "cancel"))
+
+(global-set-key [C-f1] 'dh-hydra-info-help/body)
+
+#+END_SRC
+
+** copied Hydras
+*** org-structural-templates with < 				  :hydrabind:
+http://oremacs.com/2015/03/07/hydra-org-templates/
+#+begin_quote
+
+#+end_quote
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-org-template (:color blue :hint nil)
+  "
+_c_enter    _q_uote        _L_aTeX:
+_a_scii     _e_xample      _i_ndex:
+_H_tml      _v_erse        _I_NCLUDE:
+_h_tml      _p_ractice     _H_TML:
+_s_rc       ^ ^            _A_SCII:
+
+e_l_isp     _u_sepackage:
+"
+  ("s" (hot-expand "<s"))
+  ("e" (hot-expand "<e"))
+  ("l" (hot-expand "<l"))
+  ("u" (hot-expand "<u"))
+  ("q" (hot-expand "<q"))
+  ("v" (hot-expand "<v"))
+  ("c" (hot-expand "<c"))
+  ("l" (hot-expand "<l"))
+  ("h" (hot-expand "<h"))
+  ("a" (hot-expand "<a"))
+  ("L" (hot-expand "<L"))
+  ("i" (hot-expand "<i"))
+  ("I" (hot-expand "<I"))
+  ("H" (hot-expand "<H"))
+  ("A" (hot-expand "<A"))
+  ("p" (hot-expand "<p"))
+  ("<" self-insert-command "ins")
+  ("o" nil "quit"))
+
+(defun hot-expand (str)
+  "Expand org template."
+  (insert str)
+  (org-try-structure-completion))
+
+
+(define-key org-mode-map "<"
+  (lambda () (interactive)
+     (if (looking-back "^")
+         (hydra-org-template/body)
+       (self-insert-command 1))))
+#+END_SRC
+*** rectangle mode						  :hydrabind:
+http://oremacs.com/2015/02/25/rectangle-hydra/
+
+What does what:
+
+    d deletes rectangle; it's similar to C-d.
+    n copies rectangle; it's similar to M-w.
+    o exits; it's very easy to press.
+    e exchanges the point and mark; it's also quite useful to re-activate the region if you disabled it with n or r.
+    s fills the selected rectangle with a string.
+    y yanks the rectangle that you saved before with n.
+    r deactivates or activates the rectangle at point.
+    u calls undo.
+    p kills the rectangle; it's similar to C-w.
+
+
+#+BEGIN_SRC emacs-lisp
+(defun ora-ex-point-mark ()
+  (interactive)
+  (if rectangle-mark-mode
+      (exchange-point-and-mark)
+    (let ((mk (mark)))
+      (rectangle-mark-mode 1)
+      (goto-char mk))))
+
+(defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                           :color pink
+                           :post (deactivate-mark))
+  "
+  ^_k_^     _d_elete    _s_tring
+_h_   _l_   _o_k        _y_ank  
+  ^_j_^     _n_ew-copy  _r_eset 
+^^^^        _e_xchange  _u_ndo  
+^^^^        ^ ^         _p_aste
+"
+  ("h" backward-char nil)
+  ("l" forward-char nil)
+  ("k" previous-line nil)
+  ("j" next-line nil)
+  ("<left>" backward-char nil)
+  ("<right>" forward-char nil)
+  ("<up>" previous-line nil)
+  ("<down>" next-line nil)
+  ("e" ora-ex-point-mark nil)
+  ("n" copy-rectangle-as-kill nil)
+  ("d" delete-rectangle nil)
+  ("r" (if (region-active-p)
+           (deactivate-mark)
+         (rectangle-mark-mode 1)) nil)
+  ("y" yank-rectangle nil)
+  ("u" undo nil)
+  ("s" string-rectangle nil)
+  ("p" kill-rectangle nil)
+  ("o" nil nil))
+(global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+
+#+END_SRC
+*** Zoom - text-scale				  :hydrabind:hydradocumented:
+#+BEGIN_SRC emacs-lisp
+(defhydra dh-hydra-zoom (:hint nil)
+  "
+_<up>_: text-scale-increase     _<down>_: text-scale-decrease     
+_k_: ^   ^text-scale-increase  ^   ^_j_: ^     ^text-scale-decrease
+
+_r_: ^   ^reset text-scale
+" 
+  ("<up>" text-scale-increase)
+  ("<down>" text-scale-decrease)
+  ("k" text-scale-increase)
+  ("j" text-scale-decreasel)
+  ("r" (text-scale-set 0))
+  ("0" (text-scale-set 0) :bind nil :exit t)
+  ("1" (text-scale-set 0) nil :bind nil :exit t))
+
+(global-set-key [C-f2]         'dh-hydra-zoom/body)
+#+END_SRC
+*** Info					  :hydrabind:hydradocumented:
+based on http://oremacs.com/2015/03/17/more-info/, after getting into an info buffer with <f1>i you can select various info buffers with t.
+#+BEGIN_SRC emacs-lisp
+(defun dh/open-info (topic bname)
+  "Open info on TOPIC in BNAME."
+  (if (get-buffer bname)
+      (progn
+        (switch-to-buffer bname)
+        (unless (string-match topic Info-current-file)
+          (Info-goto-node (format "(%s)" topic))))
+    (info topic bname)))
+
+(defhydra hydra-info-to (:hint nil :color teal)
+  "
+_o_rg e_l_isp _e_macs _a_uctex _p_andoc"
+  ("o" (dh/open-info "org" "*info org*"))
+  ("l" (dh/open-info "elisp" "*info elisp*"))
+  ("e" (dh/open-info "emacs" "*info emacs*"))
+  ("a" (dh/open-info "auctex" "*info auctex*"))
+  ("p" (dh/open-info "pandoc-mode" "*info pandoc*")))
+
+(define-key Info-mode-map "t" 'hydra-info-to/body)
+#+END_SRC
+*** goto-line
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-goto-line (goto-map ""
+                           :pre (linum-mode 1)
+                           :post (linum-mode -1))
+  "goto-line"
+  ("g" goto-line "go")
+  ("m" set-mark-command "mark" :bind nil)
+  ("q" nil "quit"))
+#+END_SRC
+
+
+* Ivy, Swiper, Counsel
+** loading ivy and activate it
+#+begin_src emacs-lisp
+(use-package ivy
+  :ensure t
+  :delight
+  :config
+  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+  (setq ivy-use-virtual-buffers t
+        enable-recursive-minibuffers  t
+        ivy-count-format "(%d/%d) "
+   )
+  (ivy-mode 1)
+)
+
+;; ivy uses flx for geneating candidates for large lists
+(use-package flx
+   :ensure t
+   :config
+   (setq gc-cons-threshold 20000000)
+)
+
+(use-package counsel
+  :ensure t
+  :delight
+  :bind ("M-y" . counsel-yank-pop)
+)
+
+(use-package swiper
+  :ensure t
+  :delight
+;;  :bind (())
+)
+#+end_src
+** keybindings: ivy
+#+begin_src emacs-lisp
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+#+end_src
+
+** ivy-hydra
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-hydra
+  :ensure t
+)
+#+END_SRC
+
+* larger packages
+** Magit
+*** magit setup
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t
+  :init
+    (progn
+       ;; disable the default version control git backend
+       (setq vc-handled-backends (delq 'Git vc-handled-backends))
+       ;; enabling ivy for magit
+       (setq magit-completing-read-function 'ivy-completing-read)
+))
+#+END_SRC
+
+** YASNIPPET
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :delight
+  :init
+  (progn
+      (if (boundp 'dh/me-at-work)
+                (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "I:/DATEN/_Daniel/misc/snippets-work/" yas-installed-snippets-dir))  ;; then-part
+          (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "~/.emacs.d/snippets-work-copy/" yas-installed-snippets-dir)))  ;; else-part
+      ;; change the order of the prompt function, prefer ido
+      ;;(setq  yas-prompt-functions '(yas-ido-prompt yas-x-prompt yas-dropdown-prompt yas-completing-prompt yas-no-prompt))
+      (yas-global-mode 1))
+)
+#+end_src
+
+
+** Projectile
+*** projectile setup
+A powerful project management framework for emacs.
+
+https://github.com/bbatsov/projectile
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+
+
+
+)
+#+END_SRC
+
+*** counsel-projectile
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-projectile
+  :ensure t
+  :init
+    (counsel-projectile-on)
+)
+#+END_SRC
+
+** Org
+*** Setting default org-capture target			    :implement_later:
+#+BEGIN_SRC emacs-lisp
+;; org-capture needs a default target, the target is set in org-mode at home / at work
+(define-key global-map "\C-cc" 'org-capture)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+#+END_SRC
+
+*** Setting the start visibility
+#+BEGIN_SRC emacs-lisp
+;(setq org-set-startup-visibility "fold")
+(setq org-startup-folded "content")  ;; all headlines
+#+END_SRC
+
+*** Fontify code in org code blocks
+Source: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
+#+BEGIN_SRC emacs-lisp
+;; fontify code in code blocks
+
+(setq org-src-fontify-natively t)
+
+#+END_SRC
+
+*** Fixing YASnippets tab in Org-Mode
+http://orgmode.org/manual/Conflicts.html
+#+BEGIN_SRC emacs-lisp
+;; fixing tab-binding for YASnippets in Org-Mode
+(add-hook 'org-mode-hook
+               (lambda ()
+                      (org-set-local 'yas/trigger-key [tab])
+                      (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
+#+END_SRC
+
+*** Enabling worf-mode
+worf is like Emacs speedkeys but like Vi and mady by abo_abo
+http://oremacs.com/worf/README.html
+https://github.com/abo-abo/worf
+#+BEGIN_SRC emacs-lisp
+(use-package worf
+  :ensure t
+  :init (add-hook 'org-mode-hook 'worf-mode))
+#+END_SRC
+
+*** org-templates
+Structure templates
+Org makes it easy to insert blocks by typing <s[TAB], etc. 
+I use LaTeX less than Emacs Lisp blocks, so I redefine <l to insert a Lisp block instead.
+
+<u is for an emacs lisp block with use package 
+
+#+BEGIN_SRC emacs-lisp
+(setq org-structure-template-alist
+      '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+        ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+        ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+        ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+        ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+        ("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
+        ("l" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>")
+        ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+        ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+        ("H" "#+html: " "<literal style=\"html\">?</literal>")
+        ("a" "#+begin_ascii\n?\n#+end_ascii")
+        ("A" "#+ascii: ")
+        ("i" "#+index: ?" "#+index: ?")
+        ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+(add-to-list 'org-structure-template-alist '("u" "#+BEGIN_SRC emacs-lisp\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n#+END_SRC" "<src lang=\"emacs-lisp\">\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n</src>"))
+#+END_SRC
+
+*** org-mode at work
+#+BEGIN_SRC emacs-lisp
+;; initialize my work config
+(when (boundp 'dh/me-at-work)
+
+
+(message "[dh] Setting work specific settings for org-mode")
+(setq org-directory "I:/DATEN/_Daniel/!ORG")
+(setq org-default-notes-file (concat org-directory "/Notes_Verschiedenes.org"))
+(setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m) 
+		      ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" .?f)
+		      ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
+
+(setq org-todo-keywords
+      '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
+        (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)""|" "O_DONE(@)" "O_CANCELLED(@)")
+	(sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
+	(sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
+
+
+
+;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
+;; colors - http://raebear.net/comp/emacscolors.html
+
+;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
+
+
+(setq org-todo-keyword-faces
+      '(
+	; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
+	("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
+	("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
+	("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
+	("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
+
+	; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
+	("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
+	("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
+	("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
+
+	;; ("TODO" . (:foreground ,red :weight bold))
+	;; ("WAITING" . (:foreground ,orange :weight bold))
+	;; ("DELEGATED" . (:foreground ,yellow :weight bold))
+	;; ("DONE" . (:foreground ,green :weight bold))
+	;; ("CANCELLED" . (:foreground ,grey :weight bold))
+        ;; (:slant italic)
+
+	("O_NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
+	("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+	("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
+	("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
+        ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
+        ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
+	("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
+	("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
+	("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
+	("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+	("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
+	("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+	("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
+	("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
+	("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
+	("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
+	("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+
+	;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
+	;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
+	;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
+	;; ("DONE" . (:foreground "LimeGreen" :weight bold))
+	;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
+	))
+
+(setq org-priority-faces
+      '(
+	(?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
+	(?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
+	(?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
+	))
+
+
+) ;; end_of_ (when (boundp 'dh/me-at-work)
+#+END_SRC
+
+*** Fontify done checkbox items in org-mode
+Code based on https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html
+- [ ] category :: xxxx
+#+begin_src emacs-lisp
+(font-lock-add-keywords
+ 'org-mode
+ `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
+ 'append)
+#+end_src
+
+*** org-mode at home
+currently empty
+
+
+* Finalise my Emacs environment
+** Last command at work
+#+BEGIN_SRC emacs-lisp
+;;; LAST COMMAND at work
+
+(when (boundp 'dh/me-at-work)
+  ;;; opening dired in !ORG
+  ;(dired org-directory)
+  
+  ;; open my BfN.org file as last command
+  (dh/open-my-current-taskfile)
+)
+
+#+END_SRC
+** Debugging off
+Turn off debugging, now that initialization has ended
+
+#+BEGIN_SRC emacs-lisp
+(setq debug-on-error nil)
+#+END_SRC

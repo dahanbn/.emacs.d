@@ -18,6 +18,20 @@ sure you should look at ~config.org~ best within Emacs or as a raw file [[https:
 
 I am still learning Magit therefore here links to its documentation:
 - https://magit.vc/manual/magit/Getting-Started.html#Getting-Started
+- https://magit.vc/manual/magit/index.html
+
+After launching ~magit-status~ with ~C-x g~ you can manage all git actions in 
+that status buffer. You can see available commands with ~C-c C-c~.
+
+Usually you would:
++ move between sections using ~p~ and ~n~
++ stage changed files with ~s~ or unstage with ~u~
++ ~g~ to refresh the buffer, if needed
++ hit tab on a file to see hunks of the changes
++ to commit hit ~c~ and to do a "normal" commit hit ~c~ again
++ write the commit message in the message buffer and press ~C-c C-c~
++ to push those commits type ~P~ followed by ~p~
++ to get *help* type ~h~
 
 * Links to useful Emacs related stuff
 

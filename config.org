@@ -1560,6 +1560,14 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 * Ivy, Swiper, Counsel
 ** loading ivy and activate it
 #+begin_src emacs-lisp
+
+;; if loaded from MELPA, than I should load counsel first
+
+(use-package counsel
+  :ensure t
+  :delight
+)
+
 (use-package ivy
   :ensure t
   :delight
@@ -1577,11 +1585,6 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
    :ensure t
    :config
    (setq gc-cons-threshold 20000000)
-)
-
-(use-package counsel
-  :ensure t
-  :delight
 )
 
 (use-package swiper

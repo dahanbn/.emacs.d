@@ -12,6 +12,12 @@ repo:
 - https://github.com/dahanbn/portable-emacs-win64
 
 
+*Warning:* Some headings have the status ~DISABLED~. They don't will be tangled
+into ~config.el~. Unfortunately, Github doesn't display that status here. To be
+sure you should look at ~config.org~ best within Emacs or as a raw file [[https://raw.githubusercontent.com/dahanbn/.emacs.d/master/config.org][here]].
+
+* Links to useful Emacs related stuff
+
 Nützliche Configs im WWW:
 - http://writequit.org/org/settings.html
 - http://doc.norang.ca/org-mode.html
@@ -19,6 +25,10 @@ Nützliche Configs im WWW:
 - https://github.com/novoid/dot-emacs
 
 - https://github.com/grettke/help
+
+Ideas for faster loading and use-package:
+- https://github.com/jwiegley/use-package
+- https://github.com/nilcons/emacs-use-package-fast
 
 ELisp guide:
 - https://github.com/chrisdone/elisp-guide

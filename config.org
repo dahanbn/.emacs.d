@@ -3,7 +3,16 @@
 #+TODO: ACTIVE | DISABLED
 #+STARTUP: align fold nodlcheck lognotestate content
 
-Nützliche Configs im WWW:  
+This config file is hosted on Github under GPL, v3. You can find it here:
+- https://github.com/dahanbn/.emacs.d
+
+It should work under Linux (tested), Mac (not tested) and a recent Windows in a
+portable setup (tested). For my portable setup you can look at the following
+repo:
+- https://github.com/dahanbn/portable-emacs-win64
+
+
+Nützliche Configs im WWW:
 - http://writequit.org/org/settings.html
 - http://doc.norang.ca/org-mode.html
 - http://pages.sachachua.com/.emacs.d/Sacha.html
@@ -13,6 +22,7 @@ Nützliche Configs im WWW:
 
 ELisp guide:
 - https://github.com/chrisdone/elisp-guide
+
 
 * Key bindings & commands
 Exported stands for exported to Anki! To export a table use M-x org-table-export.

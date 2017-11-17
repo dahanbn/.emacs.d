@@ -1,6 +1,6 @@
 ;; ============================================================
 ;; Don't edit this file, edit config.org' instead ...
-;; Auto-generated at Fri Nov 17 2017-11-17T10:03:56  on host WIN10
+;; Auto-generated at Fr Nov 17 2017-11-17T13:35:55  on host WIN10
 ;; ============================================================
 
 
@@ -1390,6 +1390,8 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
        (setq vc-handled-backends (delq 'Git vc-handled-backends))
        ;; enabling ivy for magit
        (setq magit-completing-read-function 'ivy-completing-read)
+       ;; setting kbd
+       (global-set-key (kbd "C-x g") 'magit-status)
 ))
 
 

@@ -12,3 +12,6 @@
 
 # not the folder nor the content of auto-save-list
 auto-save-list
+
+# don't track config.el - it's auto-generated
+config.el

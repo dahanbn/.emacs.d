@@ -1715,7 +1715,7 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 ))
 #+END_SRC
 
-*** diff-hl
+*** DISABLED diff-hl
 Diff-hl goes a little further than git-gutter in that it can highlight the
 uncommited diffs, even from Dired. And we can get them on the fly while we 
 type: ~(diff-hl-flydiff-mode)~
@@ -1743,6 +1743,17 @@ https://github.com/syohex/emacs-git-gutter
   :ensure t
   :init
     (global-git-gutter-mode +1)
+)
+#+END_SRC
+
+*** git-gutter+
+https://github.com/nonsequitur/git-gutter-plus works also in tty.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter+
+  :ensure t
+  :init
+    (global-git-gutter+-mode)
 )
 #+END_SRC
 

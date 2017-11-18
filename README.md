@@ -21,3 +21,14 @@ Clone it into the right directory either `/home/user/` under Linux / Mac or into
 ### Pulling updates from master
 
     git pull
+	
+### Handling local conflicts
+
+#### Ignore them and do a hard reset
+
+    git reset --hard HEAD
+
+#### Checkout the changed files ??
+
+    git status
+	git checkout -- FILENAME

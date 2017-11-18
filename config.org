@@ -655,7 +655,7 @@ character it is under; i.e. full width of a TAB:
 #+begin_src emacs-lisp
 ;(setq sml/replacer-regexp-list (list)) ; start with an empty list
 ; adding regexp for shortening Dropbox to DB and special DH_Folders in DB
-(when dh/dropbox-dir
+(when (boundp 'dh/dropbox-dir)
   (add-to-list 'sml/replacer-regexp-list
 	      `(,(concat "^" dh/dropbox-dir "/") ,":DB:") t)
   (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
@@ -668,7 +668,7 @@ character it is under; i.e. full width of a TAB:
 )
 
 ;; adding regexp for shortening OneDrive to OD
-(when dh/onedrive-dir
+(when (boundp 'dh/onedrive-dir)
   (add-to-list 'sml/replacer-regexp-list
 	      `(,(concat "^" dh/onedrive-dir "/") ,":OD:") t)
   (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD_Programming:") t)
@@ -680,17 +680,17 @@ character it is under; i.e. full width of a TAB:
   (add-to-list 'sml/replacer-regexp-list
 	      `(,(concat "^" dh/user-dir "/") ,":WIN~:") t)))
 
-     (when (boundp 'dh/me-at-work)
-               ;; order does matter, a few abbrevations are stacked 
-  	       (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
-	       (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/portable_emacs/.emacs.d/" ":ED:") t)
-	       (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/snippets-work/" ":WORKSNIPPETS:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:!ORG/" ":ORG:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/BESCHAFF/" ":BESCHAFF:") t)
-	       (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Arbeit" ":B_INARBEIT:") t)
-	       (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Vibe_hochgeladen" ":B_VIBE:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^H:/Privat/" ":H_PRIVAT:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^L:/!_Z22/DOKU/" ":L_DOKU:") t))
+(when (boundp 'dh/me-at-work)
+  ;; order does matter, a few abbrevations are stacked 
+  (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/portable_emacs/.emacs.d/" ":ED:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/snippets-work/" ":WORKSNIPPETS:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:!ORG/" ":ORG:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/BESCHAFF/" ":BESCHAFF:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Arbeit" ":B_INARBEIT:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Vibe_hochgeladen" ":B_VIBE:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^H:/Privat/" ":H_PRIVAT:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^L:/!_Z22/DOKU/" ":L_DOKU:") t))
 #+end_src
 ** whitespace
 ;; use whitespace mode, and mark lines longer than 80 characters

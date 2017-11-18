@@ -150,6 +150,7 @@ To edit various table entries I can use multiple cursors or macros F3 F4
 | F11              | hydra                          | dh-hydra-markdown-mode/body                                                                             | Editing     | hydra            |      |          |
 | S-F12            | dh/open-my-current-taskfile    | opens my current-tasks.org at work                                                                      | Files       | dh/custom        |      |          |
 | C-F12            | xah-make-backup                | make a backup of the current file or in dired selected files                                            | Files       | dh/custom        |      |          |
+| F8               | neotree-project-dir            | opens neotree                                                                                           | Files       | neotree          |      |          |
 
 
 
@@ -658,7 +659,7 @@ character it is under; i.e. full width of a TAB:
 ;(setq sml/replacer-regexp-list (list)) ; start with an empty list
 ;(if dh/dropbox-dir
 ;     (add-to-list 'sml/replacer-regexp-list
-;                `((lambda (s) (concat "^" ,dh/dropbox-dir)) ":MYDB:") t)
+;              `((,(lambda (s) (,(concat "^" dh/dropbox-dir)) ,":DB:"))) t)
 ;)
 
 
@@ -810,6 +811,64 @@ Navigates back to where you were editing a file next time you open it
     (setq undo-tree-visualizer-timestamps t)
     (setq undo-tree-visualizer-diff t)))
 #+end_src
+** neotree
+https://github.com/jaypei/emacs-neotree
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :ensure t
+  :bind (("<f8>" . neotree-project-dir))
+  :init
+   (progn
+      ;; Every time when the neotree window is opened, it will try to find current
+      ;; file and jump to node.
+      (setq-default neo-smart-open t)
+      ;; Do not allow neotree to be the only open window
+      (setq-default neo-dont-be-alone t))
+  :config
+  (progn
+    (setq neo-theme 'nerd) ; 'classic, 'nerd, 'ascii, 'arrow
+
+    ; When running ‘projectile-switch-project’ (C-c p p), ‘neotree’ will change root automatically.
+    (setq projectile-switch-project-action 'neotree-projectile-action)
+
+    ;; vc-backed for git must be enabled for the following vc integration
+    (setq neo-vc-integration '(face char))
+    ;; Patch to fix vc integration
+    (defun neo-vc-for-node (node)
+        (let* ((backend (ignore-errors
+                    (vc-backend node)))
+               (vc-state (when backend (vc-state node backend)))
+              )
+        (cons (cdr (assoc vc-state neo-vc-state-char-alist))
+              (cl-case vc-state
+                (up-to-date       neo-vc-up-to-date-face)
+                (edited           neo-vc-edited-face)
+                (needs-update     neo-vc-needs-update-face)
+                (needs-merge      neo-vc-needs-merge-face)
+                (unlocked-changes neo-vc-unlocked-changes-face)
+                (added            neo-vc-added-face)
+                (removed          neo-vc-removed-face)
+                (conflict         neo-vc-conflict-face)
+                (missing          neo-vc-missing-face)
+                (ignored          neo-vc-ignored-face)
+                (unregistered     neo-vc-unregistered-face)
+                (user             neo-vc-user-face)
+                (t                neo-vc-default-face)))))
+   )
+   (defun neotree-project-dir ()
+    "Open NeoTree using the git root."
+    (interactive)
+    (let ((project-dir (projectile-project-root))
+          (file-name (buffer-file-name)))
+      (neotree-toggle)
+      (if project-dir
+          (if (neo-global--window-exists-p)
+              (progn
+                (neotree-dir project-dir)
+                (neotree-find file-name)))
+        (message "Could not find git project root."))))
+)
+#+END_SRC
 ** ace-window							       :bind:
 When there are two windows, ace-window will call other-window. If there are more, each window will have its first character highlighted. Pressing that character will switch to that window. Note that, unlike ace-jump-mode, the point position will not be changed: it's the same behavior as that of other-window. The windows are ordered top-down, left-to-right. This means that if you remember your window layouts, you can switch windows without even looking at the leading char. For instance, the top left window will always be 1.
 - You can swap windows by calling ace-window with a prefix argument C-u.
@@ -1629,7 +1688,8 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
   :init
     (progn
        ;; disable the default version control git backend
-       (setq vc-handled-backends (delq 'Git vc-handled-backends))
+       ;; can't disable it, because I'd like to use it in NEOTREE
+       ;(setq vc-handled-backends (delq 'Git vc-handled-backends))
        ;; enabling ivy for magit
        (setq magit-completing-read-function 'ivy-completing-read)
        ;; setting kbd

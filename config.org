@@ -812,7 +812,24 @@ Navigates back to where you were editing a file next time you open it
     (setq undo-tree-visualizer-diff t)))
 #+end_src
 ** neotree
+A pretty cool file tree plugin. I enabled Projectile & VC (version control 
+support). To refresh the Neotree buffer type `~` in the buffer.
+
+Here are some more shortcuts for it:
+
++ ~n~ next line ， ~p~ previous line。
++ ~SPC~ or ~RET~ or ~TAB~ Open current item if it is a file. Fold/Unfold current item if it is a directory.
++ ~g~ Refresh
++ ~A~ Maximize/Minimize the NeoTree Window
++ ~H~ Toggle display hidden files
++ ~C-c C-n~ Create a file or create a directory if filename ends with a ‘/’
++ ~C-c C-d~ Delete a file or a directory.
++ ~C-c C-r~ Rename a file or a directory.
++ ~C-c C-c~ Change the root directory.
++ ~C-c C-p~ Copy a file or a directory.
+
 https://github.com/jaypei/emacs-neotree
+
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
   :ensure t

@@ -20,7 +20,7 @@ I am still learning Magit therefore here links to its documentation:
 - https://magit.vc/manual/magit/Getting-Started.html#Getting-Started
 - https://magit.vc/manual/magit/index.html
 
-After launching ~magit-status~ with ~C-x g~ you can manage all git actions in 
+After launching ~magit-status~ with ~C-x g~ you can manage all git actions in
 that status buffer. You can see available commands with ~C-c C-c~.
 
 Usually you would:
@@ -187,20 +187,37 @@ Don't use outdated compiled files. Load the .el-file if it's newer.
 #+BEGIN_SRC emacs-lisp
 (setq load-prefer-newer t)
 #+END_SRC
-** Setting dh/emacs-local-dir and dh/user-dir path
+** Setting & creating dh/emacs-local-dir and setting dh/user-dir and checkig if portable
 + dh/emacs-local-dir is a directory that contains local emacs directories of files, e.g. elpa, recentf, saveplace.
 + dh/user-dir contains the path to the user directory corresponding to the operating system, can't use "~" because that
   is not always correct if I use emacs as a portable version under Windows where I set it differently. On Linux & Mac "~"
   would be okay.
 
-Variable user-emacs-dir contains the path to the .emacs.d directory
+Variable user-emacs-directory contains the path to the .emacs.d directory
+
+I use Emacs only portable on Windows. The easiest way to run it portable to
+change the HOME environment variable to directory where emacs and all the other
+stuff is located. So in that directory Emacs will also look at if it searches
+for "~/.emacs.d". The caveat is that the "~" won't work as expected on Windows.
+
+I will also set DH_EMACS_PORTABLE_DIR to that directory. If that environment
+variable is set than I assume that I want to run emacs only in a portable way.
+In that case dh/emacs-local-dir should point to that directory, because the elpa
+and other files (recentf, savespace) should point to there as well.
+
 #+begin_src emacs-lisp
 ;; check OS type
 (cond
  ((string-equal system-type "windows-nt") ; Microsoft Windows
   (progn
-    (defconst dh/emacs-local-dir (concat (getenv "USERPROFILE") "\\emacs-local") "contains the path to my device specific emacs files and directories")
-    (defconst dh/user-dir (getenv "USERPROFILE") "contains the path to my real operating system user directory")
+    (when (getenv "DH_EMACS_PORTABLE_DIR")
+      (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path to my portable emacs files and directories")
+      (defconst dh/emacs_is_portable t "boolean switch that reflects if emacs is used as a portable version" )
+      (defconst dh/emacs-portable-dir (expand-file-name (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path where the portable version is located if Emacs is used as a portable version" ))
+    (unless (getenv "DH_EMACS_PORTABLE_DIR")
+      (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "USERPROFILE")) "contains the path to my device specific emacs files and directories")) 
+
+    (defconst dh/user-dir (expand-file-name (getenv "USERPROFILE")) "contains the path to my real operating system user directory")
    ))
  ;((string-equal system-type "darwin") ; Mac OS X
  ; (progn
@@ -208,37 +225,17 @@ Variable user-emacs-dir contains the path to the .emacs.d directory
  ; ))
  ((string-equal system-type "gnu/linux") ; linux
   (progn
-    (defconst dh/emacs-local-dir (concat (getenv "HOME") "/.emacs-local") "contains the path to my device specific emacs files and directories")
-    (defconst dh/user-dir (getenv "HOME") "contains the path to my real operating system user directory")
+    (defconst dh/emacs-local-dir (expand-file-name ".emacs-local" (getenv "HOME")) "contains the path to my device specific emacs files and directories")
+    (defconst dh/user-dir (expand-file-name (getenv "HOME")) "contains the path to my real operating system user directory")
   ))
 )
 
-;; create directory if it doesn't exist
+;; create dh/emacs-local-dir directory if it doesn't exist
 (unless (file-directory-p dh/emacs-local-dir)
   (make-directory dh/emacs-local-dir)
 )
 #+end_src
 
-** figuring out if emacs should run portable on Windows
-I use Emacs only portable on Windows. The easiest way to run it portable to change the HOME environment variable
-to directory where emacs and all the other stuff is located. So in that directory Emacs will also look at if it searches
-for "~/.emacs.d". The caveat is that the "~" won't work as expected on Windows.
-
-I will also set DH_EMACS_PORTABLE_DIR to that directory. If that environment variable is set than I assume that I want to
-run emacs only in a portable way. In that case dh/emacs-local-dir should point to that directory, because the elpa and other 
-files (recentf, savespace) should point to there as well.
-
-#+begin_src emacs-lisp
-(cond
- ((string-equal system-type "windows-nt") ; Microsoft Windows
-  (progn
-    (when (getenv "DH_EMACS_PORTABLE_DIR")
-        (defconst dh/emacs-local-dir (concat (getenv "DH_EMACS_PORTABLE_DIR") "\\emacs-local") "contains the path to my device specific emacs files and directories")
-        (defconst dh/user-dir (getenv "USERPROFILE") "contains the path to my real operating system user directory")
-        (defconst dh/emacs_is_portable t "boolean switch that reflects if emacs is used as a portable version" )
-    )))
-)
-#+end_src
 ** Figuring out, if I am at work 	    :location_switch:
 #+BEGIN_SRC emacs-lisp
 ;; setting me-at-work to true if I am at work
@@ -657,19 +654,32 @@ character it is under; i.e. full width of a TAB:
 ** smart-mode-line - regexp
 #+begin_src emacs-lisp
 ;(setq sml/replacer-regexp-list (list)) ; start with an empty list
-;(if dh/dropbox-dir
-;     (add-to-list 'sml/replacer-regexp-list
-;              `((,(lambda (s) (,(concat "^" dh/dropbox-dir)) ,":DB:"))) t)
-;)
+; adding regexp for shortening Dropbox to DB and special DH_Folders in DB
+(when dh/dropbox-dir
+  (add-to-list 'sml/replacer-regexp-list
+	      `(,(concat "^" dh/dropbox-dir "/") ,":DB:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DH_LaTeX:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_letters" ":DH_LETTERS:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DH_NOTEBOOKS:") t)
+)
 
+;; adding regexp for shortening OneDrive to OD
+(when dh/onedrive-dir
+  (add-to-list 'sml/replacer-regexp-list
+	      `(,(concat "^" dh/onedrive-dir "/") ,":OD:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD_Programming:") t)
+)
 
-     (unless  (boundp 'dh/me-at-work)
-               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_portable_apps/portable_emacs/.emacs.d/" ":DB_ED:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DH_LaTeX:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
-               (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t))
+;; shortening Windows USERPROFILE to WIN~
+(cond
+ ((string-equal system-type "windows-nt") ; Microsoft Windows
+  (add-to-list 'sml/replacer-regexp-list
+	      `(,(concat "^" dh/user-dir "/") ,":WIN~:") t)))
+
      (when (boundp 'dh/me-at-work)
                ;; order does matter, a few abbrevations are stacked 
   	       (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
@@ -1093,29 +1103,33 @@ Provides e.g. in elpy a quickhelp about the function.
 (add-to-list 'auto-mode-alist '("\\.bat$" . bat-mode))
 #+end_src
 ** markdown-mode
+One of my most used packages is Markdown-Mode combined with Pandoc-Mode. 
 
-#+BEGIN_SRC emacs-lisp
-;; markdown-mode
+https://jblevins.org/projects/markdown-mode/
+
+It has a lot of useful commands. But I wrote my own hydra for most used
+markup - that is bound to F11.
+
+#+begin_src emacs-lisp
 (use-package markdown-mode
   :ensure t
-  :delight
-  :init
-    (progn 
-       (autoload 'markdown-mode "markdown-mode"
-          "Major mode for editing Markdown files" t)
-       (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
-       (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-       (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-       (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
-       (setq markdown-command "multimarkdown")
-       ;; link to css-styles
-       ;; markdown-css-path - CSS file to link to in XHTML output (default: "").
-       ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
-       ;; meta element is necessary that utf-8 umlauts are displayed correctly in the browser
-       (setq markdown-xhtml-header-content "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />")  
-       ;; enable org-table mode in markdown
-       (add-hook 'markdown-mode-hook 'turn-on-orgtbl)))
-#+END_SRC
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.txt\\'" . markdown-mode)
+         ("\\.mmd\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown")
+         ;; link to css-styles
+         ;; markdown-css-paths - CSS file to link to in XHTML output (default: "").
+         ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
+         ;; meta element is necessary that utf-8 umlauts are displayed correctly in the browser
+         (setq markdown-xhtml-header-content "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />")  
+         ;; enable org-table mode in markdown
+         (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
+)
+#+end_src
+
 ** pandoc
 #+BEGIN_SRC emacs-lisp
 
@@ -1154,12 +1168,14 @@ It's already built in and no external package.
                 ("\\.rst\\'" . rst-mode)
                 ("\\.rest\\'" . rst-mode)) auto-mode-alist))
 #+end_src
-** AUCTeX - LaTeX
+** DISABLED AUCTeX - LaTeX old
 #+BEGIN_SRC emacs-lisp
 ;; AUCTeX aktivieren - Hilfe C-h i m auctex
 ;(load "auctex.el" nil t t)
 ;(load "preview-latex.el" nil t t)
 ;;  make AUCTeX aware of style files and multi-file documents
+
+
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
@@ -1174,7 +1190,31 @@ It's already built in and no external package.
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
 #+END_SRC
-** Rust								:not_at_work:
+** LaTeX - AUCTeX
+#+begin_src emacs-lisp
+(use-package tex-site                  ; auctex
+  :if (boundp 'dh/not-at-work)
+  :defer t 
+  :ensure auctex
+  ;:load-path "site-lisp/auctex/"
+  :mode ("\\.tex\\'" . TeX-latex-mode)
+  :init
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (setq TeX-PDF-mode t)
+  (add-hook 'LaTeX-mode-hook
+            (lambda ()
+              (rainbow-delimiters-mode)
+              (company-mode)
+              (smartparens-mode)
+              (turn-on-reftex)
+              (setq reftex-plug-into-AUCTeX t)
+              (reftex-isearch-minor-mode)
+              (setq TeX-PDF-mode t))))
+#+end_src
+
+** Rust 							:not_at_work:
 
 Enabling rust-mode for syntax highlighting
 

@@ -1705,7 +1705,7 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
   :init
     (progn
        ;; disable the default version control git backend
-       ;; can't disable it, because I'd like to use it in NEOTREE
+       ;; can't disable it, because I'd like to use it in neotree & gitgutter
        ;(setq vc-handled-backends (delq 'Git vc-handled-backends))
        ;; enabling ivy for magit
        (setq magit-completing-read-function 'ivy-completing-read)
@@ -1713,6 +1713,20 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
        (global-set-key (kbd "C-x g") 'magit-status)
        (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 ))
+#+END_SRC
+
+*** git-gutter
+ Gitgutter has a lot configuration options and I don't use them currently.
+Especially it would be possible to change the gutter colors and chars. 
+https://github.com/syohex/emacs-git-gutter
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+  :init
+    (global-git-gutter-mode +1)
+)
 #+END_SRC
 
 ** YASNIPPET

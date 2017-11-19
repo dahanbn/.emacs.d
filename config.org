@@ -666,44 +666,41 @@ character it is under; i.e. full width of a TAB:
 
 ** smart-mode-line - regexp
 #+begin_src emacs-lisp
-;(setq sml/replacer-regexp-list (list)) ; start with an empty list
-; adding regexp for shortening Dropbox to DB and special DH_Folders in DB
-(when (boundp 'dh/dropbox-dir)
-  (add-to-list 'sml/replacer-regexp-list
-	      `(,(concat "^" dh/dropbox-dir "/") ,":DB:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DH_LaTeX:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_letters" ":DH_LETTERS:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DH_NOTEBOOKS:") t)
-)
+  ;(setq sml/replacer-regexp-list (list)) ; start with an empty list
+  ; adding regexp for shortening Dropbox to DB and special DH_Folders in DB
+  (when (boundp 'dh/dropbox-dir)
+    (add-to-list 'sml/replacer-regexp-list
+                 `(,(concat "^" dh/dropbox-dir "/") ,":DB:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DH_LaTeX:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_letters" ":DH_LETTERS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DH_NOTEBOOKS:") t))
+  ;; adding regexp for shortening OneDrive to OD
+  (when (boundp 'dh/onedrive-dir)
+    (add-to-list 'sml/replacer-regexp-list
+                 `(,(concat "^" dh/onedrive-dir "/") ,":OD:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD_Programming:") t))
 
-;; adding regexp for shortening OneDrive to OD
-(when (boundp 'dh/onedrive-dir)
-  (add-to-list 'sml/replacer-regexp-list
-	      `(,(concat "^" dh/onedrive-dir "/") ,":OD:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD_Programming:") t)
-)
+  ;; shortening Windows USERPROFILE to WIN~
+  (cond
+   ((string-equal system-type "windows-nt") ; Microsoft Windows
+    (add-to-list 'sml/replacer-regexp-list
+                 `(,(concat "^" dh/user-dir "/") ,":WIN~:") t)))
 
-;; shortening Windows USERPROFILE to WIN~
-(cond
- ((string-equal system-type "windows-nt") ; Microsoft Windows
-  (add-to-list 'sml/replacer-regexp-list
-	      `(,(concat "^" dh/user-dir "/") ,":WIN~:") t)))
-
-(when (boundp 'dh/me-at-work)
-  ;; order does matter, a few abbrevations are stacked 
-  (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/portable_emacs/.emacs.d/" ":ED:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/snippets-work/" ":WORKSNIPPETS:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:!ORG/" ":ORG:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/BESCHAFF/" ":BESCHAFF:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Arbeit" ":B_INARBEIT:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Vibe_hochgeladen" ":B_VIBE:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^H:/Privat/" ":H_PRIVAT:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^L:/!_Z22/DOKU/" ":L_DOKU:") t))
+  (when (boundp 'dh/me-at-work)
+    ;; order does matter, a few abbrevations are stacked
+    (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/portable_emacs/.emacs.d/" ":ED:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/snippets-work/" ":WORKSNIPPETS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:!ORG/" ":ORG:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/BESCHAFF/" ":BESCHAFF:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Arbeit" ":B_INARBEIT:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Vibe_hochgeladen" ":B_VIBE:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^H:/Privat/" ":H_PRIVAT:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^L:/!_Z22/DOKU/" ":L_DOKU:") t))
 #+end_src
 ** whitespace
 ;; use whitespace mode, and mark lines longer than 80 characters
@@ -725,11 +722,11 @@ character it is under; i.e. full width of a TAB:
   :ensure t
   :init (load-theme 'monokai t))
 #+END_SRC
-*** Theme Monokai
+*** Theme Dracula
 #+BEGIN_SRC emacs-lisp
-(use-package dracula-theme
-  :ensure t
-  :init (load-theme 'dracula t))
+  (use-package dracula-theme
+    :ensure t
+    :init (load-theme 'dracula t))
 #+END_SRC
 *** Fonts
 #+BEGIN_SRC emacs-lisp
@@ -1904,117 +1901,113 @@ I use LaTeX less than Emacs Lisp blocks, so I redefine <l to insert a Lisp block
 <u is for an emacs lisp block with use package 
 
 #+BEGIN_SRC emacs-lisp
-(setq org-structure-template-alist
-      '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
-        ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
-        ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
-        ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
-        ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
-        ("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
-        ("l" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>")
-        ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-        ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
-        ("H" "#+html: " "<literal style=\"html\">?</literal>")
-        ("a" "#+begin_ascii\n?\n#+end_ascii")
-        ("A" "#+ascii: ")
-        ("i" "#+index: ?" "#+index: ?")
-        ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
-(add-to-list 'org-structure-template-alist '("u" "#+BEGIN_SRC emacs-lisp\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n#+END_SRC" "<src lang=\"emacs-lisp\">\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n</src>"))
+  (setq org-structure-template-alist
+        '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
+          ("e" "#+begin_example\n?\n#+end_example" "<example>\n?\n</example>")
+          ("q" "#+begin_quote\n?\n#+end_quote" "<quote>\n?\n</quote>")
+          ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE" "<verse>\n?\n</verse>")
+          ("c" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+          ("p" "#+BEGIN_PRACTICE\n?\n#+END_PRACTICE")
+          ("l" "#+begin_src emacs-lisp\n?\n#+end_src" "<src lang=\"emacs-lisp\">\n?\n</src>")
+          ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+          ("h" "#+begin_html\n?\n#+end_html" "<literal style=\"html\">\n?\n</literal>")
+          ("H" "#+html: " "<literal style=\"html\">?</literal>")
+          ("a" "#+begin_ascii\n?\n#+end_ascii")
+          ("A" "#+ascii: ")
+          ("i" "#+index: ?" "#+index: ?")
+          ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+
+  (add-to-list 'org-structure-template-alist '("u" "#+BEGIN_SRC emacs-lisp\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n#+END_SRC" "<src lang=\"emacs-lisp\">\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n</src>"))
 #+END_SRC
 
 *** org-mode at work
 #+BEGIN_SRC emacs-lisp
-;; initialize my work config
-(when (boundp 'dh/me-at-work)
+  ;; initialize my work config
+  (when (boundp 'dh/me-at-work)
+    (message "[dh] Setting work specific settings for org-mode")
+    (setq org-directory "I:/DATEN/_Daniel/!ORG")
+    (setq org-default-notes-file (concat org-directory "/Notes_Verschiedenes.org"))
+    (setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m)
+                          ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" . 102)
+                          ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
 
-
-(message "[dh] Setting work specific settings for org-mode")
-(setq org-directory "I:/DATEN/_Daniel/!ORG")
-(setq org-default-notes-file (concat org-directory "/Notes_Verschiedenes.org"))
-(setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m) 
-		      ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" .?f)
-		      ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
-
-(setq org-todo-keywords
-      '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
-        (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)""|" "O_DONE(@)" "O_CANCELLED(@)")
-	(sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
-	(sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
+    (setq org-todo-keywords
+          '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
+            (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
+            (sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
+            (sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
 
 
 
-;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
-;; colors - http://raebear.net/comp/emacscolors.html
+    ;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
+    ;; colors - http://raebear.net/comp/emacscolors.html
 
-;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
-
-
-(setq org-todo-keyword-faces
-      '(
-	; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
-	("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
-	("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
-	("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
-	("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
-
-	; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
-	("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
-	("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
-	("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
-
-	;; ("TODO" . (:foreground ,red :weight bold))
-	;; ("WAITING" . (:foreground ,orange :weight bold))
-	;; ("DELEGATED" . (:foreground ,yellow :weight bold))
-	;; ("DONE" . (:foreground ,green :weight bold))
-	;; ("CANCELLED" . (:foreground ,grey :weight bold))
-        ;; (:slant italic)
-
-	("O_NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
-	("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
-	("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
-	("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
-        ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
-        ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
-	("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
-	("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
-	("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
-	("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
-
-	("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
-	("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
-	("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
-	("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
-	("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
-	("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
-	("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+    ;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
 
 
-	;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
-	;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
-	;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
-	;; ("DONE" . (:foreground "LimeGreen" :weight bold))
-	;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
-	))
+    (setq org-todo-keyword-faces
+          '(
+                                          ; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
+            ("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
+            ("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
+            ("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
+            ("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
 
-(setq org-priority-faces
-      '(
-	(?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
-	(?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
-	(?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
-	))
+                                          ; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
+            ("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
+            ("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
+            ("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
+
+            ;; ("TODO" . (:foreground ,red :weight bold))
+            ;; ("WAITING" . (:foreground ,orange :weight bold))
+            ;; ("DELEGATED" . (:foreground ,yellow :weight bold))
+            ;; ("DONE" . (:foreground ,green :weight bold))
+            ;; ("CANCELLED" . (:foreground ,grey :weight bold))
+            ;; (:slant italic)
+
+            ("O_NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
+            ("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+            ("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
+            ("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
+            ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
+            ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
+            ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
+            ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
+            ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
+            ("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+            ("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
+            ("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+            ("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
+            ("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
+            ("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
+            ("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
+            ("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
 
 
-) ;; end_of_ (when (boundp 'dh/me-at-work)
+            ;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
+            ;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
+            ;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
+            ;; ("DONE" . (:foreground "LimeGreen" :weight bold))
+            ;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
+            ))
+
+    (setq org-priority-faces
+          '(
+            (?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
+            (?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
+            (?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
+            ))) ;; end_of_ (when (boundp 'dh/me-at-work)
 #+END_SRC
 
 *** Fontify done checkbox items in org-mode
 Code based on https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html
 - [ ] category :: xxxx
 #+begin_src emacs-lisp
-(font-lock-add-keywords
- 'org-mode
- `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
- 'append)
+  (font-lock-add-keywords
+   'org-mode
+   `(("^[ \t]*\\(?:[-+*]\\|[0-9]+[).]\\)[ \t]+\\(\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\[\\(?:X\\|\\([0-9]+\\)/\\2\\)\\][^\n]*\n\\)" 1 'org-headline-done prepend))
+   'append)
 #+end_src
 
 *** org-mode at home
@@ -2024,20 +2017,15 @@ currently empty
 * Finalise my Emacs environment
 ** Last command at work
 #+BEGIN_SRC emacs-lisp
-;;; LAST COMMAND at work
-
-(when (boundp 'dh/me-at-work)
-  ;;; opening dired in !ORG
-  ;(dired org-directory)
-  
-  ;; open my BfN.org file as last command
-  (dh/open-my-current-taskfile)
-)
-
+  ; LAST COMMAND at work
+  (when (boundp 'dh/me-at-work)
+    ;; open my BfN.org file as last command
+    (dh/open-my-current-taskfile))
 #+END_SRC
+
 ** Debugging off
 Turn off debugging, now that initialization has ended
 
 #+BEGIN_SRC emacs-lisp
-(setq debug-on-error nil)
+  (setq debug-on-error nil)
 #+END_SRC

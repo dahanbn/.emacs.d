@@ -1809,18 +1809,17 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
 
 ** YASNIPPET
 #+begin_src emacs-lisp
-(use-package yasnippet
-  :ensure t
-  :delight
-  :init
-  (progn
+  (use-package yasnippet
+    :ensure t
+    :delight
+    :init
+    (progn
       (if (boundp 'dh/me-at-work)
-                (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "I:/DATEN/_Daniel/misc/snippets-work/" yas-installed-snippets-dir))  ;; then-part
-          (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "~/.emacs.d/snippets-work-copy/" yas-installed-snippets-dir)))  ;; else-part
+          (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "I:/DATEN/_Daniel/misc/snippets-work/" yas-installed-snippets-dir)) ;; then-part
+        (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "~/.emacs.d/snippets-work-copy/" yas-installed-snippets-dir))) ;; else-part
       ;; change the order of the prompt function, prefer ido
       ;;(setq  yas-prompt-functions '(yas-ido-prompt yas-x-prompt yas-dropdown-prompt yas-completing-prompt yas-no-prompt))
-      (yas-global-mode 1))
-)
+      (yas-global-mode 1)))
 #+end_src
 
 
@@ -1849,19 +1848,28 @@ https://github.com/bbatsov/projectile
 #+END_SRC
 
 ** Org
-*** Setting default org-capture target			    :implement_later:
+*** loading latest org-mode
+
 #+BEGIN_SRC emacs-lisp
-;; org-capture needs a default target, the target is set in org-mode at home / at work
-(define-key global-map "\C-cc" 'org-capture)
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
+  (use-package org
+    :ensure t
+    :bind (("C-c l" . org-store-link)
+           ("C-c c" . org-capture)
+           ("C-c a" . org-agenda)
+           ("C-c b" . org-iswitchb)
+           :map org-mode-map
+           ("C-c e" . org-edit-special)   ; original mapping C-c '
+           :map org-src-mode-map
+           ("C-c e" . org-edit-src-exit)  ; original mapping C-c '
+           )
+    :mode ("\\.org$" . org-mode)
+    :config)  
 #+END_SRC
 
 *** Setting the start visibility
 #+BEGIN_SRC emacs-lisp
-;(setq org-set-startup-visibility "fold")
-(setq org-startup-folded "content")  ;; all headlines
+  ;(setq org-set-startup-visibility "fold")
+  (setq org-startup-folded "content")  ;; all headlines
 #+END_SRC
 
 *** Fontify code in org code blocks

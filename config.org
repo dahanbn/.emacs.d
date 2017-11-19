@@ -162,8 +162,8 @@ Here, I do set some very general settings for my GNU/Emacs.
 
 ** profiling:
 #+BEGIN_SRC emacs-lisp
-(defvar my-config-el-start-time (current-time) "Time when config.el was started")
-;(profiler-start 'cpu);; test startup performance - create report with M-x profiler-report
+  (defvar my-config-el-start-time (current-time) "Time when config.el was started")
+  ;(profiler-start 'cpu);; test startup performance - create report with M-x profiler-report
 #+END_SRC
 
 ** Debugging on
@@ -971,52 +971,53 @@ before disabling multiple cursors. If you want to insert a newline in multiple-c
 ** hungrydelete
 Delete all whitespace in one direction.
 #+begin_src emacs-lisp
-;; hungry-delete
-; it makes backspace and C-d erase all consecutive white space in a given direction (instead of just one).
-(use-package hungry-delete
-  :ensure t
-  :delight
-  :init (global-hungry-delete-mode))
+  ;; hungry-delete
+  ; it makes backspace and C-d erase all consecutive white space in a given direction (instead of just one).
+  (use-package hungry-delete
+    :ensure t
+    :delight
+    :init (global-hungry-delete-mode))
 #+end_src
 ** rainbow-delimiters
+Rainbow Delimters paints delimiters, e.g. parenthese in different colours.
+( ( even in (org)))
+
 #+begin_src emacs-lisp
-;; rainbow-delimiters - colored delimeters e.g. parentheses
-(use-package rainbow-delimiters
-  :ensure t
-  :delight
-  :init
-     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-     (add-hook 'markdown-mode-hook #'rainbow-delimiters-mode)
-)
+  ;; rainbow-delimiters - colored delimeters e.g. parentheses
+  (use-package rainbow-delimiters
+    :ensure t
+    :delight
+    :init
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+    (add-hook 'org-mode-hook #'rainbow-delimiters-mode)
+    (add-hook 'markdown-mode-hook #'rainbow-delimiters-mode))
 #+end_src
 ** dired-details+
 #+begin_src emacs-lisp :tangle yes
-(use-package dired-details+
-   :ensure t)
+  (use-package dired-details+
+    :ensure t)
 #+end_src
 
 ** Which-Key
 https://github.com/justbur/emacs-which-key
 #+begin_src emacs-lisp
-(use-package which-key
-  :ensure t
-  :delight
-  :config
-	(which-key-mode)
-        (which-key-setup-minibuffer)
-)
+  (use-package which-key
+    :ensure t
+    :delight
+    :config
+    (which-key-mode)
+    (which-key-setup-minibuffer))
 #+end_src
 
 ** expand-region
 https://github.com/magnars/expand-region.el
 
 #+begin_src emacs-lisp
-; expand the marked region in semantic increments (negative prefix to reduce region)
-(use-package expand-region
-   :ensure t
-   :config
-       (global-set-key (kbd "C-=") 'er/expand-region)
-)
+  ; expand the marked region in semantic increments (negative prefix to reduce region)
+  (use-package expand-region
+     :ensure t
+     :config
+     (global-set-key (kbd "C-=") 'er/expand-region))
 #+end_src
 
 
@@ -1025,15 +1026,15 @@ https://github.com/magnars/expand-region.el
 ** Eldoc
 Eldoc provides minibuffer hints when working with Emacs Lisp.
 #+begin_src emacs-lisp
-(use-package "eldoc"
-  :diminish eldoc-mode
-  :commands turn-on-eldoc-mode
-  :defer t
-  :init
-  (progn
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+  (use-package "eldoc"
+    :delight
+    :commands turn-on-eldoc-mode
+    :defer t
+    :init
+    (progn
+      (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+      (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+      (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
 #+end_src
 ** DISABLED Paredit
 #+begin_src emacs-lisp
@@ -1042,11 +1043,10 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 ** Lispy
 
 #+begin_src emacs-lisp
-(use-package lispy
-  :ensure t
-  :init
-  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-)
+  (use-package lispy
+    :ensure t
+    :init
+    (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
 #+end_src
 
 
@@ -1054,63 +1054,61 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 ** company mode - autocompletion
 e.g. used by emacs-racer (rust)
 #+BEGIN_SRC emacs-lisp
-(use-package company
-  :ensure t
-  :delight
-  :defer t
-  :config (global-company-mode))
+  (use-package company
+    :ensure t
+    :delight
+    :defer t
+    :config (global-company-mode))
 #+END_SRC
 ** company-quickhelp
 Provides e.g. in elpy a quickhelp about the function. 
 #+BEGIN_SRC emacs-lisp
-(use-package company-quickhelp
-  :ensure t
-  :delight
-  :init
-    (progn
-      (company-quickhelp-mode 1)))
+  (use-package company-quickhelp
+    :ensure t
+    :delight
+    :init
+    (company-quickhelp-mode 1))
 #+END_SRC
 
 ** company-auctex
 #+BEGIN_SRC emacs-lisp
-(use-package company-auctex
-  :if (boundp 'dh/not-at-work)
-  :delight
-  :ensure t
-  :init
+  (use-package company-auctex
+    :if (boundp 'dh/not-at-work)
+    :delight
+    :ensure t
+    :init
     (progn
-       (company-auctex-init)))
+      (company-auctex-init)))
 #+END_SRC
 
 ** json
 #+BEGIN_SRC emacs-lisp
-(use-package json-mode
-  :ensure t
-)
+  (use-package json-mode
+    :ensure t)
 #+END_SRC
 ** yaml
 #+BEGIN_SRC emacs-lisp
-(use-package yaml-mode
-  :ensure t
-  :init
-  (progn 
-       (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
+  (use-package yaml-mode
+    :ensure t
+    :init
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
 #+END_SRC
 ** emmet
 #+begin_src emacs-lisp
-;; emmet css selectors for Markup
-(use-package emmet-mode
-  :ensure t
-  :init 
+  ;; emmet css selectors for Markup
+  (use-package emmet-mode
+    :ensure t
+    :init
     (progn
-        (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-        (add-hook 'html-mode-hook 'emmet-mode)
-        (add-hook 'css-mode-hook  'emmet-mode)))
+      (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+      (add-hook 'html-mode-hook 'emmet-mode)
+      (add-hook 'css-mode-hook  'emmet-mode)))
 #+end_src
 ** bat-mode Windows Batch files
 #+begin_src emacs-lisp
-;; bat-mode - for syntax highlighting of batch files
-(add-to-list 'auto-mode-alist '("\\.bat$" . bat-mode))
+  ;; bat-mode - for syntax highlighting of batch files
+  (add-to-list 'auto-mode-alist '("\\.bat$" . bat-mode))
 #+end_src
 ** markdown-mode
 One of my most used packages is Markdown-Mode combined with Pandoc-Mode. 
@@ -1121,62 +1119,59 @@ It has a lot of useful commands. But I wrote my own hydra for most used
 markup - that is bound to F11.
 
 #+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.txt\\'" . markdown-mode)
-         ("\\.mmd\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown")
-         ;; link to css-styles
-         ;; markdown-css-paths - CSS file to link to in XHTML output (default: "").
-         ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
-         ;; meta element is necessary that utf-8 umlauts are displayed correctly in the browser
-         (setq markdown-xhtml-header-content "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />")  
-         ;; enable org-table mode in markdown
-         (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
-)
+  (use-package markdown-mode
+    :ensure t
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'" . markdown-mode)
+           ("\\.txt\\'" . markdown-mode)
+           ("\\.mmd\\'" . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown")
+    ;; link to css-styles
+    ;; markdown-css-paths - CSS file to link to in XHTML output (default: "").
+                                          ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
+    ;; meta element is necessary that utf-8 umlauts are displayed correctly in the browser
+    (setq markdown-xhtml-header-content "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />")
+    ;; enable org-table mode in markdown
+    (add-hook 'markdown-mode-hook 'turn-on-orgtbl))
 #+end_src
 
 ** pandoc
 #+BEGIN_SRC emacs-lisp
-
-(defun dh/load-my-pandoc-settings ()
-  "Load my pandoc default settings"
-  (interactive)
-  (pandoc-set-write "docx")
-)
+  (defun dh/load-my-pandoc-settings ()
+    "Load my pandoc default settings"
+    (interactive)
+    (pandoc-set-write "docx"))
 
 
-(use-package pandoc-mode
-  :ensure t
-  :init
-  (progn 
-       (add-hook 'markdown-mode-hook 'pandoc-mode)
-       (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
-       (add-hook 'pandoc-mode-hook 'dh/load-my-pandoc-settings)))
+  (use-package pandoc-mode
+    :ensure t
+    :init
+    (progn
+      (add-hook 'markdown-mode-hook 'pandoc-mode)
+      (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+      (add-hook 'pandoc-mode-hook 'dh/load-my-pandoc-settings)))
 #+END_SRC
 
 ** textile
 #+begin_src emacs-lisp
-(use-package textile-mode
-  :if (boundp 'dh/not-at-work)
-  :ensure t
-  :init
-  (progn
-       (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))))
+  (use-package textile-mode
+    :if (boundp 'dh/not-at-work)
+    :ensure t
+    :init
+    (progn
+      (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))))
 #+END_SRC
 #+end_src
 ** restructured text
 It's already built in and no external package.
 #+begin_src emacs-lisp
-(require 'rst)
-(setq auto-mode-alist
-      (append '(("\\.txt\\'" . rst-mode)
-                ("\\.rst\\'" . rst-mode)
-                ("\\.rest\\'" . rst-mode)) auto-mode-alist))
+  (require 'rst)
+  (setq auto-mode-alist
+        (append '(("\\.txt\\'" . rst-mode)
+                  ("\\.rst\\'" . rst-mode)
+                  ("\\.rest\\'" . rst-mode)) auto-mode-alist))
 #+end_src
 ** DISABLED AUCTeX - LaTeX old
 #+BEGIN_SRC emacs-lisp
@@ -1202,26 +1197,26 @@ It's already built in and no external package.
 #+END_SRC
 ** LaTeX - AUCTeX
 #+begin_src emacs-lisp
-(use-package tex-site                  ; auctex
-  :if (boundp 'dh/not-at-work)
-  :defer t 
-  :ensure auctex
-  ;:load-path "site-lisp/auctex/"
-  :mode ("\\.tex\\'" . TeX-latex-mode)
-  :init
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq-default TeX-master nil)
-  (setq TeX-PDF-mode t)
-  (add-hook 'LaTeX-mode-hook
-            (lambda ()
-              (rainbow-delimiters-mode)
-              (company-mode)
-              (smartparens-mode)
-              (turn-on-reftex)
-              (setq reftex-plug-into-AUCTeX t)
-              (reftex-isearch-minor-mode)
-              (setq TeX-PDF-mode t))))
+  (use-package tex-site                   ; auctex
+    :if (boundp 'dh/not-at-work)
+    :defer t
+    :ensure auctex
+                                          ;:load-path "site-lisp/auctex/"
+    :mode ("\\.tex\\'" . TeX-latex-mode)
+    :init
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+    (setq TeX-PDF-mode t)
+    (add-hook 'LaTeX-mode-hook
+              (lambda ()
+                (rainbow-delimiters-mode)
+                (company-mode)
+                (smartparens-mode)
+                (turn-on-reftex)
+                (setq reftex-plug-into-AUCTeX t)
+                (reftex-isearch-minor-mode)
+                (setq TeX-PDF-mode t))))
 #+end_src
 
 ** Rust 							:not_at_work:
@@ -1229,49 +1224,47 @@ It's already built in and no external package.
 Enabling rust-mode for syntax highlighting
 
 #+BEGIN_SRC emacs-lisp
-(use-package rust-mode
-  :if (boundp 'dh/not-at-work)
-  :ensure t
-  :mode ("\\.rs\\'" . rust-mode)
-  :config
-  (setq rust-format-on-save t) ; enabling running rustfmt automatically on save
-)
+  (use-package rust-mode
+    :if (boundp 'dh/not-at-work)
+    :ensure t
+    :mode ("\\.rs\\'" . rust-mode)
+    :config
+    (setq rust-format-on-save t) ; enabling running rustfmt automatically on save
+    )
 #+END_SRC
 
 rust-racer for autocompletion
 
 #+BEGIN_SRC emacs-lisp
-(use-package racer
-  :if (boundp 'dh/not-at-work)
-  :ensure t
-  :init
+  (use-package racer
+    :if (boundp 'dh/not-at-work)
+    :ensure t
+    :init
     (progn
-     (add-hook 'rust-mode-hook #'racer-mode)
-     (add-hook 'racer-mode-hook #'eldoc-mode)
-     (add-hook 'racer-mode-hook #'company-mode)
+      (add-hook 'rust-mode-hook #'racer-mode)
+      (add-hook 'racer-mode-hook #'eldoc-mode)
+      (add-hook 'racer-mode-hook #'company-mode)
 
-     (require 'rust-mode)
-     (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-     (setq company-tooltip-align-annotations t)
-  ))
+      (require 'rust-mode)
+      (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+      (setq company-tooltip-align-annotations t)))
 #+END_SRC
 
 flycheck-rust
 
 #+begin_src emacs-lisp
-(use-package flycheck-rust
-  :if (boundp 'dh/not-at-work)
-  :ensure t
-  :init
-    (progn (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-)
+  (use-package flycheck-rust
+    :if (boundp 'dh/not-at-work)
+    :ensure t
+    :init
+    (progn (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 #+end_src
 
 ** TOML used by Rust cargo					:not_at_work:
 #+BEGIN_SRC emacs-lisp
-(use-package toml-mode
-  :if (boundp 'dh/not-at-work)
-  :ensure t)
+  (use-package toml-mode
+    :if (boundp 'dh/not-at-work)
+    :ensure t)
 #+END_SRC
 
 ** Python
@@ -1279,26 +1272,25 @@ lpy by Abo Abo & company-jedi
 
 *** DISABLED lpy
 #+BEGIN_SRC emacs-lisp
-(use-package lpy
-  :if (boundp 'dh/not-at-work)
-  :ensure t
-)
+  (use-package lpy
+    :if (boundp 'dh/not-at-work)
+    :ensure t)
 #+END_SRC
 
 *** company-jedi
 company-jedi requires > pip install sexpdata epc virtualenv
 #+begin_src emacs-lisp
-(use-package company-jedi             ;;; company-mode completion back-end for Python JEDI
-  :if (boundp 'dh/not-at-work)
-  :delight
-  :config
-  (setq jedi:environment-virtualenv (list (expand-file-name "~/.emacs.d/.python-environments/")))
-  (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t)
-  (setq jedi:use-shortcuts t)
-  (defun config/enable-company-jedi ()
-    (add-to-list 'company-backends 'company-jedi))
-  (add-hook 'python-mode-hook 'config/enable-company-jedi))
+  (use-package company-jedi ; company-mode completion back-end for Python JEDI
+    :if (boundp 'dh/not-at-work)
+    :delight
+    :config
+    (setq jedi:environment-virtualenv (list (expand-file-name "~/.emacs.d/.python-environments/")))
+    (add-hook 'python-mode-hook 'jedi:setup)
+    (setq jedi:complete-on-dot t)
+    (setq jedi:use-shortcuts t)
+    (defun config/enable-company-jedi ()
+      (add-to-list 'company-backends 'company-jedi))
+    (add-hook 'python-mode-hook 'config/enable-company-jedi))
 #+end_src
 
 
@@ -1687,82 +1679,77 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 ** loading ivy and activate it
 #+begin_src emacs-lisp
 
-;; if loaded from MELPA, than I should load counsel first
+  ;; if loaded from MELPA, than I should load counsel first
 
-(use-package counsel
-  :ensure t
-  :delight
-)
+  (use-package counsel
+    :ensure t
+    :delight)
 
-(use-package ivy
-  :ensure t
-  :delight
-  :config
-  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
-  (setq ivy-use-virtual-buffers t
-        enable-recursive-minibuffers  t
-        ivy-count-format "(%d/%d) "
-   )
-  (ivy-mode 1)
-)
+  (use-package ivy
+    :ensure t
+    :delight
+    :config
+    ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+    (setq ivy-use-virtual-buffers t
+          enable-recursive-minibuffers  t
+          ivy-count-format "(%d/%d) "
+     )
+    (ivy-mode 1))
 
-;; ivy uses flx for geneating candidates for large lists
-(use-package flx
-   :ensure t
-   :config
-   (setq gc-cons-threshold 20000000)
-)
+  ;; ivy uses flx for geneating candidates for large lists
+  (use-package flx
+     :ensure t
+     :config
+     (setq gc-cons-threshold 20000000))
 
-(use-package swiper
-  :ensure t
-  :delight
-)
+  (use-package swiper
+    :ensure t
+    :delight)
 #+end_src
 ** keybindings: ivy
 #+begin_src emacs-lisp
-(global-set-key "\C-s" 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "<f6>") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-y") 'counsel-yank-pop)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "C-c g") 'counsel-git)
+  (global-set-key (kbd "C-c j") 'counsel-git-grep)
+  (global-set-key (kbd "C-c k") 'counsel-ag)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 #+end_src
 
 ** ivy-hydra
 #+BEGIN_SRC emacs-lisp
-(use-package ivy-hydra
-  :ensure t
-)
+  (use-package ivy-hydra
+    :ensure t)
 #+END_SRC
 
 * larger packages
 ** Magit & Git
 *** magit setup
 #+BEGIN_SRC emacs-lisp
-(use-package magit
-  :ensure t
-  :init
-    (progn
-       ;; disable the default version control git backend
-       ;; can't disable it, because I'd like to use it in neotree & gitgutter
-       ;(setq vc-handled-backends (delq 'Git vc-handled-backends))
-       ;; enabling ivy for magit
-       (setq magit-completing-read-function 'ivy-completing-read)
-       ;; setting kbd
-       (global-set-key (kbd "C-x g") 'magit-status)
-       (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
-))
+  (use-package magit
+    :ensure t
+    :init
+      (progn
+         ;; disable the default version control git backend
+         ;; can't disable it, because I'd like to use it in neotree & gitgutter
+         ;(setq vc-handled-backends (delq 'Git vc-handled-backends))
+         ;; enabling ivy for magit
+         (setq magit-completing-read-function 'ivy-completing-read)
+         ;; setting kbd
+         (global-set-key (kbd "C-x g") 'magit-status)
+         (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
+         ))
 #+END_SRC
 
 *** DISABLED diff-hl
@@ -1800,11 +1787,10 @@ https://github.com/syohex/emacs-git-gutter
 https://github.com/nonsequitur/git-gutter-plus works also in tty.
 
 #+BEGIN_SRC emacs-lisp
-(use-package git-gutter+
-  :ensure t
-  :init
-    (global-git-gutter+-mode)
-)
+  (use-package git-gutter+
+    :ensure t
+    :init
+    (global-git-gutter+-mode))
 #+END_SRC
 
 ** YASNIPPET

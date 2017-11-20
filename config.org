@@ -206,60 +206,57 @@ In that case dh/emacs-local-dir should point to that directory, because the elpa
 and other files (recentf, savespace) should point to there as well.
 
 #+begin_src emacs-lisp
-;; check OS type
-(cond
- ((string-equal system-type "windows-nt") ; Microsoft Windows
-  (progn
-    (when (getenv "DH_EMACS_PORTABLE_DIR")
-      (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path to my portable emacs files and directories")
-      (defconst dh/emacs_is_portable t "boolean switch that reflects if emacs is used as a portable version" )
-      (defconst dh/emacs-portable-dir (expand-file-name (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path where the portable version is located if Emacs is used as a portable version" ))
-    (unless (getenv "DH_EMACS_PORTABLE_DIR")
-      (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "USERPROFILE")) "contains the path to my device specific emacs files and directories")) 
+  ;; check OS type
+  (cond
+   ((string-equal system-type "windows-nt") ; Microsoft Windows
+    (progn
+      (when (getenv "DH_EMACS_PORTABLE_DIR")
+        (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path to my portable emacs files and directories")
+        (defconst dh/emacs_is_portable t "boolean switch that reflects if emacs is used as a portable version" )
+        (defconst dh/emacs-portable-dir (expand-file-name (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path where the portable version is located if Emacs is used as a portable version" ))
+      (unless (getenv "DH_EMACS_PORTABLE_DIR")
+        (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "USERPROFILE")) "contains the path to my device specific emacs files and directories")) 
 
-    (defconst dh/user-dir (expand-file-name (getenv "USERPROFILE")) "contains the path to my real operating system user directory")
-   ))
- ;((string-equal system-type "darwin") ; Mac OS X
- ; (progn
- ;   (message "Mac OS X")
- ; ))
- ((string-equal system-type "gnu/linux") ; linux
-  (progn
-    (defconst dh/emacs-local-dir (expand-file-name ".emacs-local" (getenv "HOME")) "contains the path to my device specific emacs files and directories")
-    (defconst dh/user-dir (expand-file-name (getenv "HOME")) "contains the path to my real operating system user directory")
-  ))
-)
+      (defconst dh/user-dir (expand-file-name (getenv "USERPROFILE")) "contains the path to my real operating system user directory")
+     ))
+   ;((string-equal system-type "darwin") ; Mac OS X
+   ; (progn
+   ;   (message "Mac OS X")
+   ; ))
+   ((string-equal system-type "gnu/linux") ; linux
+    (progn
+      (defconst dh/emacs-local-dir (expand-file-name ".emacs-local" (getenv "HOME")) "contains the path to my device specific emacs files and directories")
+      (defconst dh/user-dir (expand-file-name (getenv "HOME")) "contains the path to my real operating system user directory")
+    ))
+  )
 
-;; create dh/emacs-local-dir directory if it doesn't exist
-(unless (file-directory-p dh/emacs-local-dir)
-  (make-directory dh/emacs-local-dir)
-)
+  ;; create dh/emacs-local-dir directory if it doesn't exist
+  (unless (file-directory-p dh/emacs-local-dir)
+    (make-directory dh/emacs-local-dir)
+  )
 #+end_src
 
 ** Figuring out, if I am at work 	    :location_switch:
 #+BEGIN_SRC emacs-lisp
-;; setting me-at-work to true if I am at work
-;  I can check for it later to enable/disable config parts
-;(when (or 
-;       (string= system-name "PC-1316")
-;       (string= system-name "SRV-KON-XA1") ; CITRIX-Server
-;       (string= system-name "SRV-KON-XA2") ; CITRIX-Server
-;       (string= system-name "SRV-KON-XA3")) ; CITRIX-Server
+  ;; setting me-at-work to true if I am at work
+  ;;  I can check for it later to enable/disable config parts
+  ;; when (or 
+  ;;       (string= system-name "PC-1316")
+  ;;       (string= system-name "SRV-KON-XA1") ; CITRIX-Server
+  ;;       (string= system-name "SRV-KON-XA2") ; CITRIX-Server
+  ;;       (string= system-name "SRV-KON-XA3")) ; CITRIX-Server
 
-;; will be overwritten if I am at work
-(defconst dh/location-for-frame-title (concat "@NOT AT WORK") "contains the wording if I am at work or not for the frame-title") 
-(when (or (string= (getenv "USERNAME") "HannaskeD")
-          (string= (getenv "USERNAME") "hannasked"))       
-  (message "[dh] Setting const dahan/me-at-work to true")
-  (defconst dh/me-at-work t "boolean switch for work environment")
-  ;; directly setting proxy - otherwise url-package couldn't work
-  (setq url-proxy-services
-   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-     ("http" . "192.168.179.77:8080")
-     ("https" . "192.168.179.77:8080")))
-  (defconst dh/location-for-frame-title (concat "@WORK") "contains the wording if I am at work or not for the frame-title") 
+  ;; will be overwritten if I am at work
 
-)
+  (when (or (string= (getenv "USERNAME") "HannaskeD")
+            (string= (getenv "USERNAME") "hannasked"))
+    (message "[dh] Setting const dahan/me-at-work to true")
+    (defconst dh/me-at-work t "boolean switch for work environment")
+    ;; directly setting proxy - otherwise url-package couldn't work
+    (setq url-proxy-services
+          '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+            ("http" . "192.168.179.77:8080")
+            ("https" . "192.168.179.77:8080"))))
 #+END_SRC
 ** setting dh/dropbox-dir and dh/onedrive-dir
 
@@ -317,10 +314,12 @@ and other files (recentf, savespace) should point to there as well.
 
 ** setting up UTF-8
 #+BEGIN_SRC emacs-lisp
-;; utf-8
-(prefer-coding-system 'utf-8)
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  ;; utf-8
+  (prefer-coding-system 'utf-8)
+  (when (display-graphic-p)
+    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  (set-language-environment "UTF-8")
+  (set-default-coding-systems 'utf-8)
 #+END_SRC
 ** Change yes or no to y or n
 Lazy people like me never want to type "yes" when "y" will suffice.
@@ -394,15 +393,14 @@ installs its local copies of the packages:
   	(package-install 'use-package))
 (setq use-package-verbose t)
 (setq use-package-always-ensure t) ;; install packages if not installed
+(setq use-package-always-defer t)  ;; defer packages if not :demand
 (require 'use-package)
 
 (eval-when-compile
   (require 'use-package))
-(use-package delight
-   :ensure t)
-
+(use-package delight)
+ 
 (use-package auto-compile
-  :ensure t
   :config
   (auto-compile-on-load-mode)
   (auto-compile-on-save-mode)
@@ -524,7 +522,7 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
 *** dh/open-my-init-file			       :bind:bind_documented:
 #+BEGIN_SRC emacs-lisp
 (defun dh/open-my-init-file ()
-  "Open my init file dh_init.org"
+  "Open my init file config.org"
   (interactive)
   (find-file (expand-file-name "config.org" user-emacs-directory))
 )
@@ -535,19 +533,16 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
 
 *** dh/open-my-current-taskfile			       :bind:bind_documented:
 #+BEGIN_SRC emacs-lisp
-(defun dh/open-my-current-taskfile ()
-  "Open my init file dh_init.org"
-  (interactive)
-  (when (boundp 'dh/me-at-work)
+  (defun dh/open-my-current-taskfile ()
+    "opens my current tasks orgfile"
+    (interactive)
+    (when (boundp 'dh/me-at-work)
   ;;; opening dired in !ORG
-  ;(dired org-directory)
-  
-  ;; open my BfN.org file as last command
-  (find-file (concat org-directory "/Current_Tasks.org")))
-)
+                                          ;(dired org-directory)
 
-
-(global-set-key [S-f12] 'dh/open-my-current-taskfile) 
+      ;; open my BfN.org file as last command
+      (find-file (concat org-directory "/Current_Tasks.org"))))
+  (global-set-key [S-f12] 'dh/open-my-current-taskfile) 
 #+END_SRC
 ** copied functions
 *** join lines					       :bind:bind_documented:
@@ -559,80 +554,69 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
                   (interactive)
                   (join-line -1)))
 #+end_src
-
-
-
-
-
-
-
-
-
 *** xah-make-backup-and-save
-
-
 #+begin_src emacs-lisp
-(defun xah-make-backup ()
-  "Make a backup copy of current file or dired marked files.
-If in dired, backup current file or marked files.
-The backup file name is
- ‹name›~‹timestamp›~
-example:
- file.html~20150721T014457~
-in the same dir. If such a file already exist, it's overwritten.
-If the current buffer is not associated with a file, nothing's done.
-URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
-Version 2015-10-14"
-  (interactive)
-  (let (($fname (buffer-file-name)))
-    (if $fname
-        (let (($backup-name
-               (concat $fname "~" (format-time-string "%Y%m%dT%H%M%S") "~")))
-          (copy-file $fname $backup-name t)
-          (message (concat "Backup saved at: " $backup-name)))
-      (if (string-equal major-mode "dired-mode")
-          (progn
-            (mapc (lambda ($x)
-                    (let (($backup-name
-                           (concat $x "~" (format-time-string "%Y%m%dT%H%M%S") "~")))
-                      (copy-file $x $backup-name t)))
-                  (dired-get-marked-files))
-            (message "marked files backed up"))
-        (user-error "buffer not file nor dired")))))
+  (defun xah-make-backup ()
+    "Make a backup copy of current file or dired marked files.
+  If in dired, backup current file or marked files.
+  The backup file name is
+   ‹name›~‹timestamp›~
+  example:
+   file.html~20150721T014457~
+  in the same dir. If such a file already exist, it's overwritten.
+  If the current buffer is not associated with a file, nothing's done.
+  URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
+  Version 2015-10-14"
+    (interactive)
+    (let (($fname (buffer-file-name)))
+      (if $fname
+          (let (($backup-name
+                 (concat $fname "~" (format-time-string "%Y%m%dT%H%M%S") "~")))
+            (copy-file $fname $backup-name t)
+            (message (concat "Backup saved at: " $backup-name)))
+        (if (string-equal major-mode "dired-mode")
+            (progn
+              (mapc (lambda ($x)
+                      (let (($backup-name
+                             (concat $x "~" (format-time-string "%Y%m%dT%H%M%S") "~")))
+                        (copy-file $x $backup-name t)))
+                    (dired-get-marked-files))
+              (message "marked files backed up"))
+          (user-error "buffer not file nor dired")))))
 
-(defun xah-make-backup-and-save ()
-  "backup of current file and save, or backup dired marked files.
-For detail, see `xah-make-backup'.
-If the current buffer is not associated with a file, nothing's done.
-URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
-Version 2015-10-14"
-  (interactive)
-  (if (buffer-file-name)
+  (defun xah-make-backup-and-save ()
+    "backup of current file and save, or backup dired marked files.
+  For detail, see `xah-make-backup'.
+  If the current buffer is not associated with a file, nothing's done.
+  URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
+  Version 2015-10-14"
+    (interactive)
+    (if (buffer-file-name)
+        (progn
+          (xah-make-backup)
+          (when (buffer-modified-p)
+            (save-buffer)))
       (progn
-        (xah-make-backup)
-        (when (buffer-modified-p)
-          (save-buffer)))
-    (progn
-      (xah-make-backup))))
+        (xah-make-backup))))
 #+end_src
 
 
 * General Appearance
 ** full screen, global-font-lock and no startup-message
 #+BEGIN_SRC emacs-lisp
-;;;;;
-;; general appearance
-;;;;;
+  ;;;;;
+  ;; general appearance
+  ;;;;;
 
-;;; disabling the Emacs Welcome screen
-(setq inhibit-startup-message t)
+  ;;; disabling the Emacs Welcome screen
+  (setq inhibit-startup-message t)
 
-;; turn on syntax highlighting everywhere
-(global-font-lock-mode t)
+  ;; turn on syntax highlighting everywhere
+  (global-font-lock-mode t)
 
-;; start in full screen
-;; Start maximised (cross-platf)
-(add-hook 'window-setup-hook 'toggle-frame-maximized t)
+  ;; start in full screen
+  ;; Start maximised (cross-platf)
+  (add-hook 'window-setup-hook 'toggle-frame-maximized t)
 #+END_SRC
 
 ** cursor with adaptive width
@@ -644,24 +628,20 @@ character it is under; i.e. full width of a TAB:
 
 ** smart-mode-line - initial settings
 #+BEGIN_SRC emacs-lisp
-;; smart-mode-line
-; setting the mode-line
-(use-package smart-mode-line-powerline-theme
- :ensure t)
-
-(use-package smart-mode-line
-  :ensure t
-  :init
-  (progn
-     (setq powerline-arrow-shape 'curve
-           powerline-default-separator-dir '(right . left)
-           sml/theme 'powerline
-           ;sml/shorten-modes t
-           sml/name-width 24
-           sml/mode-width 'full
-           column-number-mode t)
-     (sml/setup)
-))
+  ;; smart-mode-line
+  ;; setting the mode-line
+  (use-package smart-mode-line-powerline-theme)
+  (use-package smart-mode-line
+    :init
+    (progn
+      (setq powerline-arrow-shape 'curve
+            powerline-default-separator-dir '(right . left)
+            sml/theme 'powerline
+            ;; sml/shorten-modes t
+            sml/name-width 40
+            sml/mode-width 'full
+            column-number-mode t)
+      (sml/setup)))
 #+END_SRC
 
 ** smart-mode-line - regexp
@@ -702,56 +682,61 @@ character it is under; i.e. full width of a TAB:
     (add-to-list 'sml/replacer-regexp-list '("^H:/Privat/" ":H_PRIVAT:") t)
     (add-to-list 'sml/replacer-regexp-list '("^L:/!_Z22/DOKU/" ":L_DOKU:") t))
 #+end_src
-** whitespace
-;; use whitespace mode, and mark lines longer than 80 characters
-#+BEGIN_SRC emacs-lisp
-(use-package whitespace
-  :ensure t
-  :init
-  (progn
-       ;; use whitespace mode, and mark lines longer than 80 characters
-       (setq whitespace-style '(face empty lines-tail trailing))
-       (setq whitespace-line-column 80)
-       (global-whitespace-mode)
-))
-#+END_SRC
 ** settings for windowing system
 *** DISABLED Theme Monokai
 #+BEGIN_SRC emacs-lisp
-(use-package monokai-theme
-  :ensure t
-  :init (load-theme 'monokai t))
+  (use-package monokai-theme
+    :init (load-theme 'monokai t))
 #+END_SRC
 *** Theme Dracula
 #+BEGIN_SRC emacs-lisp
   (use-package dracula-theme
-    :ensure t
     :init (load-theme 'dracula t))
 #+END_SRC
-*** Fonts
+*** fonts & faces
+more here http://ergoemacs.org/emacs/emacs_list_and_set_font.html
+
+To find out which font-face is used for a certain char you must launch
+~what-cursor-position~ with a prefix argument: ~C-u C-x =~ or you could
+also use ~M-x describe-char~.
+
+Usually, faces inherit so I must also set other font-faces as well, e.g.
+Markdown-mode iherits from  ~fixed-pitch~ face for ~Markdown Code Face~.
+And on my Windows it's standard is courier. :-(
+
+You can see a list of all loaded faces and it's highlighting with:
+ ~M-x list-faces-display~
+
 #+BEGIN_SRC emacs-lisp
-;; setting fonts, the first find will be choosen
-(cond
- ((find-font (font-spec :name "IBM Plex Mono"))
-  (set-frame-font "IBM Plex Mono-13"))
- ((find-font (font-spec :name "CamingoCode"))
-  (set-frame-font "CamingoCode-13"))
- ((find-font (font-spec :name "Consolas"))
-  (set-frame-font "Consolas-13")))
+  ;; setting fonts, the first find will be choosen
+  (cond
+   ((find-font (font-spec :name "IBM Plex Mono"))
+    (set-frame-font "IBM Plex Mono-13")
+    (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono")
+    (set-face-attribute 'fixed-pitch-serif nil :font "IBM Plex Mono"))
+   ((find-font (font-spec :name "Consolas"))
+    (set-frame-font "Consolas-13")
+    (set-face-attribute 'fixed-pitch nil :font "Consolas")
+    (set-face-attribute 'fixed-pitch-serif nil :font "Consolas")))
 #+END_SRC
 *** frame title of Emacs
 #+begin_src emacs-lisp
-;; setting the frame title
-(setq frame-title-format
-      '("%b  -  "
-	(:eval (if (buffer-file-name)
-		   (abbreviate-file-name (buffer-file-name))
-		 "%b")) "     Emacs " emacs-version dh/location-for-frame-title))
+  ;; setting the frame title
+  (if (boundp 'dh/me-at-work)
+      (defconst dh/location-for-frame-title (concat "@WORKING") "contains the wording if I am at work or not for the frame-title") ; true
+    (defconst dh/location-for-frame-title (concat "@NOT AT WORKING") "contains the wording if I am at work or not for the frame-title") ; false
+    )
+
+  (setq frame-title-format
+        '("%b  -  "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b")) "     Emacs " emacs-version dh/location-for-frame-title))
 #+end_src
 
 *** hide the tool-bar
 #+begin_src emacs-lisp
-(tool-bar-mode -1)
+  (tool-bar-mode -1)
 #+end_src
 
 ** terminal specific settings
@@ -772,64 +757,58 @@ It must be done on frame level if you run frames in tty and gui on emacs-server.
 #+end_src
 *** hide menu bar
 #+begin_src emacs-lisp
-(unless (display-graphic-p)
- (menu-bar-mode -1))
+  (unless (display-graphic-p)
+   (menu-bar-mode -1))
 #+end_src
 
 
 * General settings
 ** some ignored file extensions for completions
 #+begin_src emacs-lisp :tangle yes
-(push ".out" completion-ignored-extensions)
-(push ".pdf" completion-ignored-extensions)
-(push ".synctex.gz" completion-ignored-extensions)
+  (push ".out" completion-ignored-extensions)
+  (push ".pdf" completion-ignored-extensions)
+  (push ".synctex.gz" completion-ignored-extensions)
 #+end_src
 ** Recent files						    :location_switch:
 #+BEGIN_SRC emacs-lisp
-(use-package recentf
-  :ensure t
-  :init
-  (progn
-       (setq recentf-max-menu-items 200)
-       (setq recentf-max-saved-items 50)
-       (setq recentf-save-file (expand-file-name ".recentf" dh/emacs-local-dir))
-       (recentf-mode 1)
-   ))  
+  (use-package recentf
+    :init
+    (progn
+      (setq recentf-max-menu-items 200)
+      (setq recentf-max-saved-items 50)
+      (setq recentf-save-file (expand-file-name ".recentf" dh/emacs-local-dir))
+      (recentf-mode 1)))  
 #+END_SRC
 ** bookmarks
 #+begin_src emacs-lisp
-       (setq bookmark-default-file (expand-file-name ".bookmarks" dh/emacs-local-dir))
+  (setq bookmark-default-file (expand-file-name ".bookmarks" dh/emacs-local-dir))
 #+end_src
 ** saveplace						    :location_switch:
 Navigates back to where you were editing a file next time you open it
 #+BEGIN_SRC emacs-lisp
-(use-package saveplace
-  :ensure t
-  :init
-  (progn
-       (setq save-place-file (expand-file-name ".places" dh/emacs-local-dir))
-       (save-place-mode 1)
-   ))
+  (use-package saveplace
+    :init
+    (progn
+      (setq save-place-file (expand-file-name ".places" dh/emacs-local-dir))
+      (save-place-mode 1)))
 #+END_SRC
 
 ** smartparens
 #+begin_src emacs-lisp
-(use-package smartparens
-  :ensure t
-  :delight
-  :init (smartparens-global-mode t))
+  (use-package smartparens
+    :delight
+    :init (smartparens-global-mode t))
 #+end_src
 ** undo-tree
 #+begin_src emacs-lisp
-;; Undo tree mode - visualize your undos and branches
-(use-package undo-tree
-  :ensure t
-  :delight
-  :init
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+  ;; Undo tree mode - visualize your undos and branches
+  (use-package undo-tree
+    :delight
+    :init
+    (progn
+      (global-undo-tree-mode)
+      (setq undo-tree-visualizer-timestamps t)
+      (setq undo-tree-visualizer-diff t)))
 #+end_src
 ** neotree
 A pretty cool file tree plugin. I enabled Projectile & VC (version control 
@@ -851,95 +830,86 @@ Here are some more shortcuts for it:
 https://github.com/jaypei/emacs-neotree
 
 #+BEGIN_SRC emacs-lisp
-(use-package neotree
-  :ensure t
-  :bind (("<f8>" . neotree-project-dir))
-  :init
-   (progn
+  (use-package neotree
+    :bind (("<f8>" . neotree-project-dir))
+    :init
+    (progn
       ;; Every time when the neotree window is opened, it will try to find current
       ;; file and jump to node.
       (setq-default neo-smart-open t)
       ;; Do not allow neotree to be the only open window
       (setq-default neo-dont-be-alone t))
-  :config
-  (progn
-    (setq neo-theme 'nerd) ; 'classic, 'nerd, 'ascii, 'arrow
+    :config
+    (progn
+      (setq neo-theme 'nerd)           ; 'classic, 'nerd, 'ascii, 'arrow
 
-    ; When running ‘projectile-switch-project’ (C-c p p), ‘neotree’ will change root automatically.
-    (setq projectile-switch-project-action 'neotree-projectile-action)
+      ;;  When running ‘projectile-switch-project’ (C-c p p), ‘neotree’ will change root automatically.
+      ;; (setq projectile-switch-project-action 'neotree-projectile-action)
 
-    ;; vc-backed for git must be enabled for the following vc integration
-    (setq neo-vc-integration '(face char))
-    ;; Patch to fix vc integration
-    (defun neo-vc-for-node (node)
+      ;; vc-backed for git must be enabled for the following vc integration
+      (setq neo-vc-integration '(face char))
+      ;; Patch to fix vc integration
+      (defun neo-vc-for-node (node)
         (let* ((backend (ignore-errors
-                    (vc-backend node)))
-               (vc-state (when backend (vc-state node backend)))
-              )
-        (cons (cdr (assoc vc-state neo-vc-state-char-alist))
-              (cl-case vc-state
-                (up-to-date       neo-vc-up-to-date-face)
-                (edited           neo-vc-edited-face)
-                (needs-update     neo-vc-needs-update-face)
-                (needs-merge      neo-vc-needs-merge-face)
-                (unlocked-changes neo-vc-unlocked-changes-face)
-                (added            neo-vc-added-face)
-                (removed          neo-vc-removed-face)
-                (conflict         neo-vc-conflict-face)
-                (missing          neo-vc-missing-face)
-                (ignored          neo-vc-ignored-face)
-                (unregistered     neo-vc-unregistered-face)
-                (user             neo-vc-user-face)
-                (t                neo-vc-default-face)))))
-   )
-   (defun neotree-project-dir ()
-    "Open NeoTree using the git root."
-    (interactive)
-    (let ((project-dir (projectile-project-root))
-          (file-name (buffer-file-name)))
-      (neotree-toggle)
-      (if project-dir
-          (if (neo-global--window-exists-p)
-              (progn
-                (neotree-dir project-dir)
-                (neotree-find file-name)))
-        (message "Could not find git project root."))))
-)
+                          (vc-backend node)))
+               (vc-state (when backend (vc-state node backend))))
+          (cons (cdr (assoc vc-state neo-vc-state-char-alist))
+                (cl-case vc-state
+                  (up-to-date neo-vc-up-to-date-face)
+                  (edited neo-vc-edited-face)
+                  (needs-update neo-vc-needs-update-face)
+                  (needs-merge neo-vc-needs-merge-face)
+                  (unlocked-changes neo-vc-unlocked-changes-face)
+                  (added neo-vc-added-face)
+                  (removed neo-vc-removed-face)
+                  (conflict neo-vc-conflict-face)
+                  (missing neo-vc-missing-face)
+                  (ignored neo-vc-ignored-face)
+                  (unregistered neo-vc-unregistered-face)
+                  (user neo-vc-user-face)
+                  (t neo-vc-default-face))))))
+    (defun neotree-project-dir ()
+      "Open NeoTree using the git root."
+      (interactive)
+      (let ((project-dir (projectile-project-root))
+            (file-name (buffer-file-name)))
+        (neotree-toggle)
+        (if project-dir
+            (if (neo-global--window-exists-p)
+                (progn
+                  (neotree-dir project-dir)
+                  (neotree-find file-name)))
+          (message "Could not find git project root.")))))
 #+END_SRC
 ** ace-window							       :bind:
 When there are two windows, ace-window will call other-window. If there are more, each window will have its first character highlighted. Pressing that character will switch to that window. Note that, unlike ace-jump-mode, the point position will not be changed: it's the same behavior as that of other-window. The windows are ordered top-down, left-to-right. This means that if you remember your window layouts, you can switch windows without even looking at the leading char. For instance, the top left window will always be 1.
 - You can swap windows by calling ace-window with a prefix argument C-u.
 - You can delete the selected window by calling ace-window with a double prefix argument, i.e. C-u C-u.
 #+begin_src emacs-lisp
-(use-package ace-window
-  :ensure t
-  :bind ("C-x o" . ace-window) 
-  )
+  (use-package ace-window
+    :bind ("C-x o" . ace-window))
 #+end_src
 ** ace-link					       :bind:bind_documented:
  jump to a link in an Info-mode or help-mode or org-mode or eww-mode buffer, you can tab through the links to select the one you want. This is an O(N) operation, where the N is the amount of links. This package turns this into an O(1) operation, or at least O(log(N)) if you manage to squeeze thousands of links in one screen. It does so by assigning a letter to each link using ace-jump-mode.
 #+begin_src emacs-lisp
-(use-package ace-link
-  :ensure t
-  :init
-    (progn 
-       (ace-link-setup-default)
-       (define-key org-mode-map (kbd "M-o") 'ace-link-org)))
+  (use-package ace-link
+    :init
+    (progn
+      (ace-link-setup-default)
+      (define-key org-mode-map (kbd "M-o") 'ace-link-org)))
 #+end_src
 ** Avy
 Avy is a replacement for ace-jump mode which is an implementation of easymotion, a vim plugin.
 #+begin_src emacs-lisp
-(use-package avy
-  :ensure t
-  :config
-  (avy-setup-default))
+  (use-package avy
+    :config
+    (avy-setup-default))
 #+end_src
 ** iedit					       :bind:bind_documented:
 Iedit is interactive edit, where if you are on a word and you enter iedit-mode, you're basically editing every instance of that word/variable in the buffer.
 #+BEGIN_SRC emacs-lisp
-(use-package iedit
-  :ensure t
-  :bind ("C-;" . iedit-mode))
+  (use-package iedit
+    :bind ("C-;" . iedit-mode))
 #+END_SRC
 ** multiple-cursors				       :bind:bind_documented:
 When you have an active region that spans multiple lines, the C-S-c C-S-c will add a cursor to each line.
@@ -951,22 +921,18 @@ To get out of multiple-cursors-mode, press <return> or C-g. The latter will firs
 before disabling multiple cursors. If you want to insert a newline in multiple-cursors-mode, use C-j.
 
 #+begin_src emacs-lisp
-(use-package multiple-cursors
-   :ensure t
-   :bind ( ;("C-S-c C-S-c" . mc/edit-lines)
+  (use-package multiple-cursors
+    :bind ( ;; ("C-S-c C-S-c" . mc/edit-lines)
            ("C->" . mc/mark-next-like-this)
-           ("C-<" . mc/mark-previous-like-this)  
-           ;("C-c C-<" . mc/mark-all-like-this)
-           ("C-S-<mouse-1>". mc/add-cursor-on-click) 
-         )
- )
+           ("C-<" . mc/mark-previous-like-this)
+           ;; ("C-c C-<" . mc/mark-all-like-this)
+           ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
 #+end_src
 ** move-text					       :bind:bind_documented:
 #+begin_src emacs-lisp
-;; move-text - allows to move region or line with M-up or M-down
-(use-package move-text
-  :ensure t
-  :init (move-text-default-bindings))
+  ;; move-text - allows to move region or line with M-up or M-down
+  (use-package move-text
+    :init (move-text-default-bindings))
 #+end_src
 ** hungrydelete
 Delete all whitespace in one direction.
@@ -974,7 +940,6 @@ Delete all whitespace in one direction.
   ;; hungry-delete
   ; it makes backspace and C-d erase all consecutive white space in a given direction (instead of just one).
   (use-package hungry-delete
-    :ensure t
     :delight
     :init (global-hungry-delete-mode))
 #+end_src
@@ -985,7 +950,6 @@ Rainbow Delimters paints delimiters, e.g. parenthese in different colours.
 #+begin_src emacs-lisp
   ;; rainbow-delimiters - colored delimeters e.g. parentheses
   (use-package rainbow-delimiters
-    :ensure t
     :delight
     :init
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -1002,7 +966,6 @@ Rainbow Delimters paints delimiters, e.g. parenthese in different colours.
 https://github.com/justbur/emacs-which-key
 #+begin_src emacs-lisp
   (use-package which-key
-    :ensure t
     :delight
     :config
     (which-key-mode)
@@ -1015,9 +978,8 @@ https://github.com/magnars/expand-region.el
 #+begin_src emacs-lisp
   ; expand the marked region in semantic increments (negative prefix to reduce region)
   (use-package expand-region
-     :ensure t
-     :config
-     (global-set-key (kbd "C-=") 'er/expand-region))
+    :config
+    (global-set-key (kbd "C-=") 'er/expand-region))
 #+end_src
 
 
@@ -1029,7 +991,6 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
   (use-package "eldoc"
     :delight
     :commands turn-on-eldoc-mode
-    :defer t
     :init
     (progn
       (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -1044,7 +1005,6 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 
 #+begin_src emacs-lisp
   (use-package lispy
-    :ensure t
     :init
     (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
 #+end_src
@@ -1055,17 +1015,13 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
 e.g. used by emacs-racer (rust)
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :ensure t
     :delight
-    :defer t
     :config (global-company-mode))
 #+END_SRC
 ** company-quickhelp
 Provides e.g. in elpy a quickhelp about the function. 
 #+BEGIN_SRC emacs-lisp
   (use-package company-quickhelp
-    :ensure t
-    :delight
     :init
     (company-quickhelp-mode 1))
 #+END_SRC
@@ -1075,7 +1031,6 @@ Provides e.g. in elpy a quickhelp about the function.
   (use-package company-auctex
     :if (boundp 'dh/not-at-work)
     :delight
-    :ensure t
     :init
     (progn
       (company-auctex-init)))
@@ -1084,12 +1039,12 @@ Provides e.g. in elpy a quickhelp about the function.
 ** json
 #+BEGIN_SRC emacs-lisp
   (use-package json-mode
-    :ensure t)
+    :if (boundp 'dh/not-at-work))
 #+END_SRC
 ** yaml
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :ensure t
+    :if (boundp 'dh/not-at-work)
     :init
     (progn
       (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
@@ -1098,18 +1053,31 @@ Provides e.g. in elpy a quickhelp about the function.
 #+begin_src emacs-lisp
   ;; emmet css selectors for Markup
   (use-package emmet-mode
-    :ensure t
+    :if (boundp 'dh/not-at-work)
     :init
     (progn
       (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
       (add-hook 'html-mode-hook 'emmet-mode)
-      (add-hook 'css-mode-hook  'emmet-mode)))
+      (add-hook 'css-mode-hook 'emmet-mode)))
 #+end_src
 ** bat-mode Windows Batch files
 #+begin_src emacs-lisp
   ;; bat-mode - for syntax highlighting of batch files
   (add-to-list 'auto-mode-alist '("\\.bat$" . bat-mode))
 #+end_src
+** whitespace
+use whitespace mode, and mark lines longer than 80 characters. Not enabled per
+default. Either as hook, e.g. markdown-mode or manually enabled
+#+BEGIN_SRC emacs-lisp
+  (use-package whitespace
+    :init
+    (progn
+      ;; use whitespace mode, and mark lines longer than 80 characters
+      (setq whitespace-style '(face empty lines-tail trailing))
+      (setq whitespace-line-column 80)
+      ;; (global-whitespace-mode)
+))
+#+END_SRC
 ** markdown-mode
 One of my most used packages is Markdown-Mode combined with Pandoc-Mode. 
 
@@ -1120,7 +1088,6 @@ markup - that is bound to F11.
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
-    :ensure t
     :commands (markdown-mode gfm-mode)
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
@@ -1133,8 +1100,10 @@ markup - that is bound to F11.
                                           ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
     ;; meta element is necessary that utf-8 umlauts are displayed correctly in the browser
     (setq markdown-xhtml-header-content "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />")
-    ;; enable org-table mode in markdown
-    (add-hook 'markdown-mode-hook 'turn-on-orgtbl))
+    ;; enable org-table mode in markdown-mode
+    (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
+    ;; enable whitespace- mode in markdown-mode
+    (add-hook 'markdown-mode-hook 'whitespace-mode))
 #+end_src
 
 ** pandoc
@@ -1146,7 +1115,6 @@ markup - that is bound to F11.
 
 
   (use-package pandoc-mode
-    :ensure t
     :init
     (progn
       (add-hook 'markdown-mode-hook 'pandoc-mode)
@@ -1158,7 +1126,6 @@ markup - that is bound to F11.
 #+begin_src emacs-lisp
   (use-package textile-mode
     :if (boundp 'dh/not-at-work)
-    :ensure t
     :init
     (progn
       (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))))
@@ -1199,7 +1166,6 @@ It's already built in and no external package.
 #+begin_src emacs-lisp
   (use-package tex-site                   ; auctex
     :if (boundp 'dh/not-at-work)
-    :defer t
     :ensure auctex
                                           ;:load-path "site-lisp/auctex/"
     :mode ("\\.tex\\'" . TeX-latex-mode)
@@ -1226,7 +1192,6 @@ Enabling rust-mode for syntax highlighting
 #+BEGIN_SRC emacs-lisp
   (use-package rust-mode
     :if (boundp 'dh/not-at-work)
-    :ensure t
     :mode ("\\.rs\\'" . rust-mode)
     :config
     (setq rust-format-on-save t) ; enabling running rustfmt automatically on save
@@ -1238,7 +1203,6 @@ rust-racer for autocompletion
 #+BEGIN_SRC emacs-lisp
   (use-package racer
     :if (boundp 'dh/not-at-work)
-    :ensure t
     :init
     (progn
       (add-hook 'rust-mode-hook #'racer-mode)
@@ -1255,7 +1219,6 @@ flycheck-rust
 #+begin_src emacs-lisp
   (use-package flycheck-rust
     :if (boundp 'dh/not-at-work)
-    :ensure t
     :init
     (progn (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 #+end_src
@@ -1263,8 +1226,7 @@ flycheck-rust
 ** TOML used by Rust cargo					:not_at_work:
 #+BEGIN_SRC emacs-lisp
   (use-package toml-mode
-    :if (boundp 'dh/not-at-work)
-    :ensure t)
+    :if (boundp 'dh/not-at-work))
 #+END_SRC
 
 ** Python
@@ -1273,8 +1235,7 @@ lpy by Abo Abo & company-jedi
 *** DISABLED lpy
 #+BEGIN_SRC emacs-lisp
   (use-package lpy
-    :if (boundp 'dh/not-at-work)
-    :ensure t)
+    :if (boundp 'dh/not-at-work))
 #+END_SRC
 
 *** company-jedi
@@ -1298,8 +1259,7 @@ company-jedi requires > pip install sexpdata epc virtualenv
 https://github.com/abo-abo/hydra
 https://github.com/abo-abo/hydra/wiki
 #+BEGIN_SRC emacs-lisp
-(use-package hydra
-  :ensure t)
+  (use-package hydra)
 #+END_SRC
 
 ** own Hydras
@@ -1495,25 +1455,23 @@ Links, footnotes  C-c C-a    _L_: link          _U_: uri        _F_: footnote   
 A simple hydra that displays my hydras or other useful commands.
 
 #+BEGIN_SRC emacs-lisp
-(defhydra dh-hydra-info-help (:color blue
-                            :columns 3)
-  "dh - useful info"
-  ;("C-<f1>" 'dh-hydra-info-help/body "info help (hydra)")
-  ("S-<F1>" 'dh/open-my-init-file "open dh_init.org")
-  ("<F12>" 'dh/open-sys-file-manager "open current directory in explorer")
-  ("C-<F12>" 'xah-make-backup-and-save "make a backupfile for the current file")
-  ("S-<F12>" 'dh/open-my-current-taskfile "open Current_Tasks.org")
-  ("C-<F2>" 'dh-hydra-zoom/body "zoom (hydra)")
+  (defhydra dh-hydra-info-help (:color blue
+                                       :columns 3)
+    "dh - useful info"
+    ("S-<F1>" 'dh/open-my-init-file "open config.org")
+    ("<F12>" 'dh/open-sys-file-manager "open current directory in explorer")
+    ("C-<F12>" 'xah-make-backup-and-save "make a backupfile for the current file")
+    ("S-<F12>" 'dh/open-my-current-taskfile "open Current_Tasks.org")
+    ("C-<F2>" 'dh-hydra-zoom/body "zoom (hydra)")
 
-  ("<F10>" 'dh-vergabesnippets-main/body "Vergabesnippets (hydra)")
-  ("<F11>" 'dh-hydra-markdown-mode/body "useful markdown commands (hydra)")
-  ("S-<F11>" 'dh-hydra-modes/body "mode switching (hydra)")
-  ("C-x SPC" 'dh-hydra-rectangle/body "rectangle (hydra)")
-  
-  ("q" nil "cancel"))
+    ("<F10>" 'dh-vergabesnippets-main/body "Vergabesnippets (hydra)")
+    ("<F11>" 'dh-hydra-markdown-mode/body "useful markdown commands (hydra)")
+    ("S-<F11>" 'dh-hydra-modes/body "mode switching (hydra)")
+    ("C-x SPC" 'dh-hydra-rectangle/body "rectangle (hydra)")
 
-(global-set-key [C-f1] 'dh-hydra-info-help/body)
+    ("q" nil "cancel"))
 
+  (global-set-key [C-f1] 'dh-hydra-info-help/body)
 #+END_SRC
 
 ** copied Hydras
@@ -1682,11 +1640,9 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
   ;; if loaded from MELPA, than I should load counsel first
 
   (use-package counsel
-    :ensure t
-    :delight)
+     :delight)
 
   (use-package ivy
-    :ensure t
     :delight
     :config
     ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
@@ -1698,12 +1654,10 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 
   ;; ivy uses flx for geneating candidates for large lists
   (use-package flx
-     :ensure t
      :config
      (setq gc-cons-threshold 20000000))
 
   (use-package swiper
-    :ensure t
     :delight)
 #+end_src
 ** keybindings: ivy
@@ -1729,8 +1683,7 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 
 ** ivy-hydra
 #+BEGIN_SRC emacs-lisp
-  (use-package ivy-hydra
-    :ensure t)
+  (use-package ivy-hydra)
 #+END_SRC
 
 * larger packages
@@ -1738,18 +1691,16 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 *** magit setup
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :ensure t
     :init
-      (progn
-         ;; disable the default version control git backend
-         ;; can't disable it, because I'd like to use it in neotree & gitgutter
-         ;(setq vc-handled-backends (delq 'Git vc-handled-backends))
-         ;; enabling ivy for magit
-         (setq magit-completing-read-function 'ivy-completing-read)
-         ;; setting kbd
-         (global-set-key (kbd "C-x g") 'magit-status)
-         (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
-         ))
+    (progn
+      ;; disable the default version control git backend
+      ;; can't disable it, because I'd like to use it in neotree & gitgutter
+      ;; (setq vc-handled-backends (delq 'Git vc-handled-backends))
+      ;; enabling ivy for magit
+      (setq magit-completing-read-function 'ivy-completing-read)
+      ;; setting kbd
+      (global-set-key (kbd "C-x g") 'magit-status)
+      (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)))
 #+END_SRC
 
 *** DISABLED diff-hl
@@ -1760,14 +1711,11 @@ type: ~(diff-hl-flydiff-mode)~
 https://github.com/dgutov/diff-hl
 
 #+BEGIN_SRC emacs-lisp
-(use-package diff-hl
-  :if (boundp 'dh/not-at-work)
-  :ensure t
-  :init
+  (use-package diff-hl
+    :if (boundp 'dh/not-at-work)
+    :init
     (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-    (global-diff-hl-mode t)
-
-)
+    (global-diff-hl-mode t))
 #+END_SRC
 
 *** DISABLED git-gutter
@@ -1776,11 +1724,9 @@ Especially it would be possible to change the gutter colors and chars.
 https://github.com/syohex/emacs-git-gutter
 
 #+BEGIN_SRC emacs-lisp
-(use-package git-gutter
-  :ensure t
-  :init
-    (global-git-gutter-mode +1)
-)
+  (use-package git-gutter
+    :init
+    (global-git-gutter-mode 1))
 #+END_SRC
 
 *** git-gutter+
@@ -1788,7 +1734,6 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
 
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter+
-    :ensure t
     :init
     (global-git-gutter+-mode))
 #+END_SRC
@@ -1796,7 +1741,6 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
 ** YASNIPPET
 #+begin_src emacs-lisp
   (use-package yasnippet
-    :ensure t
     :delight
     :init
     (progn
@@ -1816,21 +1760,14 @@ A powerful project management framework for emacs.
 https://github.com/bbatsov/projectile
 
 #+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :ensure t
-
-
-
-)
+  (use-package projectile)
 #+END_SRC
 
 *** counsel-projectile
 #+BEGIN_SRC emacs-lisp
-(use-package counsel-projectile
-  :ensure t
-  :init
-    (counsel-projectile-on)
-)
+  (use-package counsel-projectile
+    :init
+    (counsel-projectile-on))
 #+END_SRC
 
 ** Org
@@ -1838,7 +1775,6 @@ https://github.com/bbatsov/projectile
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :ensure t
     :bind (("C-c l" . org-store-link)
            ("C-c c" . org-capture)
            ("C-c a" . org-agenda)
@@ -1849,42 +1785,41 @@ https://github.com/bbatsov/projectile
            ("C-c e" . org-edit-src-exit)  ; original mapping C-c '
            )
     :mode ("\\.org$" . org-mode)
-    :config)  
+    :config)
 #+END_SRC
 
 *** Setting the start visibility
 #+BEGIN_SRC emacs-lisp
-  ;(setq org-set-startup-visibility "fold")
-  (setq org-startup-folded "content")  ;; all headlines
+  (setq org-set-startup-visibility "fold")
+  ;; (setq org-startup-folded "content") ; all headlines
 #+END_SRC
 
 *** Fontify code in org code blocks
 Source: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
 #+BEGIN_SRC emacs-lisp
-;; fontify code in code blocks
-
-(setq org-src-fontify-natively t)
-
+  ;; fontify code in code blocks
+  (setq org-src-fontify-natively t)
 #+END_SRC
 
 *** Fixing YASnippets tab in Org-Mode
 http://orgmode.org/manual/Conflicts.html
 #+BEGIN_SRC emacs-lisp
-;; fixing tab-binding for YASnippets in Org-Mode
-(add-hook 'org-mode-hook
-               (lambda ()
-                      (org-set-local 'yas/trigger-key [tab])
-                      (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
+  ;; fixing tab-binding for YASnippets in Org-Mode
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-set-local 'yas/trigger-key [tab])
+              (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
 #+END_SRC
 
-*** Enabling worf-mode
+*** worf-mode
 worf is like Emacs speedkeys but like Vi and mady by abo_abo
 http://oremacs.com/worf/README.html
 https://github.com/abo-abo/worf
+
+Pretty cool mode, but you have to learn and use it.
 #+BEGIN_SRC emacs-lisp
-(use-package worf
-  :ensure t
-  :init (add-hook 'org-mode-hook 'worf-mode))
+  (use-package worf
+    :init (add-hook 'org-mode-hook 'worf-mode))
 #+END_SRC
 
 *** org-templates
@@ -1914,87 +1849,7 @@ I use LaTeX less than Emacs Lisp blocks, so I redefine <l to insert a Lisp block
   (add-to-list 'org-structure-template-alist '("u" "#+BEGIN_SRC emacs-lisp\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n#+END_SRC" "<src lang=\"emacs-lisp\">\n(use-package ?\n  :if (boundp 'dh/not-at-work)\n  :ensure t\n  :bind ()\n  :mode ()\n  :config ()\n  :init\n    \n)\n</src>"))
 #+END_SRC
 
-*** org-mode at work
-#+BEGIN_SRC emacs-lisp
-  ;; initialize my work config
-  (when (boundp 'dh/me-at-work)
-    (message "[dh] Setting work specific settings for org-mode")
-    (setq org-directory "I:/DATEN/_Daniel/!ORG")
-    (setq org-default-notes-file (concat org-directory "/Notes_Verschiedenes.org"))
-    (setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m)
-                          ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" . 102)
-                          ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
-
-    (setq org-todo-keywords
-          '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
-            (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
-            (sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
-            (sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
-
-
-
-    ;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
-    ;; colors - http://raebear.net/comp/emacscolors.html
-
-    ;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
-
-
-    (setq org-todo-keyword-faces
-          '(
-                                          ; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
-            ("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
-            ("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
-            ("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
-            ("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
-
-                                          ; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
-            ("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
-            ("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
-            ("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
-
-            ;; ("TODO" . (:foreground ,red :weight bold))
-            ;; ("WAITING" . (:foreground ,orange :weight bold))
-            ;; ("DELEGATED" . (:foreground ,yellow :weight bold))
-            ;; ("DONE" . (:foreground ,green :weight bold))
-            ;; ("CANCELLED" . (:foreground ,grey :weight bold))
-            ;; (:slant italic)
-
-            ("O_NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
-            ("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
-            ("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
-            ("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
-            ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
-            ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
-            ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
-            ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
-            ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
-            ("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
-
-            ("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
-            ("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
-            ("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
-            ("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
-            ("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
-            ("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
-            ("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
-
-
-            ;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
-            ;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
-            ;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
-            ;; ("DONE" . (:foreground "LimeGreen" :weight bold))
-            ;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
-            ))
-
-    (setq org-priority-faces
-          '(
-            (?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
-            (?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
-            (?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
-            ))) ;; end_of_ (when (boundp 'dh/me-at-work)
-#+END_SRC
-
-*** Fontify done checkbox items in org-mode
+*** Fontify done checkbox items in orgmode
 Code based on https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-org-mode.html
 - [ ] category :: xxxx
 #+begin_src emacs-lisp
@@ -2004,7 +1859,89 @@ Code based on https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-
    'append)
 #+end_src
 
-*** org-mode at home
+*** orgmode at work
+#+BEGIN_SRC emacs-lisp
+    ;; initialize my work config
+    (when (boundp 'dh/me-at-work)
+      (message "[dh] Setting work specific settings for org-mode")
+      (setq org-directory "I:/DATEN/_Daniel/!ORG")
+      (setq org-default-notes-file (concat org-directory "/Notes_Verschiedenes.org"))
+      (setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m)
+                            ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" . 102)
+                            ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
+
+      (setq org-todo-keywords
+            '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
+              (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_IN_BIDDING(B!)" "O_IN_FORMAL_BIDDING(F!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "O_UPLOAD_TO_VIBE(V!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
+              (sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
+              (sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
+
+
+      ;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
+      ;; colors - http://raebear.net/comp/emacscolors.html
+
+      ;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
+
+
+      (setq org-todo-keyword-faces
+            '(
+                                          ; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
+              ("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
+              ("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
+              ("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
+              ("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
+
+                                          ; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
+              ("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
+              ("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
+              ("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
+
+              ;; ("TODO" . (:foreground ,red :weight bold))
+              ;; ("WAITING" . (:foreground ,orange :weight bold))
+              ;; ("DELEGATED" . (:foreground ,yellow :weight bold))
+              ;; ("DONE" . (:foreground ,green :weight bold))
+              ;; ("CANCELLED" . (:foreground ,grey :weight bold))
+              ;; (:slant italic)
+
+              ("O_NEW" . (:foreground "#FD5FF0" :weight bold)) ; monokai-magenta
+              ("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+              ("O_IN_BIDDING" . (:foreground "#F92672" :weight bold)) ; monokai-red
+              ("O_IN_FORMAL_BIDDING" . (:foreground "#F92672" :weight bold)) ; monokai-red
+              ("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
+              ("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
+              ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
+              ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
+              ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
+              ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
+              ("O_UPLOAD_TO_VIBE" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
+              ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
+              ("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+              ("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
+              ("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+              ("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
+              ("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
+              ("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
+              ("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
+              ("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+
+              ;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
+              ;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
+              ;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
+              ;; ("DONE" . (:foreground "LimeGreen" :weight bold))
+              ;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
+              ))
+
+      (setq org-priority-faces
+            '(
+              (?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
+              (?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
+              (?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
+              ))) ;; end_of_ (when (boundp 'dh/me-at-work)
+#+END_SRC
+
+*** orgmode at home
 currently empty
 
 

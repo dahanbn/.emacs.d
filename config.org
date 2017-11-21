@@ -1771,7 +1771,7 @@ https://github.com/bbatsov/projectile
 #+END_SRC
 
 ** Org
-*** loading latest org-mode
+*** loading org-mode
 
 #+BEGIN_SRC emacs-lisp
   (use-package org
@@ -1787,6 +1787,35 @@ https://github.com/bbatsov/projectile
     :mode ("\\.org$" . org-mode)
     :config)
 #+END_SRC
+
+*** customizing org-faces
+**** org-headings
+
+#+begin_src emacs-lisp
+  (cond
+   ((find-font (font-spec :name "IBM Plex Sans"))
+    (set-face-attribute 'org-level-1 nil :font "IBM Plex Sans" :height 1.3)
+    (set-face-attribute 'org-level-2 nil :font "IBM Plex Sans" :height 1.2)
+    (set-face-attribute 'org-level-3 nil :font "IBM Plex Sans" :height 1.2)
+    (set-face-attribute 'org-level-4 nil :font "IBM Plex Sans" :height 1.1)
+    (set-face-attribute 'org-level-5 nil :font "IBM Plex Sans")
+    (set-face-attribute 'org-level-6 nil :font "IBM Plex Sans")
+    (set-face-attribute 'org-level-7 nil :font "IBM Plex Sans")
+    (set-face-attribute 'org-level-8 nil :font "IBM Plex Sans")))
+#+end_src
+
+**** DISABLED org-default
+Now we can have a look at org-default.
+
++ *bold*, /italics/, _underlined_, +strike-through+
++ =verbatim= verbatim
++ ~code01l~ code 01l
+
+#+begin_src emacs-lisp
+  (cond
+   ((find-font (font-spec :name "IBM Plex Sans"))
+    (set-face-attribute 'org-default nil :font "IBM Plex Sans")))
+#+end_src
 
 *** Setting the start visibility
 #+BEGIN_SRC emacs-lisp

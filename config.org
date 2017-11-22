@@ -966,7 +966,7 @@ Rainbow Delimters paints delimiters, e.g. parenthese in different colours.
     :ensure t)
 #+end_src
 
-** Which-Key
+** which-key
 https://github.com/justbur/emacs-which-key
 #+begin_src emacs-lisp
   (use-package which-key
@@ -1604,7 +1604,7 @@ _h_   _l_   _o_k        _y_ank
 (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
 
 #+END_SRC
-*** Zoom - text-scale				  :hydrabind:hydradocumented:
+*** Zoom - text-scale 				  :hydrabind:hydradocumented:
 #+BEGIN_SRC emacs-lisp
 (defhydra dh-hydra-zoom (:hint nil)
   "

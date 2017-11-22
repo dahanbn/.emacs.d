@@ -40,6 +40,7 @@ Nützliche Configs im WWW:
 - http://doc.norang.ca/org-mode.html
 - http://pages.sachachua.com/.emacs.d/Sacha.html
 - https://github.com/novoid/dot-emacs
+- https://github.com/purcell/emacs.d
 
 - https://github.com/grettke/help
 

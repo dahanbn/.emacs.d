@@ -151,6 +151,9 @@ To edit various table entries I can use multiple cursors or macros F3 F4
 | S-F12            | dh/open-my-current-taskfile    | opens my current-tasks.org at work                                                                      | Files       | dh/custom        |      |          |
 | C-F12            | xah-make-backup                | make a backup of the current file or in dired selected files                                            | Files       | dh/custom        |      |          |
 | F8               | neotree-project-dir            | opens neotree                                                                                           | Files       | neotree          |      |          |
+| C-t              | shell-pop                      | opens a shell inside emacs (Win: eshell, Linux: bash)                                                   | Tools       | shell-pop        |      |          |
+|                  |                                |                                                                                                         |             |                  |      |          |
+|------------------+--------------------------------+---------------------------------------------------------------------------------------------------------+-------------+------------------+------+----------|
 
 
 
@@ -762,7 +765,7 @@ It must be done on frame level if you run frames in tty and gui on emacs-server.
 #+end_src
 
 
-* General settings
+* General settings & packages
 ** some ignored file extensions for completions
 #+begin_src emacs-lisp :tangle yes
   (push ".out" completion-ignored-extensions)
@@ -980,6 +983,27 @@ https://github.com/magnars/expand-region.el
   (use-package expand-region
     :config
     (global-set-key (kbd "C-=") 'er/expand-region))
+#+end_src
+
+** shell-pop
+Bind ~C-t~ to open a shell-popup inside emacs. On Linux it will use ~/bin/bash~ 
+and on Windows it will use ~eshell~.
+
+Idea: http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/
+#+begin_src emacs-lisp
+  (use-package shell-pop
+    :bind (("C-t" . shell-pop))
+    :config
+
+    (if (string-equal system-type "gnu/linux")
+        (progn                            ; true
+          (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+          (setq shell-pop-term-shell "/bin/bash"))
+      (progn                              ; false
+        (setq shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda () (eshell)))))))
+
+    ;; need to do this manually or not picked up by `shell-pop'
+    (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 #+end_src
 
 

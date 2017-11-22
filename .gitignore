@@ -13,8 +13,10 @@
 # not the folder nor the content of
 # auto-save-list
 # server
+# eshell
 auto-save-list
 server
+eshell
 
 # don't track config.el - it's auto-generated
 config.el

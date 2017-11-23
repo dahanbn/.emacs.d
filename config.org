@@ -2011,7 +2011,7 @@ currently empty
   ; LAST COMMAND at work
   (when (boundp 'dh/me-at-work)
     ;; open my BfN.org file as last command
-    (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-direc)))
+    (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-directory)))
 #+END_SRC
 
 ** Debugging off

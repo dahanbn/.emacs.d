@@ -523,31 +523,33 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
 (global-set-key [f12]         'dh/open-sys-file-manager)        ; F12 - Open Explorer for the current file path)
 
 #+END_SRC
-*** dh/open-my-init-file			       :bind:bind_documented:
-#+BEGIN_SRC emacs-lisp
-(defun dh/open-my-init-file ()
-  "Open my init file config.org"
-  (interactive)
-  (find-file (expand-file-name "config.org" user-emacs-directory))
-)
+*** dh/open-file-in-emacs
+#+begin_src emacs-lisp
+  (defun dh/open-file-in-emacs (file)
+    "opens a file in a new buffer in Emacs.
 
-(global-set-key [S-f1]         'dh/open-my-init-file)  
-
-#+END_SRC
-
-*** dh/open-my-current-taskfile			       :bind:bind_documented:
-#+BEGIN_SRC emacs-lisp
-  (defun dh/open-my-current-taskfile ()
-    "opens my current tasks orgfile"
+    Simple function that checks if a file exists
+    and opens it in Emacs via find-file."
     (interactive)
-    (when (boundp 'dh/me-at-work)
-  ;;; opening dired in !ORG
-                                          ;(dired org-directory)
+    (if (file-exists-p file)
+        (find-file file)                  ; true
+      (message "Error: Couldn't find %S" file)
+      ))
 
-      ;; open my BfN.org file as last command
-      (find-file (concat org-directory "/Current_Tasks.org"))))
-  (global-set-key [S-f12] 'dh/open-my-current-taskfile) 
-#+END_SRC
+  ;; various keybindings to open commonly used files
+  (global-set-key (kbd "S-<f1>")
+                  (lambda () (interactive)
+                    (dh/open-file-in-emacs (expand-file-name "config.org" user-emacs-directory))))
+
+  (global-set-key (kbd "M-<f1>")
+                    (lambda () (interactive)
+                      (dh/open-file-in-emacs (expand-file-name "elisp-playground.org" user-emacs-directory))))
+
+  (global-set-key (kbd "S-<f12>")
+                    (lambda () (interactive)
+                      (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-directory))))
+
+#+end_src
 ** copied functions
 *** join lines					       :bind:bind_documented:
 #+begin_src emacs-lisp :tangle yes
@@ -727,8 +729,8 @@ You can see a list of all loaded faces and it's highlighting with:
 #+begin_src emacs-lisp
   ;; setting the frame title
   (if (boundp 'dh/me-at-work)
-      (defconst dh/location-for-frame-title (concat "@WORKING") "contains the wording if I am at work or not for the frame-title") ; true
-    (defconst dh/location-for-frame-title (concat "@NOT AT WORKING") "contains the wording if I am at work or not for the frame-title") ; false
+      (defconst dh/location-for-frame-title (concat "@WORK") "contains the wording if I am at work or not for the frame-title") ; true
+    (defconst dh/location-for-frame-title (concat "@NOT AT WORK") "contains the wording if I am at work or not for the frame-title") ; false
     )
 
   (setq frame-title-format
@@ -1033,7 +1035,7 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
     :init
     (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
 #+end_src
-
+   
 
 * Markup or programming languages
 ** company mode - autocompletion
@@ -1483,14 +1485,18 @@ A simple hydra that displays my hydras or other useful commands.
   (defhydra dh-hydra-info-help (:color blue
                                        :columns 3)
     "dh - useful info"
-    ("S-<F1>" 'dh/open-my-init-file "open config.org")
-    ("<F12>" 'dh/open-sys-file-manager "open current directory in explorer")
-    ("C-<F12>" 'xah-make-backup-and-save "make a backupfile for the current file")
-    ("S-<F12>" 'dh/open-my-current-taskfile "open Current_Tasks.org")
+    ("S-<F1>" (lambda () (interactive)
+                (dh/open-file-in-emacs (expand-file-name "config.org" user-emacs-directory)))
+     "open config.org")
+    ("<M-F1>" (lambda () (interactive)
+                (dh/open-file-in-emacs (expand-file-name "elisp-playground.org" user-emacs-directory))) "opens elisp-playground.org")
     ("C-<F2>" 'dh-hydra-zoom/body "zoom (hydra)")
-
     ("<F10>" 'dh-vergabesnippets-main/body "Vergabesnippets (hydra)")
     ("<F11>" 'dh-hydra-markdown-mode/body "useful markdown commands (hydra)")
+    ("<F12>" 'dh/open-sys-file-manager "open current directory in explorer")
+    ("C-<F12>" 'xah-make-backup-and-save "make a backupfile for the current file")
+    ("S-<F12>" (lambda () (interactive)
+                 (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-directory))) "open Current_Tasks.org")
     ("S-<F11>" 'dh-hydra-modes/body "mode switching (hydra)")
     ("C-x SPC" 'dh-hydra-rectangle/body "rectangle (hydra)")
 
@@ -2005,7 +2011,7 @@ currently empty
   ; LAST COMMAND at work
   (when (boundp 'dh/me-at-work)
     ;; open my BfN.org file as last command
-    (dh/open-my-current-taskfile))
+    (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-direc)))
 #+END_SRC
 
 ** Debugging off

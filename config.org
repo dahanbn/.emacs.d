@@ -1753,9 +1753,12 @@ https://emacs.stackexchange.com/questions/32696/how-to-use-magit-list-repositori
 #+begin_src emacs-lisp
   ;; setting repositories 
   (setq magit-repository-directories
-        `((,dh/emacs-portable-dir . 2)
-          (,user-emacs-directory . 6)
-          ("D:\\git-repositories\\57 Exercises for Programmers" . 1)))
+        `((,user-emacs-directory . 6)))
+
+  (when (boundp 'dh/emacs-portable-dir)
+    (add-to-list 'magit-repository-directories
+                 `(,dh/emacs-portable-dir . 6) t))
+
 
   ;; restructure the output list
   (with-eval-after-load 'magit

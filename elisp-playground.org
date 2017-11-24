@@ -140,8 +140,6 @@ http://ergoemacs.org/emacs/elisp_insert-date-time.html
          (format-time-string "%Y-%m-%d"))))))
 #+end_src
 
-* Brian P. Hogan - 57 Exercises for Programmers
-** Ch 01 - Tip Calculator
 
 
 

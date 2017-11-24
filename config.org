@@ -1009,6 +1009,19 @@ Idea: http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/
     (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 #+end_src
 
+** editorconfig
+Editorconfig is a project that enables to define 
+project specific editor settings for different
+editors. More here: http://editorconfig.org/ 
+
+#+begin_src emacs-lisp
+  (use-package editorconfig
+    :config
+    ;; use builtin engine instead of external tools
+    (set-variable 'editorconfig-get-properties-function
+                  #'editorconfig-core-get-properties-hash)
+    (editorconfig-mode 1))
+#+end_src
 
 * ELISP - setting up Lisp editing
 

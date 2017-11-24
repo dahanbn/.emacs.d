@@ -1747,6 +1747,30 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
       (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)))
 #+END_SRC
 
+*** setting magit-repository-directories
+https://emacs.stackexchange.com/questions/32696/how-to-use-magit-list-repositories
+
+#+begin_src emacs-lisp
+  ;; setting repositories 
+  (setq magit-repository-directories
+        `((,dh/emacs-portable-dir . 2)
+          (,user-emacs-directory . 6)
+          ("D:\\git-repositories\\57 Exercises for Programmers" . 1)))
+
+  ;; restructure the output list
+  (with-eval-after-load 'magit
+    (setcdr (cdr magit-repolist-columns)
+            (cons '("D" 1 magit-repolist-column-dirty ())
+                  (cddr magit-repolist-columns))))
+
+  (setq magit-repolist-columns
+        '(("Name"    25 magit-repolist-column-ident                  ())
+          ("Version" 25 magit-repolist-column-version                ())
+          ("D"        1 magit-repolist-column-dirty                  ())
+          ("L<U"      3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
+          ("L>U"      3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
+          ("Path"    99 magit-repolist-column-path                   ())))
+#+end_src
 *** DISABLED diff-hl
 Diff-hl goes a little further than git-gutter in that it can highlight the
 uncommited diffs, even from Dired. And we can get them on the fly while we 

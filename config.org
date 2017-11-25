@@ -1762,7 +1762,10 @@ https://emacs.stackexchange.com/questions/32696/how-to-use-magit-list-repositori
   (when (string-equal system-type "gnu/linux")
     (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
         (add-to-list 'magit-repository-directories
-                     `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 6) t))) 
+                     `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 6) t))
+    (if (file-directory-p (expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")))
+        (add-to-list 'magit-repository-directories
+                     `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 6) t))) 
   ;; restructure the output list
   (with-eval-after-load 'magit
     (setcdr (cdr magit-repolist-columns)

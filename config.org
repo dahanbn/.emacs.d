@@ -1750,22 +1750,35 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 *** setting magit-repository-directories
 https://emacs.stackexchange.com/questions/32696/how-to-use-magit-list-repositories
 
+Easy way to manage my Git repositories with Magit is to make them known to it. So
+I can see their status with ~M-x magit-list-repositories~ and with ~RET~ I can switch 
+into a more detailed view of the repository. The list repository buffer can be updated
+with ~g~.
+
 #+begin_src emacs-lisp
   ;; setting repositories 
+  ;; .emacs.d repo
   (setq magit-repository-directories
         `((,user-emacs-directory . 6)))
 
+  ;; add emacs-portable-win64 if it is set
   (when (boundp 'dh/emacs-portable-dir)
     (add-to-list 'magit-repository-directories
                  `(,dh/emacs-portable-dir . 6) t))
 
+  ;; add various repos on Linux
   (when (string-equal system-type "gnu/linux")
+
+    ;; elisp-playground repo
     (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
         (add-to-list 'magit-repository-directories
                      `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 6) t))
+
+    ;; 57-Exercises-for-Programmers repo
     (if (file-directory-p (expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")))
         (add-to-list 'magit-repository-directories
-                     `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 6) t))) 
+                     `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 6) t)))
+
   ;; restructure the output list
   (with-eval-after-load 'magit
     (setcdr (cdr magit-repolist-columns)

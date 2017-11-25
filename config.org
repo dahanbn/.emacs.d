@@ -1012,7 +1012,7 @@ Idea: http://pragmaticemacs.com/emacs/pop-up-a-quick-shell-with-shell-pop/
 ** editorconfig
 Editorconfig is a project that enables to define 
 project specific editor settings for different
-editors. More here: http://editorconfig.org/ 
+editors. More here: http://editorconfig.org/g 
 
 #+begin_src emacs-lisp
   (use-package editorconfig
@@ -1759,7 +1759,10 @@ https://emacs.stackexchange.com/questions/32696/how-to-use-magit-list-repositori
     (add-to-list 'magit-repository-directories
                  `(,dh/emacs-portable-dir . 6) t))
 
-
+  (when (string-equal system-type "gnu/linux")
+    (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
+        (add-to-list 'magit-repository-directories
+                     `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 6) t))) 
   ;; restructure the output list
   (with-eval-after-load 'magit
     (setcdr (cdr magit-repolist-columns)

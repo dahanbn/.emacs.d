@@ -1761,10 +1761,25 @@ with ~g~.
   (setq magit-repository-directories
         `((,user-emacs-directory . 6)))
 
-  ;; add emacs-portable-win64 if it is set
-  (when (boundp 'dh/emacs-portable-dir)
-    (add-to-list 'magit-repository-directories
-                 `(,dh/emacs-portable-dir . 6) t))
+  ;; repos on Windows
+  (when (string-equal system-type "windows-nt")
+
+    ;; add emacs-portable-win64 if it is set
+    (when (boundp 'dh/emacs-portable-dir)
+      (add-to-list 'magit-repository-directories
+                   `(,dh/emacs-portable-dir . 6) t)
+      ;; if elisp-playground is in it, add it too
+      (if (file-directory-p (expand-file-name "elisp-playground" dh/emacs-portable-dir))
+          (add-to-list 'magit-repository-directories
+                       `(,(expand-file-name "elisp-playground" dh/emacs-portable-dir) . 6) t)))
+
+    ;; usually my Windows repos are on D:\git-repositories
+    (if (file-directory-p "d:/git-repositories")
+          (add-to-list 'magit-repository-directories
+                       '("d:/git-repositories" . 10) t))
+    )
+
+
 
   ;; add various repos on Linux
   (when (string-equal system-type "gnu/linux")

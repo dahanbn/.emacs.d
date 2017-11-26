@@ -1756,57 +1756,54 @@ into a more detailed view of the repository. The list repository buffer can be u
 with ~g~.
 
 #+begin_src emacs-lisp
-  ;; setting repositories 
-  ;; .emacs.d repo
-  (setq magit-repository-directories
-        `((,user-emacs-directory . 6)))
+    ;; setting repositories 
+    ;; .emacs.d repo
+    (setq magit-repository-directories
+          `((,user-emacs-directory . 0)))
 
-  ;; repos on Windows
-  (when (string-equal system-type "windows-nt")
+    ;; repos on Windows
+    (when (string-equal system-type "windows-nt")
 
-    ;; add emacs-portable-win64 if it is set
-    (when (boundp 'dh/emacs-portable-dir)
-      (add-to-list 'magit-repository-directories
-                   `(,dh/emacs-portable-dir . 6) t)
-      ;; if elisp-playground is in it, add it too
-      (if (file-directory-p (expand-file-name "elisp-playground" dh/emacs-portable-dir))
-          (add-to-list 'magit-repository-directories
-                       `(,(expand-file-name "elisp-playground" dh/emacs-portable-dir) . 6) t)))
-
-    ;; usually my Windows repos are on D:\git-repositories
-    (if (file-directory-p "d:/git-repositories")
-          (add-to-list 'magit-repository-directories
-                       '("d:/git-repositories" . 10) t))
-    )
-
-
-
-  ;; add various repos on Linux
-  (when (string-equal system-type "gnu/linux")
-
-    ;; elisp-playground repo
-    (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
+      ;; add emacs-portable-win64 if it is set
+      (when (boundp 'dh/emacs-portable-dir)
         (add-to-list 'magit-repository-directories
-                     `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 6) t))
+                     `(,dh/emacs-portable-dir . 0) t)
+        ;; if elisp-playground is in it, add it too
+        (if (file-directory-p (expand-file-name "elisp-playground" dh/emacs-portable-dir))
+            (add-to-list 'magit-repository-directories
+                         `(,(expand-file-name "elisp-playground" dh/emacs-portable-dir) . 0) t)))
 
-    ;; 57-Exercises-for-Programmers repo
-    (if (file-directory-p (expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")))
-        (add-to-list 'magit-repository-directories
-                     `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 6) t)))
+      ;; usually my Windows repos are on D:\git-repositories
+      (if (file-directory-p "d:/git-repositories")
+          (add-to-list 'magit-repository-directories
+                       '("d:/git-repositories" . 1) t)))
 
-  ;; restructure the output list
-  (with-eval-after-load 'magit
-    (setcdr (cdr magit-repolist-columns)
-            (cons '("D" 1 magit-repolist-column-dirty ())
-                  (cddr magit-repolist-columns))))
+    ;; add various repos on Linux
+    (when (string-equal system-type "gnu/linux")
 
-  (setq magit-repolist-columns
-        '(("Name"    25 magit-repolist-column-ident                  ())
-          ("Version" 25 magit-repolist-column-version                ())
-          ("D"        1 magit-repolist-column-dirty                  ())
-          ("L<U"      3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
-          ("L>U"      3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
-          ("Path"    99 magit-repolist-column-path                   ())))
+      ;; elisp-playground repo
+      (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
+          (add-to-list 'magit-repository-directories
+                       `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 0) t))
+
+      ;; 57-Exercises-for-Programmers repo
+      (if (file-directory-p (expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")))
+          (add-to-list 'magit-repository-directories
+                       `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 0) t)))
+
+    ;; restructure the output list
+    (with-eval-after-load 'magit
+      (setcdr (cdr magit-repolist-columns)
+              (cons '("D" 1 magit-repolist-column-dirty ())
+                    (cddr magit-repolist-columns))))
+
+    (setq magit-repolist-columns
+          '(("Name"    25 magit-repolist-column-ident                  ())
+            ("Version" 25 magit-repolist-column-version                ())
+            ("D"        1 magit-repolist-column-dirty                  ())
+            ("L<U"      3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
+            ("L>U"      3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
+            ("Path"    99 magit-repolist-column-path                   ())))
 #+end_src
 *** DISABLED diff-hl
 Diff-hl goes a little further than git-gutter in that it can highlight the

@@ -2245,7 +2245,17 @@ Code based on https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-
 #+END_SRC
 
 *** orgmode at home
-currently empty
+Trying to use it via Dropbox and [[http://beorgapp.com][beorg]] on iOS.
+
+#+begin_src emacs-lisp
+  (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/not-at-work))
+    (message "[dh] Setting home specific settings for org-mode")
+    (setq org-directory (expand-file-name "org" dh/dropbox-dir))
+    (setq org-default-notes-file (concat org-directory "/notes.org"))
+
+    (setq org-todo-keywords
+          '((sequence "NEW(n!)" "TODO(t!)" "IN_PROGRESS(p!)" "WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))))
+#+end_src
 
 
 

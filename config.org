@@ -672,7 +672,9 @@ character it is under; i.e. full width of a TAB:
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_letters" ":DH_LETTERS:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_ulysses" ":DH_ULYSSES:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:org" ":DB:ORG:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DH_NOTEBOOKS:") t))
   ;; adding regexp for shortening OneDrive to OD
   (when (boundp 'dh/onedrive-dir)
@@ -984,8 +986,8 @@ https://github.com/justbur/emacs-which-key
   (use-package which-key
     :delight
     :config
-    (which-key-mode)
-    (which-key-setup-minibuffer))
+    (which-key-setup-minibuffer)
+    (which-key-mode))
 #+end_src
 
 ** expand-region
@@ -1058,6 +1060,14 @@ Setting up my launchable items.
     (push `("PE: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
     (push `("PE: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
 
+  (when (boundp 'dh/dropbox-dir)
+    (push `("DB: Dropbox root directory" . ,(expand-file-name dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("DB: org directory" . ,(expand-file-name "org" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("DB: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("DB: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("DB: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("DB: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("DB: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs))
 
   ;; yal/launchable-items-system
 
@@ -1068,7 +1078,8 @@ Setting up my launchable items.
 
   (setq yal/launchable-items-url
         '(("Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html")
-          ("Xah Elisp Tutorial - hashmapas" . "http://ergoemacs.org/emacs/elisp_hash_table.html")
+          ("Xah Elisp Tutorial - hashmpas" . "http://ergoemacs.org/emacs/elisp_hash_table.html")
+          ("Enless Parentheses: Magit" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html")
           ("github repo - elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground")
           ("github repo - .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d")
           ("github repo - portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64")
@@ -1150,7 +1161,7 @@ Content of the future package
 
     (let ((file-key
            (ivy-completing-read
-            "Style:"                      ; prompt
+            "yet-another-launcher:"                      ; prompt
             yal/yal-items                 ; collection
             nil                           ; predicate
             nil                           ; require match
@@ -2235,6 +2246,8 @@ Code based on https://fuco1.github.io/2017-05-25-Fontify-done-checkbox-items-in-
 
 *** orgmode at home
 currently empty
+
+
 
 
 * Finalise my Emacs environment

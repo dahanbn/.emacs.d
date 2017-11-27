@@ -216,7 +216,7 @@ and other files (recentf, savespace) should point to there as well.
     (progn
       (when (getenv "DH_EMACS_PORTABLE_DIR")
         (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path to my portable emacs files and directories")
-        (defconst dh/emacs_is_portable t "boolean switch that reflects if emacs is used as a portable version" )
+        (defconst dh/emacs-is-portable t "boolean switch that reflects if emacs is used as a portable version" )
         (defconst dh/emacs-portable-dir (expand-file-name (getenv "DH_EMACS_PORTABLE_DIR")) "contains the path where the portable version is located if Emacs is used as a portable version" ))
       (unless (getenv "DH_EMACS_PORTABLE_DIR")
         (defconst dh/emacs-local-dir (expand-file-name "emacs-local" (getenv "USERPROFILE")) "contains the path to my device specific emacs files and directories")) 
@@ -254,9 +254,19 @@ and other files (recentf, savespace) should point to there as well.
 
   (when (or (string= (getenv "USERNAME") "HannaskeD")
             (string= (getenv "USERNAME") "hannasked"))
+
     (message "[dh] Setting const dahan/me-at-work to true")
     (defconst dh/me-at-work t "boolean switch for work environment")
+
+    (defconst dh/emacs-work-extra-dir
+      (expand-file-name "emacs-work-extra" "I:\\DATEN\\_Daniel\\Emacs")
+      "directory where I keep work related emacs files, e.g. pandoc templates")
+    ;; create dh/emacs-local-dir directory if it doesn't exist
+
+    (unless (file-directory-p dh/emacs-work-extra-dir)
+      (make-directory dh/emacs-work-extra-dir))
     ;; directly setting proxy - otherwise url-package couldn't work
+
     (setq url-proxy-services
           '(("no_proxy" . "^\\(localhost\\|10.*\\)")
             ("http" . "192.168.179.77:8080")
@@ -1023,6 +1033,154 @@ editors. More here: http://editorconfig.org/g
     (editorconfig-mode 1))
 #+end_src
 
+** yet-another-launcher
+
+Setting up my launchable items.
+
+#+begin_src emacs-lisp
+
+  ;; first, creating empty lists for my different type of launchers
+
+  ;; that's needed, because during loading of my private launchers
+  ;; the script will assume that those already exist
+
+  (setq yal/launchable-items-emacs (list))
+  (setq yal/launchable-items-system (list))
+  (setq yal/launchable-items-url (list))
+
+  ;; defining a few default entries
+
+  ;; yal/launchable-items-emacs
+
+  (push `("config.org - my emacs init file" . ,(expand-file-name "config.org" user-emacs-directory)) yal/launchable-items-emacs)
+
+  (when (and (boundp 'dh/emacs-is-portable) (boundp 'dh/emacs-portable-dir))
+    (push `("PE: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
+    (push `("PE: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
+
+
+  ;; yal/launchable-items-system
+
+  (when (string-equal system-type "windows-nt")
+    (push `("windows user directory" . ,(expand-file-name dh/user-dir)) yal/launchable-items-system))
+
+  ;; yal/launchable-items-url
+
+  (setq yal/launchable-items-url
+        '(("Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html")
+          ("Xah Elisp Tutorial - hashmapas" . "http://ergoemacs.org/emacs/elisp_hash_table.html")
+          ("github repo - elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground")
+          ("github repo - .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d")
+          ("github repo - portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64")
+          ("github repo - 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers")
+          ("github repo - Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher")))
+#+end_src
+
++ load external launcher files if I am at work or at home
+
+#+begin_src emacs-lisp
+  ;; load my launcher items at work
+
+  ;; in it I use only add-to-list therefore the item alists should already exist befor
+
+  (when (and (boundp 'dh/me-at-work) (boundp 'dh/emacs-work-extra-dir))
+    (if (file-exists-p (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))
+        (load (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))))
+#+end_src
+
+** yet-another-launcher package-content
+Content of the future package
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x y") 'yet-another-launcher)
+
+  (defun yal/generate-hash-from-list (item-list item-type)
+    "generates the hash"
+    (while item-list
+       (puthash (car (car item-list))      ; name of the item
+               (list
+                item-type                 ; type of the item
+                (cdr (car item-list))     ; address of the item)
+                )
+               yal/yal-items                  ; name of the hash
+               )
+      (pop item-list)                    ; remove current pair from list
+      ))
+
+  (defun yal/init ()
+    "initializes the launchables items from yet-another-launcher"
+
+    ;; creating hash-table that will contain all launchable items
+    ;; it should be in the global namespace
+    ;; if rerun yal/init will each time create a new hash-table
+    (setq yal/yal-items (make-hash-table :test 'equal))
+
+
+    ;; filling the hash-table with content
+
+    ;; checking if at least one of the following associated lists are set
+    ;; yal/launchable-items-emacs         for items to launch in Emacs
+    ;; yal/launchable-items-system        for items to launch with default app
+    ;; yal/launchable-items-url           for items to launch in a browser
+    (unless (or (boundp 'yal/launchable-items-emacs)
+                (boundp 'yal/launchable-items-system)
+                (boundp 'yal/launchable-items-url))
+      (message "yal-error: At least you have to define yal/launchable-items-emacs, yal/launchable-items-system or yal/launchable-items-url"))
+
+    (if (boundp 'yal/launchable-items-system)
+        (yal/generate-hash-from-list yal/launchable-items-system "system"))
+
+    (if (boundp 'yal/launchable-items-emacs)
+        (yal/generate-hash-from-list yal/launchable-items-emacs "emacs"))
+
+    (if (boundp 'yal/launchable-items-url)
+        (yal/generate-hash-from-list yal/launchable-items-url "url")))
+
+  (defun yet-another-launcher ()
+    "launches local files in Emacs or with the OS corresponding launcher"
+    (interactive)
+    (require 'ivy)
+
+    ;; check if the hash yal/yal-items exist, otherwise call yal/init
+    (unless (boundp 'yal/yal-items)
+      (yal/init))
+
+    ;; development run yal/init everytime
+    (yal/init)
+
+    (let ((file-key
+           (ivy-completing-read
+            "Style:"                      ; prompt
+            yal/yal-items                 ; collection
+            nil                           ; predicate
+            nil                           ; require match
+            nil                           ; initial input
+            nil                           ; history
+            nil                           ; value
+            )) file-type file-name)
+      (setq file-type (car (gethash file-key yal/yal-items)))
+      (setq file-name (car (last (gethash file-key yal/yal-items))))
+      (message "%s -> %s -> %s" file-key file-type file-name)
+      (cond
+       ((string-equal file-type "emacs") ; open filen in a new Emacs buffer
+        (if (file-exists-p file-name)
+            (find-file file-name)
+          (message "Error: Couldn't find %S" file-name)))
+       ((string-equal file-type "system") ; launch it with os default application
+        (if (file-exists-p file-name)
+            (progn
+              (cond
+               ((string-equal system-type "windows-nt")
+                (w32-shell-execute "open" file-name))))
+          (message "Error: Couldn't find %S" file-name)))
+       ((string-equal file-type "url") ; launch it with os default application
+        ;; later I might add different browser support
+        (cond
+         ((string-equal system-type "windows-nt")
+          (w32-shell-execute "open" file-name)))))))
+#+end_src
+
+
 * ELISP - setting up Lisp editing
 
 ** Eldoc
@@ -1134,7 +1292,7 @@ markup - that is bound to F11.
            ("\\.txt\\'" . markdown-mode)
            ("\\.mmd\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "multimarkdown")
+    :init 
     ;; link to css-styles
     ;; markdown-css-paths - CSS file to link to in XHTML output (default: "").
                                           ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
@@ -1143,7 +1301,14 @@ markup - that is bound to F11.
     ;; enable org-table mode in markdown-mode
     (add-hook 'markdown-mode-hook 'turn-on-orgtbl)
     ;; enable whitespace- mode in markdown-mode
-    (add-hook 'markdown-mode-hook 'whitespace-mode))
+    (add-hook 'markdown-mode-hook 'whitespace-mode)
+    ;; enable auto-fill-mode in markdown-mode
+    (add-hook 'markdown-mode-hook 'auto-fill-mode)
+
+    (when (string-equal system-type "windows-nt")
+      (if (boundp 'dh/emacs-is-portable)
+          (setq markdown-command (expand-file-name "tools/MultiMarkdown-Windows-6.2.2/bin/multimarkdown.exe" dh/emacs-portable-dir))))
+    )
 #+end_src
 
 ** pandoc

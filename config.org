@@ -1079,7 +1079,10 @@ Setting up my launchable items.
   (setq yal/launchable-items-url
         '(("Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html")
           ("Xah Elisp Tutorial - hashmpas" . "http://ergoemacs.org/emacs/elisp_hash_table.html")
-          ("Enless Parentheses: Magit" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html")
+          ("Endless Parentheses: Magit keychords" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html")
+          ("Pandoc User Guide" . "https://pandoc.org/MANUAL.html")
+          ("Pandoc-mode Guide" . "https://joostkremers.github.io/pandoc-mode/")
+          ("Markdown-mode Guiprde" . "https://jblevins.org/projects/markdown-mode/")
           ("github repo - elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground")
           ("github repo - .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d")
           ("github repo - portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64")
@@ -1934,6 +1937,8 @@ I can see their status with ~M-x magit-list-repositories~ and with ~RET~ I can s
 into a more detailed view of the repository. The list repository buffer can be updated
 with ~g~.
 
+See also http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html for a 
+lot of useful what I can do with Magit.
 #+begin_src emacs-lisp
   ;; setting repositories 
   ;; .emacs.d repo

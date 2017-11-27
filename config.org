@@ -1084,7 +1084,10 @@ Setting up my launchable items.
           ("github repo - .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d")
           ("github repo - portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64")
           ("github repo - 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers")
-          ("github repo - Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher")))
+          ("github repo - Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher")
+          ("Beihilfe - Ansprechpartner und Adresse" . "http://www.bva.bund.de/DE/Organisation/Abteilungen/Abteilung_VII/020_Beihilfe/110_Ansprechpartner/beihilfestelle_DZB_bad_homburg.html?nn=4485804")
+          ("Beihilfe - Formulare - Anlage Zusammenstellung Belege" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1a_Anlage_Zusammenstellung.html")
+          ("Beihilfe - Formulare - Antrag auf Beihilfe" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1_Antrag_Beihilfe_FFW.html")))
 #+end_src
 
 + load external launcher files if I am at work or at home

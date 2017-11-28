@@ -1039,70 +1039,76 @@ editors. More here: http://editorconfig.org/g
 
 Setting up my launchable items.
 
+
 #+begin_src emacs-lisp
 
-  ;; first, creating empty lists for my different type of launchers
+  ;; load my launcher items at work
 
-  ;; that's needed, because during loading of my private launchers
-  ;; the script will assume that those already exist
+  ;; in it I use only add-to-list therefore the item alists should already exist befor
 
-  (setq yal/launchable-items-emacs (list))
-  (setq yal/launchable-items-system (list))
-  (setq yal/launchable-items-url (list))
+  (if (and (boundp 'dh/me-at-work) (boundp 'dh/emacs-work-extra-dir))
+      (progn                              ; true
+        (if (file-exists-p (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))
+            (load (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))))
+    (progn                                ; false
+      ;; first, creating empty lists for my different type of launchers
+
+      ;; that's not necessary, if I am loading my private launchers
+      ;; because in yal-launchers.el I create those list as well
+
+      (setq yal/launchable-items-emacs (list))
+      (setq yal/launchable-items-system (list))
+      (setq yal/launchable-items-url (list))))
 
   ;; defining a few default entries
 
   ;; yal/launchable-items-emacs
 
-  (push `("config.org - my emacs init file" . ,(expand-file-name "config.org" user-emacs-directory)) yal/launchable-items-emacs)
+  (push `("emacs: config.org - my emacs init file" . ,(expand-file-name "config.org" user-emacs-directory)) yal/launchable-items-emacs)
 
   (when (and (boundp 'dh/emacs-is-portable) (boundp 'dh/emacs-portable-dir))
-    (push `("PE: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
-    (push `("PE: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
+    (push `("emacs-portable: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
+    (push `("emacs-portable: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
 
   (when (boundp 'dh/dropbox-dir)
-    (push `("DB: Dropbox root directory" . ,(expand-file-name dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("DB: org directory" . ,(expand-file-name "org" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("DB: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("DB: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("DB: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("DB: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("DB: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs))
+    (push `("dropbox: root directory" . ,(expand-file-name dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("dropbox: org directory" . ,(expand-file-name "org" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("dropbox: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("dropbox: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("dropbox: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("dropbox: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
+    (push `("dropbox: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs))
 
   ;; yal/launchable-items-system
 
   (when (string-equal system-type "windows-nt")
-    (push `("windows user directory" . ,(expand-file-name dh/user-dir)) yal/launchable-items-system))
+    (push `("windows: user directory" . ,(expand-file-name dh/user-dir)) yal/launchable-items-system)
+    (push `("windows: download directory" . ,(expand-file-name "Downloads" dh/user-dir)) yal/launchable-items-system)
+    (push `("windows: picture directory" . ,(expand-file-name "Pictures" dh/user-dir)) yal/launchable-items-system)
+    (push `("windows: appdata directory" . ,(expand-file-name "AppData" dh/user-dir)) yal/launchable-items-system)
+    (push `("windows: desktop directory" . ,(expand-file-name "Desktop" dh/user-dir)) yal/launchable-items-system)
+    (push `("windows: tmp directory" . ,(expand-file-name (getenv "TMPDIR"))) yal/launchable-items-system)
+    )
 
   ;; yal/launchable-items-url
 
-  (setq yal/launchable-items-url
-        '(("Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html")
-          ("Xah Elisp Tutorial - hashmpas" . "http://ergoemacs.org/emacs/elisp_hash_table.html")
-          ("Endless Parentheses: Magit keychords" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html")
-          ("Pandoc User Guide" . "https://pandoc.org/MANUAL.html")
-          ("Pandoc-mode Guide" . "https://joostkremers.github.io/pandoc-mode/")
-          ("Markdown-mode Guiprde" . "https://jblevins.org/projects/markdown-mode/")
-          ("github repo - elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground")
-          ("github repo - .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d")
-          ("github repo - portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64")
-          ("github repo - 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers")
-          ("github repo - Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher")
-          ("Beihilfe - Ansprechpartner und Adresse" . "http://www.bva.bund.de/DE/Organisation/Abteilungen/Abteilung_VII/020_Beihilfe/110_Ansprechpartner/beihilfestelle_DZB_bad_homburg.html?nn=4485804")
-          ("Beihilfe - Formulare - Anlage Zusammenstellung Belege" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1a_Anlage_Zusammenstellung.html")
-          ("Beihilfe - Formulare - Antrag auf Beihilfe" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1_Antrag_Beihilfe_FFW.html")))
-#+end_src
-
-+ load external launcher files if I am at work or at home
-
-#+begin_src emacs-lisp
-  ;; load my launcher items at work
-
-  ;; in it I use only add-to-list therefore the item alists should already exist befor
-
-  (when (and (boundp 'dh/me-at-work) (boundp 'dh/emacs-work-extra-dir))
-    (if (file-exists-p (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))
-        (load (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))))
+  (push '("elisp: Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html") yal/launchable-items-url)
+  (push '("elisp: Xah Elisp Tutorial - hashmpas" . "http://ergoemacs.org/emacs/elisp_hash_table.html") yal/launchable-items-url)
+  (push '("Endless Parentheses: Magit keychords" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html") yal/launchable-items-url)
+  (push '("guide: Pandoc User" . "https://pandoc.org/MANUAL.html") yal/launchable-items-url)
+  (push '("guide: Pandoc-mode" . "https://joostkremers.github.io/pandoc-mode/") yal/launchable-items-url)
+  (push '("emacs-guide: Markdown-mode" . "https://jblevins.org/projects/markdown-mode/") yal/launchable-items-url)
+  (push '("emacs-guide: orgmode manual" . "http://orgmode.org/org.html") yal/launchable-items-url)
+  (push '("emacs-guide: orgmode compact guide" . "http://orgmode.org/guide") yal/launchable-items-url)
+  (push '("emacs-guide: Magit" . "https://magit.vc/manual/magit.html#Top") yal/launchable-items-url)
+  (push '("github: elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground") yal/launchable-items-url)
+  (push '("github: .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d") yal/launchable-items-url)
+  (push '("github: portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64") yal/launchable-items-url)
+  (push '("github: 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers") yal/launchable-items-url)
+  (push '("github: Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher") yal/launchable-items-url)
+  (push '("Beihilfe - Ansprechpartner und Adresse" . "http://www.bva.bund.de/DE/Organisation/Abteilungen/Abteilung_VII/020_Beihilfe/110_Ansprechpartner/beihilfestelle_DZB_bad_homburg.html?nn=4485804") yal/launchable-items-url)
+  (push '("Beihilfe - Formulare - Anlage Zusammenstellung Belege" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1a_Anlage_Zusammenstellung.html") yal/launchable-items-url)
+  (push '("Beihilfe - Formulare - Antrag auf Beihilfe" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1_Antrag_Beihilfe_FFW.html") yal/launchable-items-url)
 #+end_src
 
 ** yet-another-launcher package-content
@@ -1167,7 +1173,7 @@ Content of the future package
 
     (let ((file-key
            (ivy-completing-read
-            "yet-another-launcher:"                      ; prompt
+            "yet-another-launcher: "      ; prompt
             yal/yal-items                 ; collection
             nil                           ; predicate
             nil                           ; require match
@@ -1177,7 +1183,7 @@ Content of the future package
             )) file-type file-name)
       (setq file-type (car (gethash file-key yal/yal-items)))
       (setq file-name (car (last (gethash file-key yal/yal-items))))
-      (message "%s -> %s -> %s" file-key file-type file-name)
+      (message "launch %s -> %s -> %s" file-key file-type file-name)
       (cond
        ((string-equal file-type "emacs") ; open filen in a new Emacs buffer
         (if (file-exists-p file-name)
@@ -2283,3 +2289,4 @@ Turn off debugging, now that initialization has ended
 #+BEGIN_SRC emacs-lisp
   (setq debug-on-error nil)
 #+END_SRC
+

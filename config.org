@@ -1121,12 +1121,12 @@ Content of the future package
     "generates the hash"
     (while item-list
        (puthash (car (car item-list))      ; name of the item
-               (list
-                item-type                 ; type of the item
-                (cdr (car item-list))     ; address of the item)
-                )
-               yal/yal-items                  ; name of the hash
-               )
+	       (list
+		item-type                 ; type of the item
+		(cdr (car item-list))     ; address of the item)
+		)
+	       yal/yal-items                  ; name of the hash
+	       )
       (pop item-list)                    ; remove current pair from list
       ))
 
@@ -1146,18 +1146,18 @@ Content of the future package
     ;; yal/launchable-items-system        for items to launch with default app
     ;; yal/launchable-items-url           for items to launch in a browser
     (unless (or (boundp 'yal/launchable-items-emacs)
-                (boundp 'yal/launchable-items-system)
-                (boundp 'yal/launchable-items-url))
+		(boundp 'yal/launchable-items-system)
+		(boundp 'yal/launchable-items-url))
       (message "yal-error: At least you have to define yal/launchable-items-emacs, yal/launchable-items-system or yal/launchable-items-url"))
 
     (if (boundp 'yal/launchable-items-system)
-        (yal/generate-hash-from-list yal/launchable-items-system "system"))
+	(yal/generate-hash-from-list yal/launchable-items-system "system"))
 
     (if (boundp 'yal/launchable-items-emacs)
-        (yal/generate-hash-from-list yal/launchable-items-emacs "emacs"))
+	(yal/generate-hash-from-list yal/launchable-items-emacs "emacs"))
 
     (if (boundp 'yal/launchable-items-url)
-        (yal/generate-hash-from-list yal/launchable-items-url "url")))
+	(yal/generate-hash-from-list yal/launchable-items-url "url")))
 
   (defun yet-another-launcher ()
     "launches local files in Emacs or with the OS corresponding launcher"
@@ -1172,35 +1172,39 @@ Content of the future package
     (yal/init)
 
     (let ((file-key
-           (ivy-completing-read
-            "yet-another-launcher: "      ; prompt
-            yal/yal-items                 ; collection
-            nil                           ; predicate
-            nil                           ; require match
-            nil                           ; initial input
-            nil                           ; history
-            nil                           ; value
-            )) file-type file-name)
+	   (ivy-completing-read
+	    "yet-another-launcher: "      ; prompt
+	    yal/yal-items                 ; collection
+	    nil                           ; predicate
+	    nil                           ; require match
+	    nil                           ; initial input
+	    nil                           ; history
+	    nil                           ; value
+	    )) file-type file-name)
       (setq file-type (car (gethash file-key yal/yal-items)))
       (setq file-name (car (last (gethash file-key yal/yal-items))))
       (message "launch %s -> %s -> %s" file-key file-type file-name)
       (cond
        ((string-equal file-type "emacs") ; open filen in a new Emacs buffer
-        (if (file-exists-p file-name)
-            (find-file file-name)
-          (message "Error: Couldn't find %S" file-name)))
+	(if (file-exists-p file-name)
+	    (find-file file-name)
+	  (message "Error: Couldn't find %S" file-name)))
        ((string-equal file-type "system") ; launch it with os default application
-        (if (file-exists-p file-name)
-            (progn
-              (cond
-               ((string-equal system-type "windows-nt")
-                (w32-shell-execute "open" file-name))))
-          (message "Error: Couldn't find %S" file-name)))
+	(if (file-exists-p file-name)
+	    (progn
+	      (cond
+	       ((string-equal system-type "windows-nt")
+		(w32-shell-execute "open" file-name))))
+	  (message "Error: Couldn't find %S" file-name)))
        ((string-equal file-type "url") ; launch it with os default application
-        ;; later I might add different browser support
-        (cond
-         ((string-equal system-type "windows-nt")
-          (w32-shell-execute "open" file-name)))))))
+	;; later I might add different browser support
+	(cond
+	 ((string-equal system-type "windows-nt")
+	  (w32-shell-execute "open" file-name))
+	 ((string-equal system-type "gnu/linux")
+	  (unless (display-graphic-p)	; without graphical interface
+	    (when (fboundp 'eww)		; and eww is available
+	      (eww-browse-url file-name)))))))))
 #+end_src
 
 

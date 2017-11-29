@@ -560,6 +560,33 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
                       (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-directory))))
 
 #+end_src
+*** dh/format-as-euro
+
+#+begin_src emacs-lisp
+  (defun dh/format-as-euro (num)
+    "Format NUM as string grouped with . and add € at the end."
+    ;; Based on code for `math-group-float' in calc-ext.el
+    ;; see also https://www.emacswiki.org/emacs/ElispCookbook
+    (let* ((size 3)
+           (char ".")
+           (str (replace-regexp-in-string "\\." "," ; replacing . with ,
+                                          (if (stringp num)
+                                              num
+                                            (number-to-string num))))
+           ;; omitting any trailing non-digit chars, that means
+           ;; grouping only numbers before the dot
+           (pt (or (string-match "[^0-9]" str) (length str))))
+      ;; replacing . with ,
+      ;; (setq str (replace-regexp-in-string "\." "," str))
+      (while (> pt size)
+        (setq str (concat (substring str 0 (- pt size))
+                          char
+                          (substring str (- pt size)))
+              pt (- pt size)))
+      ;; add EURO sign at the end
+      (setq str (concat str " €"))
+      str))
+#+end_src
 ** copied functions
 *** join lines					       :bind:bind_documented:
 #+begin_src emacs-lisp :tangle yes

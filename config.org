@@ -191,7 +191,7 @@ Don't use outdated compiled files. Load the .el-file if it's newer.
 #+BEGIN_SRC emacs-lisp
 (setq load-prefer-newer t)
 #+END_SRC
-** Setting & creating dh/emacs-local-dir and setting dh/user-dir and checkig if portable
+** Setting & creating dh/emacs-local-dir and setting dh/user-dir and checking if portable :emacs_local_dir:
 + dh/emacs-local-dir is a directory that contains local emacs directories of files, e.g. elpa, recentf, saveplace.
 + dh/user-dir contains the path to the user directory corresponding to the operating system, can't use "~" because that
   is not always correct if I use emacs as a portable version under Windows where I set it differently. On Linux & Mac "~"
@@ -350,7 +350,7 @@ Lazy people like me never want to type "yes" when "y" will suffice.
 #+end_src
 
 
-* Package and Use-Package configuration
+* Package and Use-Package configuration			    :emacs_local_dir:
 
 Configure the package manager of my GNU/Emacs.
 
@@ -781,34 +781,40 @@ It must be done on frame level if you run frames in tty and gui on emacs-server.
 
 
 * General settings & packages
-** some ignored file extensions for completions
+** some ignored file exqtensions for completions
 #+begin_src emacs-lisp :tangle yes
   (push ".out" completion-ignored-extensions)
   (push ".pdf" completion-ignored-extensions)
   (push ".synctex.gz" completion-ignored-extensions)
 #+end_src
-** Recent files						    :location_switch:
+** Recent files						    :emacs_local_dir:
 #+BEGIN_SRC emacs-lisp
   (use-package recentf
     :init
-    (progn
-      (setq recentf-max-menu-items 200)
-      (setq recentf-max-saved-items 50)
-      (setq recentf-save-file (expand-file-name ".recentf" dh/emacs-local-dir))
-      (recentf-mode 1)))  
+    (setq recentf-max-menu-items 200)
+    (setq recentf-max-saved-items 50)
+    ;; setting a path outside .emacs.d into my emacs-local-dir
+    (setq recentf-save-file (expand-file-name ".recentf" dh/emacs-local-dir))
+    (recentf-mode 1)
+    ;; removing everything inside elpa directory, especially *autoloads.el
+    ;; adding it to the list will delete them if I call recentf-cleanup
+    ;; to do that I launch it at the end of my config
+    (add-to-list 'recentf-exclude
+                 (format "%s/elpa/.*" (expand-file-name dh/emacs-local-dir))))  
 #+END_SRC
-** bookmarks
+** bookmarks						    :emacs_local_dir:
 #+begin_src emacs-lisp
+  ;; setting a path outside .emacs.d into my emacs-local-dir
   (setq bookmark-default-file (expand-file-name ".bookmarks" dh/emacs-local-dir))
 #+end_src
-** saveplace						    :location_switch:
+** saveplace						    :emacs_local_dir:
 Navigates back to where you were editing a file next time you open it
 #+BEGIN_SRC emacs-lisp
   (use-package saveplace
     :init
-    (progn
-      (setq save-place-file (expand-file-name ".places" dh/emacs-local-dir))
-      (save-place-mode 1)))
+    ;; setting a path outside .emacs.d into my emacs-local-dir
+    (setq save-place-file (expand-file-name ".places" dh/emacs-local-dir))
+    (save-place-mode 1))
 #+END_SRC
 
 ** smartparens
@@ -2279,6 +2285,12 @@ Trying to use it via Dropbox and [[http://beorgapp.com][beorg]] on iOS.
 
 
 * Finalise my Emacs environment
+** cleaning recentf up 
+To get rid of all the .*autoloads.el in recentf I have to manually 
+launch recentf-cleanup as one of my last commands. 
+#+begin_src emacs-lisp
+  (recentf-cleanup)
+#+end_src
 ** Last command at work
 #+BEGIN_SRC emacs-lisp
   ; LAST COMMAND at work

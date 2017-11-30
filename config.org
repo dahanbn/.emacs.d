@@ -561,18 +561,48 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
 
 #+end_src
 *** dh/format-as-euro
+Warning works so far, but not if a 5 is at the last part.
+
+ELISP> (dh/format-as-euro 123456789.995)
+"123.456.789,99 €"
+ELISP> (dh/format-as-euro 123456789.996)
+"123.456.790,00 €"
+ELISP> (dh/format-as-euro 123456789.996)
+"123.456.790,00 €"
+
+ELISP> (dh/format-as-euro 123456789.125)
+"123.456.789,12 €"
+ELISP> (dh/format-as-euro 123456789.126)
+"123.456.789,12 €"
+ELISP> (dh/format-as-euro 123456789.126)
+"123.456.789,13 €"
 
 #+begin_src emacs-lisp
   (defun dh/format-as-euro (num)
     "Format NUM as string grouped with . and add € at the end."
     ;; Based on code for `math-group-float' in calc-ext.el
     ;; see also https://www.emacswiki.org/emacs/ElispCookbook
-    (let* ((size 3)
-           (char ".")
-           (str (replace-regexp-in-string "\\." "," ; replacing . with ,
-                                          (if (stringp num)
-                                              num
-                                            (number-to-string num))))
+    (let* ((size 3) ; grouping every 3 numbers
+           (char ".")        ; char to group with
+           (str              ; constructing str with the floating number
+            ;; replacing . with , to get a German floating point
+            (replace-regexp-in-string "\\." ","
+                                      ;; two numbers as fractional part
+                                      (format "%0.2f"
+                                              (* 0.01
+                                                 (round (* 100
+                                                           (cond
+                                                            ((stringp num) ; convert to a number if it's a string
+                                                             (string-to-number num))
+                                                            ((numberp num) ; else return number
+                                                             num)
+                                                            (t
+                                                             0 ; default value is 0 if it isn't a string or number
+                                                             ))))))
+                                      ;; (if (stringp num)
+                                      ;;     num
+                                      ;;   (number-to-string num))
+                                      ))
            ;; omitting any trailing non-digit chars, that means
            ;; grouping only numbers before the dot
            (pt (or (string-match "[^0-9]" str) (length str))))
@@ -1126,7 +1156,7 @@ Setting up my launchable items.
   ;; yal/launchable-items-url
 
   (push '("elisp: Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html") yal/launchable-items-url)
-  (push '("elisp: Xah Elisp Tutorial - hashmpas" . "http://ergoemacs.org/emacs/elisp_hash_table.html") yal/launchable-items-url)
+  (push '("elisp: Xah Elisp Tutorial - hashmaps" . "http://ergoemacs.org/emacs/elisp_hash_table.html") yal/launchable-items-url)
   (push '("Endless Parentheses: Magit keychords" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html") yal/launchable-items-url)
   (push '("guide: Pandoc User" . "https://pandoc.org/MANUAL.html") yal/launchable-items-url)
   (push '("guide: Pandoc-mode" . "https://joostkremers.github.io/pandoc-mode/") yal/launchable-items-url)
@@ -2332,4 +2362,5 @@ Turn off debugging, now that initialization has ended
 #+BEGIN_SRC emacs-lisp
   (setq debug-on-error nil)
 #+END_SRC
+
 

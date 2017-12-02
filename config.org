@@ -878,7 +878,13 @@ Navigates back to where you were editing a file next time you open it
 #+begin_src emacs-lisp
   (use-package smartparens
     :delight
-    :init (smartparens-global-mode t))
+    :config
+    ;; Activate smartparens globally
+    (smartparens-global-mode t)
+    ;; Activate smartparens in minibuffer
+    (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
+    ;; Do not pair simple quotes
+    (sp-pair "'" nil :actions :rem))
 #+end_src
 ** undo-tree
 #+begin_src emacs-lisp

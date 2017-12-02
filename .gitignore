@@ -14,9 +14,11 @@
 # auto-save-list
 # server
 # eshell
+# elpa
 auto-save-list
 server
 eshell
+elpa
 
 # don't track config.el - it's auto-generated
 config.el

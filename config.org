@@ -1261,7 +1261,6 @@ Package only on Windows, because it throws error
 on MELPA for Linux
 #+begin_src emacs-lisp
   (use-package edit-indirect
-    :if (string-equal system-type "windows-nt")
     :delight
     :bind (:map edit-indirect-mode-map
                 ("C-c e" . edit-indirect-commit) ; original mapping C-c '

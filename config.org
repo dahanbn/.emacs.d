@@ -724,20 +724,21 @@ character it is under; i.e. full width of a TAB:
   (when (boundp 'dh/dropbox-dir)
     (add-to-list 'sml/replacer-regexp-list
                  `(,(concat "^" dh/dropbox-dir "/") ,":DB:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DH_TEXT:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DH_LaTeX:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_letters" ":DH_LETTERS:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DH_MISC:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DH_DOCUMENTS:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_ulysses" ":DH_ULYSSES:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DH_ARCHIV:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_text" ":DB-TEXT:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_latex" ":DB-LATEX:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_letters" ":DB-LETTERS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_misc" ":DB-MISC:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_documents" ":DB-DOCUMENTS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_ulysses" ":DB-ULYSSES:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_x_archiv" ":DB-ARCHIV:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:org" ":DB:ORG:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DH_NOTEBOOKS:") t))
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_uberspace" ":DB-UBERSPACE:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DB-NOTEBOOKS:") t))
   ;; adding regexp for shortening OneDrive to OD
   (when (boundp 'dh/onedrive-dir)
     (add-to-list 'sml/replacer-regexp-list
                  `(,(concat "^" dh/onedrive-dir "/") ,":OD:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD_Programming:") t))
+    (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD-PROGRAMMING:") t))
 
   ;; shortening Windows USERPROFILE to WIN~
   (cond
@@ -1232,7 +1233,7 @@ markup - that is bound to F11.
     ;; disabling prefix prompts because I enabled which-key
     (setq markdown-enable-prefix-prompts nil)
 
-    ;; using pandoc or multimarkdown
+    ;; using pandoc if available otherwise multimarkdown
     (cond
      ;; using pandoc if available
      ((executable-find "pandoc")
@@ -2261,13 +2262,18 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("emacs-portable: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
 
   (when (boundp 'dh/dropbox-dir)
+    ;; Dropbox root, org & dahan_uberspace is in all my dropboxes
     (push `("dropbox: root directory" . ,(expand-file-name dh/dropbox-dir)) yal/launchable-items-emacs)
     (push `("dropbox: org directory" . ,(expand-file-name "org" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs))
+    (push `("dropbox: dahan_uberspace directory" . ,(expand-file-name "dahan_uberspace" dh/dropbox-dir)) yal/launchable-items-emacs)
+    ;; other directories are only in some, if one (e.g. dahan_text) is there,
+    ;; the other will also be there
+    (when (file-directory-p (expand-file-name "dahan_text" dh/dropbox-dir))
+      (push `("dropbox: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
+      (push `("dropbox: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
+      (push `("dropbox: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
+      (push `("dropbox: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
+      (push `("dropbox: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs)))
 
   ;; yal/launchable-items-system
 

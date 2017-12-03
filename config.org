@@ -1256,8 +1256,12 @@ markdown-mode, usually invoked via ~C-c '~.
 
 But I also added ~C-c e~ like I used for 
 org-edit-special.
+
+Package only on Windows, because it throws error
+on MELPA for Linux
 #+begin_src emacs-lisp
   (use-package edit-indirect
+    :if (string-equal system-type "windows-nt")
     :delight
     :bind (:map edit-indirect-mode-map
                 ("C-c e" . edit-indirect-commit) ; original mapping C-c '

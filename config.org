@@ -878,9 +878,8 @@ Navigates back to where you were editing a file next time you open it
 #+begin_src emacs-lisp
   (use-package smartparens
     :delight
+    :init (smartparens-global-mode t)
     :config
-    ;; Activate smartparens globally
-    (smartparens-global-mode t)
     ;; Activate smartparens in minibuffer
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
     ;; Do not pair simple quotes
@@ -1054,7 +1053,7 @@ https://github.com/justbur/emacs-which-key
 #+begin_src emacs-lisp
   (use-package which-key
     :delight
-    :config
+    :init
     (which-key-setup-minibuffer)
     (which-key-mode))
 #+end_src

@@ -1229,9 +1229,22 @@ markup - that is bound to F11.
     ;; enable auto-fill-mode in markdown-mode
     (add-hook 'markdown-mode-hook 'auto-fill-mode)
 
-    (when (string-equal system-type "windows-nt")
-      (if (boundp 'dh/emacs-is-portable)
-          (setq markdown-command (expand-file-name "tools/MultiMarkdown-Windows-6.2.2/bin/multimarkdown.exe" dh/emacs-portable-dir))))
+    ;; disabling prefix prompts because I enabled which-key
+    (setq markdown-enable-prefix-prompts nil)
+
+    ;; using pandoc or multimarkdown
+    (cond
+     ;; using pandoc if available
+     ((executable-find "pandoc")
+      (setq markdown-command
+            (concat
+             "pandoc"
+             " --from=markdown --to=html"
+             " --standalone --mathjax --highlight-style=pygments")))
+     ;; otherwise testing for multimarkdown
+     ((executable-find "multimarkdown")
+      (setq markdown-command "multimarkdown")))
+  
     )
 #+end_src
 

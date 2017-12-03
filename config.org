@@ -1212,12 +1212,15 @@ markup - that is bound to F11.
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :commands (markdown-mode gfm-mode)
+    :bind (:map markdown-mode-map
+                ("C-c e" . edit-indirect-commit) ; original mapping C-c '
+                )
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
            ("\\.txt\\'" . markdown-mode)
            ("\\.mmd\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
-    :init 
+    :init
     ;; link to css-styles
     ;; markdown-css-paths - CSS file to link to in XHTML output (default: "").
                                           ;(setq markdown-css-paths (concat (getenv "HOME") "markdown-css-themes/foghorn.css"))
@@ -1244,11 +1247,22 @@ markup - that is bound to F11.
              " --standalone --mathjax --highlight-style=pygments")))
      ;; otherwise testing for multimarkdown
      ((executable-find "multimarkdown")
-      (setq markdown-command "multimarkdown")))
-  
-    )
+      (setq markdown-command "multimarkdown"))))
 #+end_src
 
+** DISABLED edit-indirect
+Package is used to edit src blocks in
+markdown-mode, usually invoked via ~C-c '~.
+
+But I also added ~C-c e~ like I used for 
+org-edit-special.
+#+begin_src emacs-lisp
+  (use-package edit-indirect
+    :delight
+    :bind (:map edit-indirect-mode-map
+                ("C-c e" . edit-indirect-commit) ; original mapping C-c '
+                ))
+#+end_src
 ** pandoc
 #+BEGIN_SRC emacs-lisp
   (defun dh/load-my-pandoc-settings ()

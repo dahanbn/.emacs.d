@@ -22,7 +22,7 @@
     ("84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" default)))
  '(package-selected-packages
    (quote
-    (editorconfig shell-pop neotree git-gutter+ expand-region counsel-projectile projectile flx company-jedi company-auctex company-quickhelp textile-mode worf org-bullets ace-window magit ace-link yaml-mode lispy yasnippet ivy company flycheck-rust ivy-hydra json-mode char-menu which-key avy counsel toml-mode racer rust-mode use-package undo-tree smartparens smart-mode-line-powerline-theme rainbow-delimiters paredit pandoc-mode multiple-cursors move-text monokai-theme markdown-mode iedit hungry-delete emmet-mode elpy dired-details+ auto-compile))))
+    (edit-indirect editorconfig shell-pop neotree git-gutter+ expand-region counsel-projectile projectile flx company-jedi company-auctex company-quickhelp textile-mode worf org-bullets ace-window magit ace-link yaml-mode lispy yasnippet ivy company flycheck-rust ivy-hydra json-mode char-menu which-key avy counsel toml-mode racer rust-mode use-package undo-tree smartparens smart-mode-line-powerline-theme rainbow-delimiters paredit pandoc-mode multiple-cursors move-text monokai-theme markdown-mode iedit hungry-delete emmet-mode elpy dired-details+ auto-compile))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

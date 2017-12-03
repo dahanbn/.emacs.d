@@ -1213,7 +1213,7 @@ markup - that is bound to F11.
   (use-package markdown-mode
     :commands (markdown-mode gfm-mode)
     :bind (:map markdown-mode-map
-                ("C-c e" . edit-indirect-commit) ; original mapping C-c '
+                ("C-c e" . markdown-edit-code-block) ; original mapping C-c '
                 )
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'" . markdown-mode)
@@ -1250,7 +1250,7 @@ markup - that is bound to F11.
       (setq markdown-command "multimarkdown"))))
 #+end_src
 
-** DISABLED edit-indirect
+** edit-indirect
 Package is used to edit src blocks in
 markdown-mode, usually invoked via ~C-c '~.
 

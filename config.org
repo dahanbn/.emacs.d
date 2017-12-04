@@ -1161,22 +1161,17 @@ Provides e.g. in elpy a quickhelp about the function.
 
 ** json
 #+BEGIN_SRC emacs-lisp
-  (use-package json-mode
-    :if (boundp 'dh/not-at-work))
+  (use-package json-mode)
 #+END_SRC
 ** yaml
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :if (boundp 'dh/not-at-work)
-    :init
-    (progn
-      (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))))
+    :mode ("\\.yml\\'" . yaml-mode))
 #+END_SRC
 ** emmet
 #+begin_src emacs-lisp
   ;; emmet css selectors for Markup
   (use-package emmet-mode
-    :if (boundp 'dh/not-at-work)
     :init
     (progn
       (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
@@ -1194,12 +1189,11 @@ default. Either as hook, e.g. markdown-mode or manually enabled
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace
     :init
-    (progn
-      ;; use whitespace mode, and mark lines longer than 80 characters
-      (setq whitespace-style '(face empty lines-tail trailing))
-      (setq whitespace-line-column 80)
-      ;; (global-whitespace-mode)
-))
+    ;; use whitespace mode, and mark lines longer than 80 characters
+    (setq whitespace-style '(face empty lines-tail trailing))
+    (setq whitespace-line-column 80)
+    ;; (global-whitespace-mode)
+    )
 #+END_SRC
 ** markdown-mode
 One of my most used packages is Markdown-Mode combined with Pandoc-Mode. 
@@ -1285,11 +1279,7 @@ on MELPA for Linux
 ** textile
 #+begin_src emacs-lisp
   (use-package textile-mode
-    :if (boundp 'dh/not-at-work)
-    :init
-    (progn
-      (add-to-list 'auto-mode-alist '("\\.textile\\'" . textile-mode))))
-#+END_SRC
+    :mode ("\\.textile\\'" . textile-mode))
 #+end_src
 ** restructured text
 It's already built in and no external package.
@@ -1345,13 +1335,13 @@ It's already built in and no external package.
                 (setq TeX-PDF-mode t))))
 #+end_src
 
-** Rust 							:not_at_work:
+** Rust
 
 Enabling rust-mode for syntax highlighting
 
 #+BEGIN_SRC emacs-lisp
   (use-package rust-mode
-    :if (boundp 'dh/not-at-work)
+    :if (executable-find "rustup")
     :mode ("\\.rs\\'" . rust-mode)
     :config
     (setq rust-format-on-save t) ; enabling running rustfmt automatically on save
@@ -1362,7 +1352,7 @@ rust-racer for autocompletion
 
 #+BEGIN_SRC emacs-lisp
   (use-package racer
-    :if (boundp 'dh/not-at-work)
+    :if (executable-find "rustup")
     :init
     (progn
       (add-hook 'rust-mode-hook #'racer-mode)
@@ -1378,15 +1368,14 @@ flycheck-rust
 
 #+begin_src emacs-lisp
   (use-package flycheck-rust
-    :if (boundp 'dh/not-at-work)
+    :if (executable-find "rustup")
     :init
     (progn (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 #+end_src
 
-** TOML used by Rust cargo					:not_at_work:
+** TOML
 #+BEGIN_SRC emacs-lisp
-  (use-package toml-mode
-    :if (boundp 'dh/not-at-work))
+  (use-package toml-mode)
 #+END_SRC
 
 ** Python

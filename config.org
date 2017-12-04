@@ -242,50 +242,59 @@ and other files (recentf, savespace) should point to there as well.
 
 ** Figuring out, if I am at work 	    :location_switch:
 #+BEGIN_SRC emacs-lisp
-  ;; setting me-at-work to true if I am at work
-  ;;  I can check for it later to enable/disable config parts
-  ;; when (or 
-  ;;       (string= system-name "PC-1316")
-  ;;       (string= system-name "SRV-KON-XA1") ; CITRIX-Server
-  ;;       (string= system-name "SRV-KON-XA2") ; CITRIX-Server
-  ;;       (string= system-name "SRV-KON-XA3")) ; CITRIX-Server
+    ;; setting me-at-work to true if I am at work
+    ;;  I can check for it later to enable/disable config parts
+    ;; when (or 
+    ;;       (string= system-name "PC-1316")
 
-  ;; will be overwritten if I am at work
+  (if (or (string= (getenv "USERNAME") "HannaskeD")
+          (string= (getenv "USERNAME") "hannasked"))
+      (progn				; true = at work
+        (message "[dh] Setting const dahan/me-at-work to true")
+        (defconst dh/me-at-work t "boolean switch for work environment")
 
-  (when (or (string= (getenv "USERNAME") "HannaskeD")
-            (string= (getenv "USERNAME") "hannasked"))
+        (defconst dh/emacs-work-extra-dir
+          (expand-file-name "emacs-work-extra" "I:\\DATEN\\_Daniel\\Emacs")
+          "directory where I keep work related emacs files, e.g. pandoc templates")
+        ;; create dh/emacs-local-dir directory if it doesn't exist
 
-    (message "[dh] Setting const dahan/me-at-work to true")
-    (defconst dh/me-at-work t "boolean switch for work environment")
+        (unless (file-directory-p dh/emacs-work-extra-dir)
+          (make-directory dh/emacs-work-extra-dir))
+        ;; directly setting proxy - otherwise url-package couldn't work
 
-    (defconst dh/emacs-work-extra-dir
-      (expand-file-name "emacs-work-extra" "I:\\DATEN\\_Daniel\\Emacs")
-      "directory where I keep work related emacs files, e.g. pandoc templates")
-    ;; create dh/emacs-local-dir directory if it doesn't exist
-
-    (unless (file-directory-p dh/emacs-work-extra-dir)
-      (make-directory dh/emacs-work-extra-dir))
-    ;; directly setting proxy - otherwise url-package couldn't work
-
-    (setq url-proxy-services
-          '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-            ("http" . "192.168.179.77:8080")
-            ("https" . "192.168.179.77:8080"))))
+        (setq url-proxy-services
+              '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+                ("http" . "192.168.179.77:8080")
+                ("https" . "192.168.179.77:8080"))))
+    (progn				; false = not at work
+      (message "[dh] Setting const dahan/not-at-work to true")
+      (defconst dh/not-at-work t "boolean switch for not at work packages")))
 #+END_SRC
 ** setting dh/dropbox-dir and dh/onedrive-dir
 
 #+begin_src emacs-lisp
-(unless  (boundp 'dh/me-at-work)
-     (defconst dh/not-at-work t "boolean switch for not at work packages")
-     ;; setting path to Dropbox depending on user directory if it exists
-     (if (file-directory-p (expand-file-name "Dropbox" dh/user-dir))
-         (defconst dh/dropbox-dir (expand-file-name "Dropbox" dh/user-dir) "contains the path to my dropbox")
-     )
-     ;; setting path to Onedrive depending on user directory if it exists
-     (if (file-directory-p (expand-file-name "OneDrive" dh/user-dir))
-         (defconst dh/onedrive-dir (expand-file-name "OneDrive" dh/user-dir) "contains the path to my dropbox")
-     )     
-)
+  (when (boundp 'dh/not-at-work)
+
+    ;; setting path to Dropbox depending on user directory if it exists
+    (when (file-directory-p (expand-file-name "Dropbox" dh/user-dir))
+      (defconst dh/dropbox-dir (expand-file-name "Dropbox" dh/user-dir) "contains the path to my dropbox")
+
+      ;; I have two Dropbox setups, one full with all folders and one with only two
+      ;; figuring out which is available
+      (cond
+       ((and
+         (file-directory-p (expand-file-name "dahan_text" dh/dropbox-dir))
+         (file-directory-p (expand-file-name "dahan_ebooks" dh/dropbox-dir))
+         (file-directory-p (expand-file-name "dahan_documents" dh/dropbox-dir))
+         (file-directory-p (expand-file-name "dahan_notebooks" dh/dropbox-dir)))
+        (defconst dh/dropbox-full-available t "boolean switch that shows if my full dropbox is available"))
+       ((and
+         (file-directory-p (expand-file-name "org" dh/dropbox-dir))
+         (file-directory-p (expand-file-name "dahan_uberspace" dh/dropbox-dir)))
+        (defconst dh/dropbox-partial-available t "boolean switch that shows if only my partial dropbox is available"))))
+    ;; setting path to Onedrive depending on user directory if it exists
+    (if (file-directory-p (expand-file-name "OneDrive" dh/user-dir))
+        (defconst dh/onedrive-dir (expand-file-name "OneDrive" dh/user-dir) "contains the path to my dropbox")))
 #+end_src
 
 ** DISABLED set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
@@ -839,8 +848,8 @@ It must be done on frame level if you run frames in tty and gui on emacs-server.
 
 
 * General settings & packages
-** some ignored file exqtensions for completions
-#+begin_src emacs-lisp :tangle yes
+** some ignored file extensions for completions
+#+begin_src emacs-lisp
   (push ".out" completion-ignored-extensions)
   (push ".pdf" completion-ignored-extensions)
   (push ".synctex.gz" completion-ignored-extensions)
@@ -1956,13 +1965,19 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
   (use-package yasnippet
     :delight
     :init
-    (progn
-      (if (boundp 'dh/me-at-work)
-          (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "I:/DATEN/_Daniel/misc/snippets-work/" yas-installed-snippets-dir)) ;; then-part
-        (setq yas-snippet-dirs '("~/.emacs.d/snippets-dh/" "~/.emacs.d/snippets-work-copy/" yas-installed-snippets-dir))) ;; else-part
-      ;; change the order of the prompt function, prefer ido
-      ;;(setq  yas-prompt-functions '(yas-ido-prompt yas-x-prompt yas-dropdown-prompt yas-completing-prompt yas-no-prompt))
-      (yas-global-mode 1)))
+    (if (file-directory-p (expand-file-name "snippets-dh" user-emacs-directory))
+        (push (expand-file-name "snippets-dh" user-emacs-directory) yas-snippet-dirs))
+    (if (and
+         (boundp 'dh/dropbox-dir)
+         (file-directory-p (expand-file-name "dahan_uberspace/snippets-work-copy" dh/dropbox-dir)))
+        (push (expand-file-name "dahan_uberspace/snippets-work-copy" dh/dropbox-dir) yas-snippet-dirs))
+
+    (if (boundp 'dh/me-at-work)
+        (push "I:/DATEN/_Daniel/misc/snippets-work/" yas-installed-snippets-dir)) 
+
+    ;; change the order of the prompt function, prefer ido
+    ;;(setq  yas-prompt-functions '(yas-ido-prompt yas-x-prompt yas-dropdown-prompt yas-completing-prompt yas-no-prompt))
+    (yas-global-mode 1))
 #+end_src
 
 
@@ -2291,7 +2306,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
 
     ;; other directories are only in some, if one (e.g. dahan_text) is there,
     ;; the other will also be there
-    (when (file-directory-p (expand-file-name "dahan_text" dh/dropbox-dir))
+    (when (boundp 'dh/dropbox-full-available)
       (push `("dropbox: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
       (push `("dropbox: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
       (push `("dropbox: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
@@ -2310,7 +2325,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     )
 
   ;; if my full Dropbox is there, that means more directories besides org and dahan_uberspace
-  (when (and (boundp 'dh/dropbox-dir) (file-directory-p (expand-file-name "dahan_ebooks" dh/dropbox-dir)))
+  (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/dropbox-full-available))
     (push `("ebook: markdown-mode" . ,(expand-file-name "dahan_ebooks/Verlage/LeanPub/markdown-mode.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     ;; (push `("ebook: " . ,(expand-file-name "dahan_ebooks/Verlage/.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: 57 exercises for programmers" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/exercises-for-programmers_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
@@ -2349,7 +2364,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("ebook: Just Enough Research" . ,(expand-file-name "apps/O'Reilly Media/Just Enough Research/Just Enough Research.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: bash Cookbook" . ,(expand-file-name "apps/O'Reilly Media/bash Cookbook/bash Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: CSS3 The Missing Manual" . ,(expand-file-name "apps/O'Reilly Media/CSS3_ The Missing Manual/CSS3_ The Missing Manual.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    
+
     )
 
 

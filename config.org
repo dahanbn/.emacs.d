@@ -1242,12 +1242,12 @@ markup - that is bound to F11.
      ((executable-find "pandoc")
       (setq markdown-command
             (concat
-             "pandoc"
-             " --from=markdown --to=html"
+             (executable-find "pandoc")
+             " --from=markdown --to=html --quiet"
              " --standalone --mathjax --highlight-style=pygments")))
      ;; otherwise testing for multimarkdown
      ((executable-find "multimarkdown")
-      (setq markdown-command "multimarkdown"))))
+      (setq markdown-command (executable-find "multimarkdown")))))
 #+end_src
 
 ** edit-indirect
@@ -1855,16 +1855,16 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 *** magit setup
 #+BEGIN_SRC emacs-lisp
   (use-package magit
+    :if (executable-find "git")
     :init
-    (progn
-      ;; disable the default version control git backend
-      ;; can't disable it, because I'd like to use it in neotree & gitgutter
-      ;; (setq vc-handled-backends (delq 'Git vc-handled-backends))
-      ;; enabling ivy for magit
-      (setq magit-completing-read-function 'ivy-completing-read)
-      ;; setting kbd
-      (global-set-key (kbd "C-x g") 'magit-status)
-      (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)))
+    ;; disable the default version control git backend
+    ;; can't disable it, because I'd like to use it in neotree & gitgutter
+    ;; (setq vc-handled-backends (delq 'Git vc-handled-backends))
+    ;; enabling ivy for magit
+    (setq magit-completing-read-function 'ivy-completing-read)
+    ;; setting kbd
+    (global-set-key (kbd "C-x g") 'magit-status)
+    (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup))
 #+END_SRC
 
 *** setting magit-repository-directories
@@ -1878,50 +1878,52 @@ with ~g~.
 See also http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html for a 
 lot of useful what I can do with Magit.
 #+begin_src emacs-lisp
-  ;; setting repositories 
-  ;; .emacs.d repo
-  (setq magit-repository-directories
-        `((,user-emacs-directory . 0)))
+  (when (executable-find "git")
 
-  ;; repos on Windows
-  (when (string-equal system-type "windows-nt")
+    ;; setting repositories
+    ;; .emacs.d repo
+    (setq magit-repository-directories
+          `((,user-emacs-directory . 0)))
 
-    ;; add emacs-portable-win64 if it is set
-    (when (boundp 'dh/emacs-portable-dir)
-      (add-to-list 'magit-repository-directories
-                   `(,dh/emacs-portable-dir . 0) t))
+    ;; repos on Windows
+    (when (string-equal system-type "windows-nt")
 
-    ;; usually my Windows repos are on D:\git-repositories
-    (if (file-directory-p "d:/git-repositories")
+      ;; add emacs-portable-win64 if it is set
+      (when (boundp 'dh/emacs-portable-dir)
         (add-to-list 'magit-repository-directories
-                     '("d:/git-repositories" . 1) t)))
+                     `(,dh/emacs-portable-dir . 0) t))
 
-  ;; add various repos on Linux
-  (when (string-equal system-type "gnu/linux")
+      ;; usually my Windows repos are on D:\git-repositories
+      (if (file-directory-p "d:/git-repositories")
+          (add-to-list 'magit-repository-directories
+                       '("d:/git-repositories" . 1) t)))
 
-    ;; elisp-playground repo
-    (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
-        (add-to-list 'magit-repository-directories
-                     `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 0) t))
+    ;; add various repos on Linux
+    (when (string-equal system-type "gnu/linux")
 
-    ;; 57-Exercises-for-Programmers repo
-    (if (file-directory-p (expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")))
-        (add-to-list 'magit-repository-directories
-                     `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 0) t)))
+      ;; elisp-playground repo
+      (if (file-directory-p (expand-file-name "elisp-playground" (getenv "HOME")))
+          (add-to-list 'magit-repository-directories
+                       `(,(expand-file-name "elisp-playground" (getenv "HOME")) . 0) t))
 
-  ;; restructure the output list
-  (with-eval-after-load 'magit
-    (setcdr (cdr magit-repolist-columns)
-            (cons '("D" 1 magit-repolist-column-dirty ())
-                  (cddr magit-repolist-columns))))
+      ;; 57-Exercises-for-Programmers repo
+      (if (file-directory-p (expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")))
+          (add-to-list 'magit-repository-directories
+                       `(,(expand-file-name "57-Exercises-for-Programmers" (getenv "HOME")) . 0) t)))
 
-  (setq magit-repolist-columns
-        '(("Name"    25 magit-repolist-column-ident                  ())
-          ("Version" 25 magit-repolist-column-version                ())
-          ("D"        1 magit-repolist-column-dirty                  ())
-          ("L<U"      3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
-          ("L>U"      3 magit-repolist-column-unpushed-to-upstream   ((:right-align t)))
-          ("Path"    99 magit-repolist-column-path                   ())))
+    ;; restructure the output list
+    (with-eval-after-load 'magit
+      (setcdr (cdr magit-repolist-columns)
+              (cons '("D" 1 magit-repolist-column-dirty ())
+                    (cddr magit-repolist-columns))))
+
+    (setq magit-repolist-columns
+          '(("Name" 25 magit-repolist-column-ident ())
+            ("Version" 25 magit-repolist-column-version ())
+            ("D" 1 magit-repolist-column-dirty ())
+            ("L<U" 3 magit-repolist-column-unpulled-from-upstream ((:right-align t)))
+            ("L>U" 3 magit-repolist-column-unpushed-to-upstream ((:right-align t)))
+            ("Path" 99 magit-repolist-column-path ()))))
 #+end_src
 *** DISABLED diff-hl
 Diff-hl goes a little further than git-gutter in that it can highlight the
@@ -1932,7 +1934,7 @@ https://github.com/dgutov/diff-hl
 
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
-    :if (boundp 'dh/not-at-work)
+    :if (executable-find "git")
     :init
     (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
     (global-diff-hl-mode t))
@@ -1945,6 +1947,7 @@ https://github.com/syohex/emacs-git-gutter
 
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter
+    :if (executable-find "git")
     :init
     (global-git-gutter-mode 1))
 #+END_SRC
@@ -1954,6 +1957,7 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
 
 #+BEGIN_SRC emacs-lisp
   (use-package git-gutter+
+    :if (executable-find "git")
     :init
     (global-git-gutter+-mode))
 #+END_SRC
@@ -2373,6 +2377,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
   (push '("emacs-guide: Magit" . "https://magit.vc/manual/magit.html#Top") yal/launchable-items-url)
   (push '("github: elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground") yal/launchable-items-url)
   (push '("github: .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d") yal/launchable-items-url)
+  (push '("github: .emacs.d (config.org - raw)" . "https://raw.githubusercontent.com/dahanbn/.emacs.d/master/config.org") yal/launchable-items-url)
   (push '("github: portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64") yal/launchable-items-url)
   (push '("github: 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers") yal/launchable-items-url)
   (push '("github: Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher") yal/launchable-items-url)
@@ -2497,5 +2502,6 @@ Turn off debugging, now that initialization has ended
 #+BEGIN_SRC emacs-lisp
   (setq debug-on-error nil)
 #+END_SRC
+
 
 

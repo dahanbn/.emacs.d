@@ -885,6 +885,9 @@ Navigates back to where you were editing a file next time you open it
 #+END_SRC
 
 ** smartparens
+    
+https://github.com/Fuco1/smartparens
+
 #+begin_src emacs-lisp
   (use-package smartparens
     :delight
@@ -892,8 +895,12 @@ Navigates back to where you were editing a file next time you open it
     :config
     ;; Activate smartparens in minibuffer
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
-    ;; Do not pair simple quotes
-    (sp-pair "'" nil :actions :rem))
+    ;; Do not pair simple quote
+    (sp-pair "'" nil :actions :rem)
+    ;; add some org text markup pairs
+    (sp-local-pair 'org-mode "~" "~")     ; code
+    (sp-local-pair 'org-mode "_" "_")     ; underlined
+    )
 #+end_src
 ** undo-tree
 #+begin_src emacs-lisp

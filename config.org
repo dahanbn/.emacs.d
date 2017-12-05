@@ -854,6 +854,56 @@ It must be done on frame level if you run frames in tty and gui on emacs-server.
   (push ".pdf" completion-ignored-extensions)
   (push ".synctex.gz" completion-ignored-extensions)
 #+end_src
+** ibuffer
+making ibuffer as default buffer list
+
+code is from http://cestlaz.github.io/posts/using-emacs-34-ibuffer-emmet
+
+#+begin_src emacs-lisp
+  (defalias 'list-buffers 'ibuffer) ; make ibuffer default
+  (setq ibuffer-saved-filter-groups
+        (quote (("not-at-work"
+                 ("dired" (mode . dired-mode))
+                 ("emacs-config" (or
+                                  (filename . ".emacs.d")
+                                  (filename . "emacs-config")))
+                 ("org" (name . "^.*org$"))
+                 ("org-src" (name . "^\\*Org Src"))
+                 ("web" (or
+                         (mode . web-mode)
+                         (mode . js2-mode)))
+                 ("shell" (or
+                           (mode . eshell-mode)
+                           (mode . shell-mode)))
+                 ("mu4e" (name . "\*mu4e\*"))
+                 ("programming" (or
+                                 (mode . python-mode)
+                                 (mode . c++-mode)
+                                 (mode . rust-mode)))
+                 ("Magit" (name . "\*magit"))
+                 ("Help" (or
+                          (name . "\*Help\*")
+                          (name . "\*Apropos\*")
+                          (name . "\*info\*")))
+                 ("emacs" (or
+                           (name . "^\\*scratch\\*$")
+                           (name . "^\\*ielm\\*$")
+                           (name . "^\\*Messages\\*$")))))))
+
+  (add-hook 'ibuffer-mode-hook
+            (lambda ()
+              (ibuffer-auto-mode 1)
+              (ibuffer-switch-to-saved-filter-groups "not-at-work")))
+
+  ;; don't show these
+  ;; (add-to-list 'ibuffer-never-show-predicates "zowie")
+
+  ;; Don't show filter groups if there are no buffers in that group
+  (setq ibuffer-show-empty-filter-groups nil)
+
+  ;; Don't ask for confirmation to delete marked buffers
+  (setq ibuffer-expert t)
+#+end_src
 ** Recent files						    :emacs_local_dir:
 #+BEGIN_SRC emacs-lisp
   (use-package recentf
@@ -1078,11 +1128,6 @@ Rainbow Delimters paints delimiters, e.g. parenthese in different colours.
     (add-hook 'org-mode-hook #'rainbow-delimiters-mode)
     (add-hook 'markdown-mode-hook #'rainbow-delimiters-mode))
 #+end_src
-** dired-details+
-#+begin_src emacs-lisp :tangle yes
-  (use-package dired-details+
-    :ensure t)
-#+end_src
 
 ** which-key
 https://github.com/justbur/emacs-which-key
@@ -1138,9 +1183,36 @@ editors. More here: http://editorconfig.org/g
                   #'editorconfig-core-get-properties-hash)
     (editorconfig-mode 1))
 #+end_src
+** dired+
+enhanced dired.
 
+a short video intro http://cestlaz.github.io/posts/using-emacs-38-dired/
+#+begin_src emacs-lisp
+  (use-package dired+
+    :config (require 'dired+))
+#+end_src
+** dired-details+
 
+https://www.emacswiki.org/emacs/DiredDetails
 
+~(~ is bind to ~dired-details-toggle~
+
+#+begin_src emacs-lisp
+  (use-package dired-details+
+    :ensure t
+    :config (setq dired-details-propagate-flag t) ; remembers hide/show details settings
+    )
+#+end_src
+
+** normal regexp in emacs
+~pcre-mode~ allows to use normal regexp inside Emacs instead of escaping.
+
+Now I can use ~.*(jpg|png)~ instead of ~.*\(jpg\|png\)~.
+
+#+begin_src emacs-lisp
+  (use-package pcre2el
+    :init (pcre-mode))
+#+end_src
 * ELISP - setting up Lisp editing
 
 ** Eldoc
@@ -1203,15 +1275,28 @@ Provides e.g. in elpy a quickhelp about the function.
   (use-package yaml-mode
     :mode ("\\.yml\\'" . yaml-mode))
 #+END_SRC
+** webmode
+http://cestlaz.github.io/posts/using-emacs-21-web-mode
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (setq web-mode-ac-sources-alist
+          '(("css" . (ac-source-css-property))
+            ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+    (setq web-mode-enable-auto-closing t)
+    (setq web-mode-enable-auto-quoting t)) ; this fixes the quote problem I mentioned
+#+end_src
 ** emmet
 #+begin_src emacs-lisp
   ;; emmet css selectors for Markup
   (use-package emmet-mode
     :init
-    (progn
-      (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-      (add-hook 'html-mode-hook 'emmet-mode)
-      (add-hook 'css-mode-hook 'emmet-mode)))
+    (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+    (add-hook 'html-mode-hook 'emmet-mode)
+    (add-hook 'web-mode-hook 'emmet-mode)
+    (add-hook 'css-mode-hook 'emmet-mode))
 #+end_src
 ** bat-mode Windows Batch files
 #+begin_src emacs-lisp

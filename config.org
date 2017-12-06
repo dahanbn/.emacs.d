@@ -1213,6 +1213,22 @@ Now I can use ~.*(jpg|png)~ instead of ~.*\(jpg\|png\)~.
   (use-package pcre2el
     :init (pcre-mode))
 #+end_src
+** expand-region
+https://github.com/magnars/expand-region.el
+
+#+begin_src emacs-lisp
+  (use-package expand-region
+    :bind (("C-=" . er/expand-region))
+    )
+#+end_src
+** helpful
+https://github.com/Wilfred/helpful
+
+#+begin_src emacs-lisp
+  (use-package helpful)
+#+end_src
+
+
 * ELISP - setting up Lisp editing
 
 ** Eldoc
@@ -1535,7 +1551,35 @@ company-jedi requires > pip install sexpdata epc virtualenv
     (add-hook 'python-mode-hook 'config/enable-company-jedi))
 #+end_src
 
+** slime - common lisp repl
 
+CL interface for Emacs
+
+https://common-lisp.net/project/slime/doc/html/
+
+I use Steel Bank Common Lisp (http://sbcl.org/).
+
+#+begin_src emacs-lisp
+  (use-package slime
+    :if (executable-find "sbcl")
+    :config
+    (setq inferior-lisp-program (executable-find "sbcl"))
+    )
+#+end_src
+
+** geiser - scheme repl
+https://github.com/jaor/geiser
+
+Racket https://racket-lang.org/
+
+#+begin_src emacs-lisp
+  (use-package geiser
+    :if (executable-find "racket"))
+#+end_src
+#+BEGIN_PRACTICE
+(use-package geiser
+)
+#+END_PRACTICE
 * hydra
 https://github.com/abo-abo/hydra
 https://github.com/abo-abo/hydra/wiki
@@ -2631,6 +2675,3 @@ Turn off debugging, now that initialization has ended
 #+BEGIN_SRC emacs-lisp
   (setq debug-on-error nil)
 #+END_SRC
-
-
-

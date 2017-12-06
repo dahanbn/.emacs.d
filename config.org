@@ -1574,7 +1574,7 @@ Racket https://racket-lang.org/
 
 #+begin_src emacs-lisp
   (use-package geiser
-    :if (executable-find "racket"))
+    :if (or (executable-find "racket") (executable-find "guile")))
 #+end_src
 #+BEGIN_PRACTICE
 (use-package geiser

@@ -1225,7 +1225,9 @@ https://github.com/magnars/expand-region.el
 https://github.com/Wilfred/helpful
 
 #+begin_src emacs-lisp
-  (use-package helpful)
+    (use-package helpful
+      :bind (("C-c C-." . helpful-at-point))
+      )
 #+end_src
 
 
@@ -1564,7 +1566,9 @@ I use Steel Bank Common Lisp (http://sbcl.org/).
     :if (executable-find "sbcl")
     :config
     (setq inferior-lisp-program (executable-find "sbcl"))
-    )
+    (when (string-equal system-type "windows-nt")
+      ;; (setq slime-lisp-implementations '((sbcl ("c:/Program Files/Steel Bank Common Lisp/1.4.2/sbcl.exe" "--core" "c:/Program Files/Steel Bank Common Lisp/1.4.2/sbcl.core"))))
+      (setq slime-lisp-implementations `((sbcl (,(executable-find "sbcl") "--core" ,(concat (substring (executable-find "sbcl") 0 -3) "core")))))))
 #+end_src
 
 ** geiser - scheme repl
@@ -1576,10 +1580,6 @@ Racket https://racket-lang.org/
   (use-package geiser
     :if (or (executable-find "racket") (executable-find "guile")))
 #+end_src
-#+BEGIN_PRACTICE
-(use-package geiser
-)
-#+END_PRACTICE
 * hydra
 https://github.com/abo-abo/hydra
 https://github.com/abo-abo/hydra/wiki

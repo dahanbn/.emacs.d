@@ -1581,6 +1581,16 @@ company-jedi requires > pip install sexpdata epc virtualenv
     (add-hook 'python-mode-hook 'config/enable-company-jedi))
 #+end_src
 
+**  slime-company
+
+https://github.com/anwyn/slime-company
+
+#+begin_src emacs-lisp
+  ;; will be activated within setup of Slime
+  (use-package slime-company
+    :if (executable-find "sbcl"))
+#+end_src
+
 ** slime - common lisp repl
 
 CL interface for Emacs
@@ -1596,10 +1606,23 @@ I use Steel Bank Common Lisp (http://sbcl.org/).
     (setq inferior-lisp-program (executable-find "sbcl"))
     (when (string-equal system-type "windows-nt")
       ;; (setq slime-lisp-implementations '((sbcl ("c:/Program Files/Steel Bank Common Lisp/1.4.2/sbcl.exe" "--core" "c:/Program Files/Steel Bank Common Lisp/1.4.2/sbcl.core"))))
-      (setq slime-lisp-implementations `((sbcl (,(executable-find "sbcl") "--core" ,(concat (substring (executable-find "sbcl") 0 -3) "core")))))))
+      (setq slime-lisp-implementations `((sbcl (,(executable-find "sbcl") "--core" ,(concat (substring (executable-find "sbcl") 0 -3) "core"))))))
+    ;; (slime-setup '(slime-fancy slime-company))
+    (setq slime-contribs '(slime-fancy))
+
+    ;; enabling quicklisp via quicklisp/slime-helper.el
+    ;;
+    ;; quicklisp is located in the user directory
+    (if (file-exists-p (expand-file-name (quicklisp/slime-helper.el) dh/user-dir))
+        (load (expand-filename (quicklisp/slime-helper.el) dh/user-dir))
+      ;; else call slime-setup manually
+      (slime-setup '(slime-fancy slime-company slime-autodoc))))
+
+
+      
 #+end_src
 
-** geiser - scheme repl
+** DISABLED geiser - scheme repl
 https://github.com/jaor/geiser
 
 Racket https://racket-lang.org/

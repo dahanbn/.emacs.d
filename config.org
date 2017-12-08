@@ -1272,7 +1272,27 @@ e.g. used by emacs-racer (rust)
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :delight
-    :config (global-company-mode))
+    :init
+    (global-company-mode)
+    :config
+        ;; (setq company-backends  '(company-ycmd
+        ;;       company-bbdb
+        ;;       company-nxml
+        ;;       company-css
+        ;;       company-eclim
+        ;;       company-semantic
+        ;;       company-xcode
+        ;;       ;; company-ropemacs
+        ;;       company-cmake
+        ;;       company-capf
+        ;;       (company-dabbrev-code company-gtags company-etags company-keywords)
+        ;;       company-oddmuse
+        ;;       company-files
+        ;;       company-dabbrev))
+    (define-key company-active-map (kbd "\C-n") 'company-select-next)
+    (define-key company-active-map (kbd "\C-p") 'company-select-previous)
+    (define-key company-active-map (kbd "\C-d") 'company-show-doc-buffer)
+    (define-key company-active-map (kbd "M-.") 'company-show-location))
 #+END_SRC
 ** company-quickhelp
 Provides e.g. in elpy a quickhelp about the function. 

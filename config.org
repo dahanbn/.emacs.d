@@ -867,8 +867,12 @@ code is from http://cestlaz.github.io/posts/using-emacs-34-ibuffer-emmet
                  ("emacs-config" (or
                                   (filename . ".emacs.d")
                                   (filename . "emacs-config")))
-                 ("org" (name . "^.*org$"))
+                 ("my tasks" (filename . "/Dropbox/org/"))
+                 ("org" (mode . org-mode))
                  ("org-src" (name . "^\\*Org Src"))
+                 ("slime" (or
+                           (name . "^\\*sl")
+                           (name . "^\\*inferior")))
                  ("web" (or
                          (mode . web-mode)
                          (mode . js2-mode)))

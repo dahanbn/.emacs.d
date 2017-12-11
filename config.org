@@ -1622,15 +1622,6 @@ I use Steel Bank Common Lisp (http://sbcl.org/).
       
 #+end_src
 
-** DISABLED geiser - scheme repl
-https://github.com/jaor/geiser
-
-Racket https://racket-lang.org/
-
-#+begin_src emacs-lisp
-  (use-package geiser
-    :if (or (executable-find "racket") (executable-find "guile")))
-#+end_src
 * hydra
 https://github.com/abo-abo/hydra
 https://github.com/abo-abo/hydra/wiki

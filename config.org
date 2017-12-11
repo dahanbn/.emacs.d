@@ -1613,8 +1613,8 @@ I use Steel Bank Common Lisp (http://sbcl.org/).
     ;; enabling quicklisp via quicklisp/slime-helper.el
     ;;
     ;; quicklisp is located in the user directory
-    (if (file-exists-p (expand-file-name "quicklisp/slime-helper.el" dh/user-dir))
-        (load (expand-filename "quicklisp/slime-helper.el" dh/user-dir))
+    (if (file-exists-p (expand-file-name "~/slime-helper.el"))
+        (load (expand-file-name "~/slime-helper.el"))
       ;; else call slime-setup manually
       (slime-setup '(slime-fancy slime-company slime-autodoc))))
 

@@ -1605,11 +1605,10 @@ I use Steel Bank Common Lisp (http://sbcl.org/).
     :config
     (setq inferior-lisp-program (executable-find "sbcl"))
     (when (string-equal system-type "windows-nt")
-      ;; (setq slime-lisp-implementations '((sbcl ("c:/Program Files/Steel Bank Common Lisp/1.4.2/sbcl.exe" "--core" "c:/Program Files/Steel Bank Common Lisp/1.4.2/sbcl.core"))))
       (setq slime-lisp-implementations `((sbcl (,(executable-find "sbcl") "--core" ,(concat (substring (executable-find "sbcl") 0 -3) "core"))))))
     ;; (slime-setup '(slime-fancy slime-company))
     (setq slime-contribs '(slime-fancy))
-
+    (setq slime-repl-history-file (expand-file-name ".slime-history.eld" dh/emacs-local-dir))
     ;; enabling quicklisp via quicklisp/slime-helper.el
     ;;
     ;; quicklisp is located in the user directory

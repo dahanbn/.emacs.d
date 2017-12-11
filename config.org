@@ -2537,7 +2537,12 @@ use variables that we're set on other lines in the config, e.g. org-directory.
   ;; if my full Dropbox is there, that means more directories besides org and dahan_uberspace
   (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/dropbox-full-available))
     (push `("ebook: markdown-mode" . ,(expand-file-name "dahan_ebooks/Verlage/LeanPub/markdown-mode.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    ;; (push `("ebook: " . ,(expand-file-name "dahan_ebooks/Verlage/.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    ;; (push `("ebook: " . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (push `("ebook: little schemer" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/The_Little_Schemer_4th_2.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (push `("ebook: seasoned schemer" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/The Seasoned Schemer - Daniel P. Friedman.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (push `("ebook: common lisp - krusenotto" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/Funktionale+Programmierung+und+Metaprogr.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (push `("ebook: little lisper" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/__The_Little_LISPer___3rd_Edition.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (push `("ebook: common lisp - touretzky" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/Common Lisp A Gentle Introduction to Symbolic Computation David Touretzky.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: 57 exercises for programmers" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/exercises-for-programmers_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: tmux 2" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/tmux-2_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: practical vim" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/practical-vim-second-edition_p2_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)

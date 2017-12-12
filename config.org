@@ -2632,25 +2632,45 @@ Content of the future package
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-x y") 'yet-another-launcher)
 
-  (defun yal/generate-hash-from-list (item-list item-type)
+  (setq yal/completing-backend "ivy")
+
+  ;; private functions
+
+  (defun yal--set-completing-backend ()
+    "sets the completing backend that is used by yet-another-launcher"
+
+
+    (cond
+     ((boundp 'yal/completing-backend) ; check if yal/completing-backend exists
+      (message "backend is set to: %s" yal/completing-backend))
+     ((featurep 'ivy)                     ; use ivy if it's there
+      )
+     ((featurep 'helm)                    ; use helm if it's there
+      )
+     ((featurep 'ido)                   ; use ido, because it's built in
+      )
+     
+     ))
+
+  (defun yal--generate-hash-from-list (item-list item-type)
     "generates the hash"
     (while item-list
-       (puthash (car (car item-list))      ; name of the item
+      (puthash (car (car item-list))      ; name of the item
                (list
                 item-type                 ; type of the item
                 (cdr (car item-list))     ; address of the item)
                 )
-               yal/yal-items                  ; name of the hash
+               yal/yal-items              ; name of the hash
                )
       (pop item-list)                    ; remove current pair from list
       ))
 
-  (defun yal/init ()
+  (defun yal--init ()
     "initializes the launchables items from yet-another-launcher"
 
     ;; creating hash-table that will contain all launchable items
     ;; it should be in the global namespace
-    ;; if rerun yal/init will each time create a new hash-table
+    ;; if rerun yal--init will each time create a new hash-table
     (setq yal/yal-items (make-hash-table :test 'equal))
 
 
@@ -2666,28 +2686,30 @@ Content of the future package
       (message "yal-error: At least you have to define yal/launchable-items-emacs, yal/launchable-items-system or yal/launchable-items-url"))
 
     (if (boundp 'yal/launchable-items-system)
-        (yal/generate-hash-from-list yal/launchable-items-system "system"))
+        (yal--generate-hash-from-list yal/launchable-items-system "system"))
 
     (if (boundp 'yal/launchable-items-emacs)
-        (yal/generate-hash-from-list yal/launchable-items-emacs "emacs"))
+        (yal--generate-hash-from-list yal/launchable-items-emacs "emacs"))
 
     (if (boundp 'yal/launchable-items-url)
-        (yal/generate-hash-from-list yal/launchable-items-url "url")))
+        (yal--generate-hash-from-list yal/launchable-items-url "url")))
+
+  ;; public functions
 
   (defun yet-another-launcher ()
     "launches local files in Emacs or with the OS corresponding launcher"
     (interactive)
     (require 'ivy)
 
-    ;; check if the hash yal/yal-items exist, otherwise call yal/init
+    ;; check if the hash yal/yal-items exist, otherwise call yal--init
     (unless (boundp 'yal/yal-items)
-      (yal/init))
+      (yal--init))
 
-    ;; development run yal/init everytime
-    (yal/init)
+    ;; development run yal--init everytime
+    (yal--init)
 
     (let ((file-key
-           (ivy-completing-read
+           (completing-read
             "yet-another-launcher: "      ; prompt
             yal/yal-items                 ; collection
             nil                           ; predicate
@@ -2717,8 +2739,8 @@ Content of the future package
          ((string-equal system-type "windows-nt")
           (w32-shell-execute "open" file-name))
          ((string-equal system-type "gnu/linux")
-          (unless (display-graphic-p)   ; without graphical interface
-            (when (fboundp 'eww)                ; and eww is available
+          (unless (display-graphic-p)     ; without graphical interface
+            (when (fboundp 'eww)          ; and eww is available
               (eww-browse-url file-name)))))))))
 #+end_src
 

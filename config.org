@@ -1238,6 +1238,19 @@ https://github.com/Wilfred/helpful
     )
 #+end_src
 
+** imenu-list
+Some explanation here:
+
+https://jblevins.org/log/markdown-imenu
+
+#+begin_src emacs-lisp
+(use-package imenu-list
+  :ensure t
+  :bind (("C-'" . imenu-list-smart-toggle))
+  :config
+  (setq imenu-list-focus-after-activation t
+        imenu-list-auto-resize nil))
+#+end_src
 
 * ELISP - setting up Lisp editing
 
@@ -1393,6 +1406,11 @@ markup - that is bound to F11.
     ;; enable auto-fill-mode in markdown-mode
     (add-hook 'markdown-mode-hook 'auto-fill-mode)
 
+    ;; enabling imenu support
+    ;; https://jblevins.org/log/markdown-imenu
+    (add-hook 'markdown-mode-hook 'imenu-add-menubar-index)
+    (setq imenu-auto-rescan t)
+    
     ;; disabling prefix prompts because I enabled which-key
     (setq markdown-enable-prefix-prompts nil)
 

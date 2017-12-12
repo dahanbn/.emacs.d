@@ -4,7 +4,7 @@
 
 ;; Author: Daniel Hannaske <d.hannaske@gmail.com>
 ;; Version: 0.1
-;; Package-Requires: 
+;; Package-Requires: either ido, helm or ivy - I prefer ivy
 ;; Keywords: 
 ;; URL: 
 
@@ -24,9 +24,11 @@
 
 ;;; Commentary:
 
-;; This package provides a minor mode to frobnicate and/or
-;; bifurcate any flanges you desire.  To activate it, just type
-
+;; This package provides a flexible launcher command that is able to
+;; launch three kind of items:
+;;    - files/dirs within Emacs (yal/launchable-items-emacs)
+;;    - files/dirs opened by os default applications (yal/launchable-items-system)
+;;    - urls opened by os default browser (yal/launchable-items-url)
 
 ;;;###autoload
      
@@ -34,3 +36,4 @@
 (provide 'yet-another-launcher)
 
 
+;;; yet-another-launcher.el ends here

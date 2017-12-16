@@ -2525,6 +2525,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("tasks: org-directory" . ,(expand-file-name org-directory)) yal/launchable-items-emacs)
     (push `("tasks: 0-dh-tasks.org" . ,(expand-file-name "0-dh-tasks.org" org-directory)) yal/launchable-items-emacs)
     (push `("tasks: refile-beorg.org" . ,(expand-file-name "refile-beorg.org" org-directory)) yal/launchable-items-emacs)
+    (push `("tasks: refile-ifttt.org" . ,(expand-file-name "refile-ifttt.org" org-directory)) yal/launchable-items-emacs)
     (push `("tasks: refile-drafts.org" . ,(expand-file-name "refile-drafts.org" org-directory)) yal/launchable-items-emacs)
     (push `("tasks: notes.org" . ,(expand-file-name "notes.org" org-directory)) yal/launchable-items-emacs)
     (push `("tasks: misc.org" . ,(expand-file-name "misc.org" org-directory)) yal/launchable-items-emacs)

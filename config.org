@@ -626,6 +626,17 @@ ELISP> (dh/format-as-euro 123456789.126)
       (setq str (concat str " €"))
       str))
 #+end_src
+*** dh/convert-markdown
+A wrapper function that uses ivy to convert markdown files to various output formats.
+
+#+begin_src emacs-lisp
+  (defun dh/convert-markdown ()
+    "converts the current buffer from markdown to various output formats."
+    (interactive)
+    ;; do only something if you are in markdown-mode, otherwise do nothing
+    (when (string-equal major-mode "markdown-mode")
+      ))
+#+end_src
 ** copied functions
 *** join lines					       :bind:bind_documented:
 #+begin_src emacs-lisp :tangle yes

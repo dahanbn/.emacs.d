@@ -2544,6 +2544,9 @@ use variables that we're set on other lines in the config, e.g. org-directory.
       (push `("dropbox: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
       (push `("dropbox: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs)))
 
+  (when (string-equal system-type "windows-nt")
+    (when (file-directory-p (expand-file-name "D:\\git-repositories"))
+      (push `("dired: git-repositories-dir" . ,(expand-file-name "D:\\git-repositories")) yal/launchable-items-emacs)))
   ;; yal/launchable-items-system
 
   (when (string-equal system-type "windows-nt")
@@ -2554,7 +2557,9 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("windows: desktop directory" . ,(expand-file-name "Desktop" dh/user-dir)) yal/launchable-items-system)
     (push `("windows: tmp directory" . ,(expand-file-name (getenv "TMPDIR"))) yal/launchable-items-system)
     (when (boundp 'dh/emacs-portable-dir)
-      (push `("windows: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs)))
+      (push `("windows: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs))
+    (when (file-directory-p (expand-file-name "D:\\git-repositories"))
+      (push `("windows: git-repositories-dir" . ,(expand-file-name "D:\\git-repositories")) yal/launchable-items-emacs)))
 
   ;; if my full Dropbox is there, that means more directories besides org and dahan_uberspace
   (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/dropbox-full-available))

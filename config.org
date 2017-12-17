@@ -2511,6 +2511,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
   (push `("emacs: config.org - my emacs init file" . ,(expand-file-name "config.org" user-emacs-directory)) yal/launchable-items-emacs)
 
   (when (and (boundp 'dh/emacs-is-portable) (boundp 'dh/emacs-portable-dir))
+    (push `("dired: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs)
     (push `("emacs-portable: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
     (push `("emacs-portable: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
 
@@ -2552,7 +2553,8 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("windows: appdata directory" . ,(expand-file-name "AppData" dh/user-dir)) yal/launchable-items-system)
     (push `("windows: desktop directory" . ,(expand-file-name "Desktop" dh/user-dir)) yal/launchable-items-system)
     (push `("windows: tmp directory" . ,(expand-file-name (getenv "TMPDIR"))) yal/launchable-items-system)
-    )
+    (when (boundp 'dh/emacs-portable-dir)
+      (push `("windows: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs)))
 
   ;; if my full Dropbox is there, that means more directories besides org and dahan_uberspace
   (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/dropbox-full-available))

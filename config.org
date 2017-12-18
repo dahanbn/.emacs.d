@@ -693,6 +693,20 @@ A wrapper function that uses ivy to convert markdown files to various output for
         (xah-make-backup))))
 #+end_src
 
+*** kill backwards
+Killing backwards to begin of line with respecting the current indentation level.
+http://emacsredux.com/blog/2013/04/08/kill-line-backward/
+
+Bound to ~C-Backspace~.
+
+Usually is backward-word-kill bound to both ~C-Backspace~ and ~M-Backspace~.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-<backspace>") (lambda ()
+                                          (interactive)
+                                          (kill-line 0)
+                                          (indent-according-to-mode)))
+#+end_src
 
 * General Appearance
 ** full screen, global-font-lock and no startup-message

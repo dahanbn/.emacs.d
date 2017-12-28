@@ -883,6 +883,15 @@ It must be done on frame level if you run frames in tty and gui on emacs-server.
    (menu-bar-mode -1))
 #+end_src
 
+*** dimmer
+package that dims the faces of not active windows dynamically
+#+begin_src emacs-lisp
+  (use-package dimmer
+    :init
+    (dimmer-activate)
+    (setq dimmer-percent 0.3) ; default is 0.20 
+    )
+#+end_src
 
 * General settings & packages
 ** some ignored file extensions for completions

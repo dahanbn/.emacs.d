@@ -2269,7 +2269,7 @@ https://github.com/bbatsov/projectile
 #+BEGIN_SRC emacs-lisp
   (use-package counsel-projectile
     :init
-    (counsel-projectile-on))
+    (counsel-projectile-mode))
 #+END_SRC
 
 ** Org

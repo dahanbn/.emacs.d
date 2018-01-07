@@ -407,7 +407,7 @@ installs its local copies of the packages:
        (add-to-list 'package-archives (cons "melpa" url) t) 
 )
 
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; (add-to-list 'load-path "~/elisp")
@@ -2222,7 +2222,7 @@ https://github.com/syohex/emacs-git-gutter
     (global-git-gutter-mode 1))
 #+END_SRC
 
-*** git-gutter+
+*** DISABLED git-gutter+
 https://github.com/nonsequitur/git-gutter-plus works also in tty.
 
 #+BEGIN_SRC emacs-lisp

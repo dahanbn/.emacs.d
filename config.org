@@ -406,8 +406,7 @@ installs its local copies of the packages:
        (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
        (add-to-list 'package-archives (cons "melpa" url) t) 
 )
-
-;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; (add-to-list 'load-path "~/elisp")
@@ -1516,8 +1515,7 @@ It's already built in and no external package.
 #+begin_src emacs-lisp
   (require 'rst)
   (setq auto-mode-alist
-        (append '(("\\.txt\\'" . rst-mode)
-                  ("\\.rst\\'" . rst-mode)
+        (append '(("\\.rst\\'" . rst-mode)
                   ("\\.rest\\'" . rst-mode)) auto-mode-alist))
 #+end_src
 ** DISABLED AUCTeX - LaTeX old

@@ -2627,7 +2627,10 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("ebook: git for humans" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/git-for-humans.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: demystifying-public-speaking" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/demystifying-public-speaking.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: css3 for web designers" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/CSS3-for-Web-Designers-2e.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (push `("ebook: Automate the Boring Stuff with Python" . ,(expand-file-name "dahan_ebooks/Verlage/NoStarch/AutomatetheBoringStuffwithPython.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+
     ;; (push `("ebook: " . ,(expand-file-name "apps\O'Reilly Media//.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+
     (push `("ebook: Land of Lisp" . ,(expand-file-name "apps/O'Reilly Media/Land of Lisp/Land of Lisp.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: Lauren Ipsum" . ,(expand-file-name "apps/O'Reilly Media/Lauren Ipsum/Lauren Ipsum.pdf" dh/dropbox-dir)) yal/launchable-items-system)
     (push `("ebook: Learning GNU Emacs" . ,(expand-file-name "apps/O'Reilly Media/Learning GNU Emacs/Learning GNU Emacs.pdf" dh/dropbox-dir)) yal/launchable-items-system)

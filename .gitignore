@@ -18,3 +18,4 @@ elpa
 # don't track config.el - it's auto-generated
 config.el
 /projectile-bookmarks.eld
+/#config.org#

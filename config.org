@@ -421,6 +421,8 @@ installs its local copies of the packages:
 (eval-when-compile
   (require 'use-package))
 (use-package delight)
+
+(use-package use-package)
  
 (use-package auto-compile
   :config

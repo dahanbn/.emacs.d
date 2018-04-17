@@ -247,9 +247,9 @@ and other files (recentf, savespace) should point to there as well.
     ;; when (or 
     ;;       (string= system-name "PC-1316")
 
-  (if (or (string= (getenv "USERNAME") "HannaskeD")
-          (string= (getenv "USERNAME") "hannasked"))
-      (progn				; true = at work
+  (if (string= (downcase (getenv "USERNAME")) "hannasked")
+
+      (progn                              ; true = at work
         (message "[dh] Setting const dahan/me-at-work to true")
         (defconst dh/me-at-work t "boolean switch for work environment")
 
@@ -266,7 +266,7 @@ and other files (recentf, savespace) should point to there as well.
               '(("no_proxy" . "^\\(localhost\\|10.*\\)")
                 ("http" . "192.168.179.77:8080")
                 ("https" . "192.168.179.77:8080"))))
-    (progn				; false = not at work
+    (progn                                ; false = not at work
       (message "[dh] Setting const dahan/not-at-work to true")
       (defconst dh/not-at-work t "boolean switch for not at work packages")))
 #+END_SRC

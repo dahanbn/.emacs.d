@@ -846,7 +846,7 @@ You can see a list of all loaded faces and it's highlighting with:
 #+begin_src emacs-lisp
   ;; setting the frame title
   (if (boundp 'dh/me-at-work)
-      (defconst dh/location-for-frame-title (concat "@WORK") "contains the wording if I am at work or not for the frame-title") ; true
+      (defconst dh/location-for-frame-title (concat "@WORK (" (getenv "emacs_dir") ")") "contains the wording if I am at work or not for the frame-title") ; true
     (defconst dh/location-for-frame-title (concat "@NOT AT WORK") "contains the wording if I am at work or not for the frame-title") ; false
     )
 
@@ -1325,6 +1325,22 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
     (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
 #+end_src
    
+** Elisp Slime Navigation
+https://github.com/purcell/elisp-slime-nav
+adds Slime navigation to elisp & ielm
+- ~M-.~ to navigate to symbol at point
+- ~M-,~ to pop back to the previous mark
+
+#+BEGIN_SRC emacs-lisp
+(use-package elisp-slime-nav
+  :ensure t
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+  (add-hook hook 'elisp-slime-nav-mode))
+    
+)
+#+END_SRC
+
 
 * Markup or programming languages
 ** company mode - autocompletion
@@ -2822,5 +2838,6 @@ Turn off debugging, now that initialization has ended
 #+BEGIN_SRC emacs-lisp
   (setq debug-on-error nil)
 #+END_SRC
+
 
 

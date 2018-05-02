@@ -1388,6 +1388,20 @@ Provides e.g. in elpy a quickhelp about the function.
       (company-auctex-init)))
 #+END_SRC
 
+** poporg
+WRITE CODE COMMENTS IN ORG-MODE WITH POPORG
+http://pragmaticemacs.com/emacs/write-code-comments-in-org-mode-with-poporg/
+
+~C-c /~ calls ~poporg-dwim~, that creates a temporary org-window to write
+comments with org markup, the poporg buffer can be closed with ~C-x C-s~.
+
+During the editing side by side "C-c C-c" would update the comment in the 
+original window.
+#+BEGIN_SRC emacs-lisp
+  (use-package poporg
+    :ensure t
+    :bind (("C-c /" . poporg-dwim)))
+#+END_SRC
 ** json
 #+BEGIN_SRC emacs-lisp
   (use-package json-mode)

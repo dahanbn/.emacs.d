@@ -1234,7 +1234,7 @@ editors. More here: http://editorconfig.org/g
                   #'editorconfig-core-get-properties-hash)
     (editorconfig-mode 1))
 #+end_src
-** dired+
+** DISABLED dired+
 enhanced dired.
 
 a short video intro http://cestlaz.github.io/posts/using-emacs-38-dired/
@@ -1242,7 +1242,7 @@ a short video intro http://cestlaz.github.io/posts/using-emacs-38-dired/
   (use-package dired+
     :config (require 'dired+))
 #+end_src
-** dired-details+
+** DISABLED dired-details+
 
 https://www.emacswiki.org/emacs/DiredDetails
 
@@ -2496,7 +2496,7 @@ http://orgmode.org/manual/Conflicts.html
   ;; fixing tab-binding for YASnippets in Org-Mode
   (add-hook 'org-mode-hook
             (lambda ()
-              (org-set-local 'yas/trigger-key [tab])
+              (setq-local yas/trigger-key [tab])
               (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
 #+END_SRC
 

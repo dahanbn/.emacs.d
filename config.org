@@ -270,7 +270,7 @@ and other files (recentf, savespace) should point to there as well.
       (message "[dh] Setting const dahan/not-at-work to true")
       (defconst dh/not-at-work t "boolean switch for not at work packages")))
 #+END_SRC
-** setting dh/dropbox-dir and dh/onedrive-dir
+** setting dh/dropbox-dir, dh/onedrive-dir & dh/iclouddrive-dir
 
 #+begin_src emacs-lisp
   (when (boundp 'dh/not-at-work)
@@ -292,9 +292,14 @@ and other files (recentf, savespace) should point to there as well.
          (file-directory-p (expand-file-name "org" dh/dropbox-dir))
          (file-directory-p (expand-file-name "dahan_uberspace" dh/dropbox-dir)))
         (defconst dh/dropbox-partial-available t "boolean switch that shows if only my partial dropbox is available"))))
+
     ;; setting path to Onedrive depending on user directory if it exists
     (if (file-directory-p (expand-file-name "OneDrive" dh/user-dir))
-        (defconst dh/onedrive-dir (expand-file-name "OneDrive" dh/user-dir) "contains the path to my dropbox")))
+        (defconst dh/onedrive-dir (expand-file-name "OneDrive" dh/user-dir) "contains the path to my dropbox"))
+
+    ;; setting path to iClouddrive dir if it exists
+    (if (file-directory-p (expand-file-name "iCloudDrive" dh/user-dir))
+        (defconst dh/iclouddrive-dir (expand-file-name "iCloudDrive" dh/user-dir) "contains the path to my iCloud drive")))
 #+end_src
 
 ** DISABLED set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
@@ -781,11 +786,20 @@ character it is under; i.e. full width of a TAB:
     (add-to-list 'sml/replacer-regexp-list '("^:DB:org" ":DB:ORG:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_uberspace" ":DB-UBERSPACE:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:DB:dahan_notebooks" ":DB-NOTEBOOKS:") t))
+
   ;; adding regexp for shortening OneDrive to OD
   (when (boundp 'dh/onedrive-dir)
     (add-to-list 'sml/replacer-regexp-list
                  `(,(concat "^" dh/onedrive-dir "/") ,":OD:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:OD:dprogramming" ":OD-PROGRAMMING:") t))
+
+  ;; adding regexp for shortening iCloudDrive to iCloud
+  (when (boundp 'dh/iclouddrive-dir)
+    (add-to-list 'sml/replacer-regexp-list
+                 `(,(concat "^" dh/iclouddrive-dir "/") ,":iCloud:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:iCloud:M6HJR9W95L~com~textasticapp~textastic" ":iCloud-Textastic:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:iCloud:27N4MQEA55~pro~writer" ":iCloud-iAWriter:") t))
+
 
   ;; shortening Windows USERPROFILE to WIN~
   (cond
@@ -2590,6 +2604,12 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("dired: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs)
     (push `("emacs-portable: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
     (push `("emacs-portable: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
+
+  (when (boundp 'dh/iclouddrive-dir)
+    ;; beware iCloudDrive directories have strang name in reality, in Windows won't be shown those names directly
+    (push `("iCloud: root directory" . ,(expand-file-name dh/iclouddrive-dir)) yal/launchable-items-emacs)
+    (push `("iCloud: iA Writer directory" . ,(expand-file-name "27N4MQEA55~pro~writer" dh/iclouddrive-dir)) yal/launchable-items-emacs)
+    (push `("iCloud: Textastic directory" .  ,(expand-file-name "M6HJR9W95L~com~textasticapp~textastic" dh/iclouddrive-dir)) yal/launchable-items-emacs))
 
   (when (boundp 'dh/dropbox-dir)
     ;; Dropbox root, org & dahan_uberspace is in all my dropboxes

@@ -20,6 +20,8 @@ I am still learning Magit therefore here links to its documentation:
 - https://magit.vc/manual/magit/Getting-Started.html#Getting-Started
 - https://magit.vc/manual/magit/index.html
 
+Either use ~magit-status~ or ~magit-list-repositories~.
+
 After launching ~magit-status~ with ~C-x g~ you can manage all git actions in
 that status buffer. You can see available commands with ~C-c C-c~.
 
@@ -32,6 +34,10 @@ Usually you would:
 + write the commit message in the message buffer and press ~C-c C-c~
 + to push those commits type ~P~ followed by ~p~
 + to get *help* type ~h~
+
+~magit-list-repositories~ will show you all known repositories and there status. 
+With ~ret~ I  can switch into a more detailed view of the repository. 
+The list repository buffer can be updated with ~g~.
 
 * Links to useful Emacs related stuff
 

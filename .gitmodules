@@ -1,3 +1,0 @@
-[submodule "local-packages/lpy"]
-	path = local-packages/lpy
-	url = https://github.com/abo-abo/lpy.git

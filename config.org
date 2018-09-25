@@ -1368,7 +1368,7 @@ adds Slime navigation to elisp & ielm
 
 
 * EVIL
-** evil
+** DISABLED evil
 #+begin_src emacs-lisp
 ;; Evil Mode
 
@@ -1402,7 +1402,7 @@ adds Slime navigation to elisp & ielm
     (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)))
 #+end_src
-** evil-leader
+** DISABLED evil-leader
 #+begin_src emacs-lisp
 ; Setup , as a leader
 (use-package evil-leader
@@ -1415,7 +1415,7 @@ adds Slime navigation to elisp & ielm
     ; ,x to be M-x
 (evil-leader/set-key "x" 'execute-extended-command))
 #+end_src
-** evil-escape
+** DISABLED evil-escape
 #+begin_src emacs-lisp
 ; Allow escaping of lots of things
 (use-package evil-escape
@@ -1424,12 +1424,12 @@ adds Slime navigation to elisp & ielm
     (evil-escape-mode)
 (global-set-key (kbd "<escape>") 'evil-escape)))
 #+end_src
-** evil-matchit
+** DISABLED evil-matchit
 #+begin_src emacs-lisp
 ; Various tag matching
 (use-package evil-matchit)
 #+end_src
-** evil-numbers
+** DISABLED evil-numbers
 #+begin_src emacs-lisp
 ; C-+ C-- to increase/decrease number like Vim's C-a C-x
 (use-package evil-numbers
@@ -1438,7 +1438,7 @@ adds Slime navigation to elisp & ielm
     (define-key evil-normal-state-map (kbd "C-=") 'evil-numbers/inc-at-pt)
 (define-key evil-normal-state-map (kbd "C--") 'evil-numbers/dec-at-pt)))
 #+end_src
-** evil-surround
+** DISABLED evil-surround
 #+begin_src emacs-lisp
 ; Surround
 (use-package evil-surround
@@ -1447,7 +1447,7 @@ adds Slime navigation to elisp & ielm
   (progn
 (global-evil-surround-mode 1)))
 #+end_src
-** evil-tabs
+** DISABLED evil-tabs
 #+begin_src emacs-lisp
 ; Tabs
 (use-package evil-tabs

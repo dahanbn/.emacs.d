@@ -1462,8 +1462,6 @@ adds Slime navigation to elisp & ielm
 #+end_src
 
 ** evil
-make a slow try with evil:
- main goal is to have Vim like movements and actions as d2w in normal mode
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t

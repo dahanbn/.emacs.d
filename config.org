@@ -568,9 +568,10 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
     and opens it in Emacs via find-file."
     (interactive)
     (if (file-exists-p file)
-        (find-file file)                  ; true
-      (message "Error: Couldn't find %S" file)
-      ))
+        (progn
+          (find-file file)		; true
+          )
+      (message "Error: Couldn't find %S" file)))
 
   ;; various keybindings to open commonly used files
   (global-set-key (kbd "S-<f1>")

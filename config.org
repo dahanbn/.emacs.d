@@ -1460,6 +1460,18 @@ adds Slime navigation to elisp & ielm
     (define-key evil-normal-state-map (kbd "C-l") 'elscreen-next)
 (define-key evil-normal-state-map (kbd "C-h") 'elscreen-previous)))
 #+end_src
+
+** evil
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :bind ()
+  :mode ()
+  :config ()
+  :init
+    (evil-mode 1)
+)
+#+END_SRC
 * Markup or programming languages
 ** company mode - autocompletion
 e.g. used by emacs-racer (rust)

@@ -544,19 +544,44 @@ With prefix argument FILES-TOO also offer to find files."
 based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-windows/
          http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
 #+BEGIN_SRC emacs-lisp
-;; open-sys-file-manager
-;; ----------
-(defun dh/open-sys-file-manager ()
-  "Launch the system file manager in the current directory and selects current file"
-  (interactive)
-  (when (string= system-type "windows-nt")
-           (w32-shell-execute
-              "open"
-              "explorer"
-              (concat "/e,/select," (convert-standard-filename buffer-file-name)))))
+  ;; open-sys-file-manager
+  ;; ----------
+  (defun dh/open-sys-file-manager ()
+    "Show current file in desktop.
+   (Mac Finder, Windows Explorer, Linux file manager)
+   This command can be called when in a file or in `dired'.
 
+  URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+  Version 2018-01-13"
+    (interactive)
+    (let (($path (if (buffer-file-name) (buffer-file-name) default-directory)))
+      (cond
+       ((string-equal system-type "windows-nt")
+        (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" $path t t)))
+       ((string-equal system-type "darwin")
+        (if (eq major-mode 'dired-mode)
+            (let (($files (dired-get-marked-files)))
+              (if (eq (length $files) 0)
+                  (shell-command
+                   (concat "open " (shell-quote-argument default-directory)))
+                (shell-command
+                 (concat "open -R " (shell-quote-argument (car (dired-get-marked-files)))))))
+          (shell-command
+           (concat "open -R " $path))))
+       ((string-equal system-type "gnu/linux")
+        (let (
+              (process-connection-type nil)
+              (openFileProgram (if (file-exists-p "/usr/bin/gvfs-open")
+                                   "/usr/bin/gvfs-open"
+                                 "/usr/bin/xdg-open")))
+          (start-process "" nil openFileProgram $path)))
+       ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
+       )))
 
-(global-set-key [f12]         'dh/open-sys-file-manager)        ; F12 - Open Explorer for the current file path)
+  ;; ELISP> (file-name-nondirectory (directory-file-name (file-name-directory "d:/portable-emacs-win64/.emacs.d/config.org")))
+  ;; returns ".emacs.d"
+
+  (global-set-key [f12]         'dh/open-sys-file-manager)        ; F12 - Open Explorer for the current file path)
 
 #+END_SRC
 *** dh/open-file-in-emacs

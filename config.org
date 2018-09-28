@@ -679,6 +679,61 @@ ELISP> (dh/format-as-euro 123456789.126)
       (setq str (concat str " €"))
       str))
 #+end_src
+*** dh/get-folder-name-for-buffer-file
+That's a custom function designed to be used in my snippets. In those I use 
+snippet templates and I would like to prefill custom values depending on parts
+of the directory name.
+
+file: ~example.txt~ 
+is in directory: ~D:\bla\blup\2018\I 1.5-2018-D048 Important but not described stuff~
+
+In that case the latest directory name should be extracted to:
+~I 1.5-2018-D048 Important but not described stuff~
+
+And from that I would need to split it into two parts:
+
+1st part: ~I 1.5-2018-D048~
+2nd part: ~Important but not described stuff~
+
+This function should be a helper function that returns a list of both parts. It will
+be used by two other functions to get the first part and the second part with car and
+con.
+#+begin_src emacs-lisp
+  (defun dh/get-folder-name-for-buffer-file ()
+    "Splits the directory name of the directory that contains the buffer-file-name.
+
+  If there is no buffer-file-name than it will use the default directory instead."
+    (interactive)
+    (if (buffer-file-name)
+        (file-name-nondirectory (directory-file-name (file-name-directory buffer-file-name)))
+      (default-directory)))
+#+end_src
+*** dh/get-contract-number
+
+#+begin_src emacs-lisp
+  (defun dh/get-contract-number ()
+    (interactive)
+    (let (($dirname))
+      (setq $dirname (dh/get-folder-name-for-buffer-file))
+      (if (string-match "\\(I 1.5[-A-Za-z0-9]+\\) \\(.+\\)" $dirname)
+          (match-string 1 $dirname)
+        ;; else
+        ($dirname))))
+#+end_src
+
+** dh/get-contract-topic
+
+#+begin_src emacs-lisp
+  (defun dh/get-contract-topic ()
+    (interactive)
+    (let (($dirname))
+      (setq $dirname (dh/get-folder-name-for-buffer-file))
+      (if (string-match "\\(I 1.5[-A-Za-z0-9]+\\) \\(.+\\)" $dirname)
+          (match-string 2 $dirname)
+        ;; else
+        ($dirname))))
+#+end_src
+
 *** dh/convert-markdown
 A wrapper function that uses ivy to convert markdown files to various output formats.
 

@@ -709,7 +709,8 @@ con.
       (default-directory)))
 #+end_src
 *** dh/get-contract-number
-
+- a simple custom function to get the contract number of the name of the working directory
+- it's used in snippets to fill in some useful information based on the directory where the file is located
 #+begin_src emacs-lisp
   (defun dh/get-contract-number ()
     (interactive)
@@ -722,7 +723,8 @@ con.
 #+end_src
 
 ** dh/get-contract-topic
-
+- a simple custom function to get the contract topic of the name of the working directory
+- it's used in snippets to fill in some useful information based on the directory where the file is located
 #+begin_src emacs-lisp
   (defun dh/get-contract-topic ()
     (interactive)
@@ -957,6 +959,9 @@ You can see a list of all loaded faces and it's highlighting with:
     (set-frame-font "Consolas-13")
     (set-face-attribute 'fixed-pitch nil :font "Consolas")
     (set-face-attribute 'fixed-pitch-serif nil :font "Consolas")))
+
+  ;; setting additional font for text and markdown
+  ;; (cond ((find-font (font-spec :name "Pigeonette V01")) (set-face-attribute 'Markdown-)))
 #+END_SRC
 *** frame title of Emacs
 #+begin_src emacs-lisp
@@ -2347,7 +2352,8 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
 #+end_src
 ** keybindings: ivy
 #+begin_src emacs-lisp
-  (global-set-key "\C-s" 'swiper)
+  ;; (global-set-key (kbd "C-s") 'swiper)  ; old line based swiper
+  (global-set-key (kbd "C-s") 'swiper-isearch) ; new iSearch like swiper
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "<f6>") 'ivy-resume)
   (global-set-key (kbd "M-x") 'counsel-M-x)

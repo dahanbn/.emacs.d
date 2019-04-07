@@ -948,6 +948,9 @@ And on my Windows it's standard is courier. :-(
 You can see a list of all loaded faces and it's highlighting with:
  ~M-x list-faces-display~
 
+A great article about the emacs font system and setting fallback fonts can
+be found here: https://idiocy.org/emacs-fonts-and-fontsets.html
+
 #+BEGIN_SRC emacs-lisp
   ;; setting fonts, the first find will be choosen
   (cond
@@ -962,6 +965,13 @@ You can see a list of all loaded faces and it's highlighting with:
 
   ;; setting additional font for text and markdown
   ;; (cond ((find-font (font-spec :name "Pigeonette V01")) (set-face-attribute 'Markdown-)))
+
+  ;; (cond
+  ;;  ((member "Real Text Pro" (font-family-list))
+  ;;   (set-face-attribute 'default nil :font "Real Text Pro")
+  ;;    ; can't set font size in that way, need a way to set the font bigger)
+  ;;  ((member "IBM Plex Mono" (font-family-list))
+  ;;   (set-face-attribute 'default nil :font "IBM Plex Mono")))
 #+END_SRC
 *** frame title of Emacs
 #+begin_src emacs-lisp

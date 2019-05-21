@@ -2573,7 +2573,7 @@ Trying to use it via iCloud and [[http://beorgapp.com][beorg]] on iOS.
     (setq org-directory dh/beorg-dir)
     (setq org-default-notes-file (expand-file-name "ACTIONS.org" org-directory))
     (setq org-todo-keywords
-          '((sequence "ACTION(a!)" "HABIT(t!)" "P_NEW(n!)" "P_IN_PROGRESS(p!)" "P_WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))))
+          '((sequence "ACTION(a!)" "RUNNING(r!)" "HABIT(t!)" "P_NEW(n!)" "P_IN_PROGRESS(p!)" "P_WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))))
 #+end_src
 **** org at work
 #+BEGIN_SRC emacs-lisp
@@ -2848,6 +2848,7 @@ use variables that we're set on other lines in the config, e.g. org-directory.
     (push `("beorg: org-directory" . ,(expand-file-name org-directory)) yal/launchable-items-emacs)
     (push `("beorg: ACTIONS" . ,(expand-file-name "ACTIONS.org" org-directory)) yal/launchable-items-emacs)
     (push `("beorg: B-PROJECTS" . ,(expand-file-name "B-PROJECTS.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: B-PROJECT-Backup" . ,(expand-file-name "B-PROJECT-Backup.org" org-directory)) yal/launchable-items-emacs)
     (push `("beorg: C-CHECK-FOR-CANCELLATION" . ,(expand-file-name "C-CHECK-FOR-CANCELLATION.org" org-directory)) yal/launchable-items-emacs)
     (push `("beorg: H-HABITS" . ,(expand-file-name "H-HABITS.org" org-directory)) yal/launchable-items-emacs)
     (push `("beorg: refile-beorg" . ,(expand-file-name "refile-beorg.org" org-directory)) yal/launchable-items-emacs)

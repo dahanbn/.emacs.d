@@ -309,8 +309,12 @@ and other files (recentf, savespace) should point to there as well.
         (defconst dh/onedrive-dir (expand-file-name "OneDrive" dh/user-dir) "contains the path to my dropbox"))
 
     ;; setting path to iClouddrive dir if it exists
-    (if (file-directory-p (expand-file-name "iCloudDrive" dh/user-dir))
-        (defconst dh/iclouddrive-dir (expand-file-name "iCloudDrive" dh/user-dir) "contains the path to my iCloud drive")))
+    (when (file-directory-p (expand-file-name "iCloudDrive" dh/user-dir))
+      (defconst dh/iclouddrive-dir (expand-file-name "iCloudDrive" dh/user-dir) "contains the path to my iCloud drive")
+      ;; checking if beorg dir exists
+      (if (file-directory-p (expand-file-name "iCloud~com~appsonthemove~beorg/org" dh/iclouddrive-dir))
+          ;; setting path to it
+          (defconst dh/beorg-dir (expand-file-name "iCloud~com~appsonthemove~beorg/org" dh/iclouddrive-dir) "contains the path to my beorg directory"))))
 #+end_src
 
 ** DISABLED set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
@@ -619,7 +623,8 @@ based on http://arunrocks.com/emacs-tip-a-key-to-open-the-current-folder-in-wind
 
   (global-set-key (kbd "S-<f12>")
                     (lambda () (interactive)
-                      (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-directory))))
+                      (dh/open-file-in-emacs org-default-notes-file)))
+		  
 
 #+end_src
 *** dh/format-as-euro
@@ -902,6 +907,7 @@ character it is under; i.e. full width of a TAB:
     (add-to-list 'sml/replacer-regexp-list
                  `(,(concat "^" dh/iclouddrive-dir "/") ,":iCloud:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:iCloud:M6HJR9W95L~com~textasticapp~textastic" ":iCloud-Textastic:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:iCloud:iCloud~com~appsonthemove~beorg/org/" ":iCloud-beorg:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:iCloud:27N4MQEA55~pro~writer" ":iCloud-iAWriter:") t))
 
 
@@ -2559,96 +2565,96 @@ https://github.com/bbatsov/projectile
 #+END_SRC
 *** general org settings
 **** org at home
-Trying to use it via Dropbox and [[http://beorgapp.com][beorg]] on iOS.
+Trying to use it via iCloud and [[http://beorgapp.com][beorg]] on iOS.
 
 #+begin_src emacs-lisp
-  (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/not-at-work))
+  (when (and (boundp 'dh/beorg-dir) (boundp 'dh/not-at-work))
     (message "[dh] Setting home specific settings for org-mode")
-    (setq org-directory (expand-file-name "org" dh/dropbox-dir))
-    (setq org-default-notes-file (expand-file-name "0-dh-tasks.org" org-directory))
+    (setq org-directory dh/beorg-dir)
+    (setq org-default-notes-file (expand-file-name "ACTIONS.org" org-directory))
     (setq org-todo-keywords
           '((sequence "ACTION(a!)" "HABIT(t!)" "P_NEW(n!)" "P_IN_PROGRESS(p!)" "P_WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))))
 #+end_src
 **** org at work
 #+BEGIN_SRC emacs-lisp
-    ;; initialize my work config
-    (when (boundp 'dh/me-at-work)
-      (message "[dh] Setting work specific settings for org-mode")
-      (setq org-directory "I:/DATEN/_Daniel/!ORG")
-      (setq org-default-notes-file (concat org-directory "/Notes_Verschiedenes.org"))
-      (setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m)
-                            ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" . 102)
-                            ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
+  ;; initialize my work config
+  (when (boundp 'dh/me-at-work)
+    (message "[dh] Setting work specific settings for org-mode")
+    (setq org-directory "I:/DATEN/_Daniel/!ORG")
+    (setq org-default-notes-file (expand-file-name "Current_Tasks.org" org-directory))
+    (setq org-tag-alist '(("Beschaffung" . ?b) ("Lizenzen" . ?l) ("Mobilfunk" . ?m)
+                          ("Kommunikation" . ?k) ("ITSicherheit" . ?i) ("FGLeitung" . 102)
+                          ("Verschiedenes" . ?v) ("Admin" . ?a) ("Rahmenvertrag" . ?r)))
 
-      (setq org-todo-keywords
-            '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
-              (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_IN_BIDDING(B!)" "O_IN_FORMAL_BIDDING(F!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "O_UPLOAD_TO_VIBE(V!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
-              (sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
-              (sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
-
-
-      ;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
-      ;; colors - http://raebear.net/comp/emacscolors.html
-
-      ;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
+    (setq org-todo-keywords
+          '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
+            (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_IN_BIDDING(B!)" "O_IN_FORMAL_BIDDING(F!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "O_UPLOAD_TO_VIBE(V!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
+            (sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
+            (sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
 
 
-      (setq org-todo-keyword-faces
-            '(
-                                          ; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
-              ("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
-              ("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
-              ("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
-              ("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
+    ;; description of faces - http://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html
+    ;; colors - http://raebear.net/comp/emacscolors.html
 
-                                          ; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
-              ("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
-              ("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
-              ("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
-
-              ;; ("TODO" . (:foreground ,red :weight bold))
-              ;; ("WAITING" . (:foreground ,orange :weight bold))
-              ;; ("DELEGATED" . (:foreground ,yellow :weight bold))
-              ;; ("DONE" . (:foreground ,green :weight bold))
-              ;; ("CANCELLED" . (:foreground ,grey :weight bold))
-              ;; (:slant italic)
-
-              ("O_NEW" . (:foreground "#FD5FF0" :weight bold)) ; monokai-magenta
-              ("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
-              ("O_IN_BIDDING" . (:foreground "#F92672" :weight bold)) ; monokai-red
-              ("O_IN_FORMAL_BIDDING" . (:foreground "#F92672" :weight bold)) ; monokai-red
-              ("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
-              ("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
-              ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
-              ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
-              ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
-              ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
-              ("O_UPLOAD_TO_VIBE" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
-              ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
-              ("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
-
-              ("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
-              ("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
-              ("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
-              ("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
-              ("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
-              ("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
-              ("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+    ;; monokai-colors - https://github.com/oneKelvinSmith/monokai-emacs/blob/master/monokai-theme.el
 
 
-              ;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
-              ;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
-              ;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
-              ;; ("DONE" . (:foreground "LimeGreen" :weight bold))
-              ;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
-              ))
+    (setq org-todo-keyword-faces
+          '(
+                                        ; #333333 monokai-gray-dark #3E3D31 monokai-highlight-line
+            ("BUG" . (:foreground "#FD5FF0" :background "#3E3D31" :weight bold)) ; monokai-magenta
+            ("REPORTED" . (:foreground "#F92672" :background "#3E3D31" :weight bold)) ; monokai-red
+            ("KNOWNCAUSE" . (:foreground "#66D9EF" :background "#3E3D31" :weight bold)) ; monokai-blue
+            ("FIXED" . (:foreground "#A6E22E" :background "#3E3D31" :weight bold)) ; monokai-green
 
-      (setq org-priority-faces
-            '(
-              (?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
-              (?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
-              (?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
-              ))) ;; end_of_ (when (boundp 'dh/me-at-work)
+                                        ; #F3EA98 monokai-yellow-light #E6DB74 monokai-yellow
+            ("IDEA" . (:foreground "#333333" :weight bold :background "#E6DB74")) ; monokai-gray-d
+            ("IDEA_APPROVED" . (:foreground "#67930F" :weight bold :background "#E6DB74")) ; monokai-green-d
+            ("IDEA_CANCELLED" . (:foreground "#F92672" :weight bold :background "#E6DB74")) ; monokai-red
+
+            ;; ("TODO" . (:foreground ,red :weight bold))
+            ;; ("WAITING" . (:foreground ,orange :weight bold))
+            ;; ("DELEGATED" . (:foreground ,yellow :weight bold))
+            ;; ("DONE" . (:foreground ,green :weight bold))
+            ;; ("CANCELLED" . (:foreground ,grey :weight bold))
+            ;; (:slant italic)
+
+            ("O_NEW" . (:foreground "#FD5FF0" :weight bold)) ; monokai-magenta
+            ("O_IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+            ("O_IN_BIDDING" . (:foreground "#F92672" :weight bold)) ; monokai-red
+            ("O_IN_FORMAL_BIDDING" . (:foreground "#F92672" :weight bold)) ; monokai-red
+            ("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
+            ("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
+            ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
+            ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
+            ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
+            ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
+            ("O_UPLOAD_TO_VIBE" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
+            ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
+            ("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+            ("NEW" . (:foreground "#FD5FF0" :weight bold :slant italic)) ; monokai-magenta
+            ("IN_PROCESS" . (:foreground "#F92672" :weight bold)) ; monokai-red
+            ("WAITING_EXT" . (:foreground "#E6DB74" :weight bold)) ; monokai-yellow
+            ("WAITING_INT" . (:foreground "#E6DB74" :weight bold :slant italic)) ; monokai-yellow
+            ("DELEGATED" . (:foreground "#66D9EF" :weight bold)) ; monokai-blue
+            ("DONE" . (:foreground "#A6E22E" :weight bold)) ; monokai-green
+            ("CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
+
+
+            ;; ("TODO" . (:foreground "brown1" :weight bold)) ; eg. org-warning)
+            ;; ("WAITING" . (:foreground "LemonChiffon1" :weight bold))
+            ;; ("DELEGATED" . (:foreground "burlywood3" :weight bold))
+            ;; ("DONE" . (:foreground "LimeGreen" :weight bold))
+            ;; ("CANCELLED" . (:foreground "darkgrey" :weight bold))
+            ))
+
+    (setq org-priority-faces
+          '(
+            (?A . (:background "firebrick2" :weight bold :foreground "thistle1"))
+            (?B . (:background "firebrick2" :weight bold :foreground "thistle1"))
+            (?C . (:background "#75715E" :weight bold :foreground "thistle1")) ; bg: monokai-comments
+            ))) ;; end_of_ (when (boundp 'dh/me-at-work)
 #+END_SRC
 
 **** rest of general org settings 
@@ -2799,164 +2805,168 @@ use variables that we're set on other lines in the config, e.g. org-directory.
 
 #+begin_src emacs-lisp
 
-  ;; load my launcher items at work
+    ;; load my launcher items at work
 
-  ;; in it I use only add-to-list therefore the item alists should already exist befor
+    ;; in it I use only add-to-list therefore the item alists should already exist befor
 
-  (if (and (boundp 'dh/me-at-work) (boundp 'dh/emacs-work-extra-dir))
-      (progn                              ; true
-        (if (file-exists-p (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))
-            (load (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))))
-    (progn                                ; false
-      ;; first, creating empty lists for my different type of launchers
+    (if (and (boundp 'dh/me-at-work) (boundp 'dh/emacs-work-extra-dir))
+        (progn                              ; true
+          (if (file-exists-p (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))
+              (load (expand-file-name "yal-launchers.el" dh/emacs-work-extra-dir))))
+      (progn                                ; false
+        ;; first, creating empty lists for my different type of launchers
 
-      ;; that's not necessary, if I am loading my private launchers
-      ;; because in yal-launchers.el I create those list as well
+        ;; that's not necessary, if I am loading my private launchers
+        ;; because in yal-launchers.el I create those list as well
 
-      (setq yal/launchable-items-emacs (list))
-      (setq yal/launchable-items-system (list))
-      (setq yal/launchable-items-url (list))))
+        (setq yal/launchable-items-emacs (list))
+        (setq yal/launchable-items-system (list))
+        (setq yal/launchable-items-url (list))))
 
-  ;; defining a few default entries
+    ;; defining a few default entries
 
-  ;; yal/launchable-items-emacs
+    ;; yal/launchable-items-emacs
 
-  (push `("emacs: config.org - my emacs init file" . ,(expand-file-name "config.org" user-emacs-directory)) yal/launchable-items-emacs)
+    (push `("emacs: config.org - my emacs init file" . ,(expand-file-name "config.org" user-emacs-directory)) yal/launchable-items-emacs)
 
-  (when (and (boundp 'dh/emacs-is-portable) (boundp 'dh/emacs-portable-dir))
-    (push `("dired: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs)
-    (push `("emacs-portable: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
-    (push `("emacs-portable: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
-
+    (when (and (boundp 'dh/emacs-is-portable) (boundp 'dh/emacs-portable-dir))
+      (push `("dired: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs)
+      (push `("emacs-portable: git-pull-emacs-emacs.d.bat" . ,(expand-file-name "git-pull-emacs-emacs.d.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs)
+      (push `("emacs-portable: portable-emacs-win64.bat" . ,(expand-file-name "portable-emacs-win64.bat" dh/emacs-portable-dir)) yal/launchable-items-emacs))
   (when (boundp 'dh/iclouddrive-dir)
     ;; beware iCloudDrive directories have strang name in reality, in Windows won't be shown those names directly
     (push `("iCloud: root directory" . ,(expand-file-name dh/iclouddrive-dir)) yal/launchable-items-emacs)
     (push `("iCloud: iA Writer directory" . ,(expand-file-name "27N4MQEA55~pro~writer" dh/iclouddrive-dir)) yal/launchable-items-emacs)
-    (push `("iCloud: Textastic directory" .  ,(expand-file-name "M6HJR9W95L~com~textasticapp~textastic" dh/iclouddrive-dir)) yal/launchable-items-emacs))
+    (push `("iCloud: Textastic directory" . dh/beorg-dir) yal/launchable-items-emacs))
 
-  (when (boundp 'dh/dropbox-dir)
-    ;; Dropbox root, org & dahan_uberspace is in all my dropboxes
-    (push `("dropbox: root directory" . ,(expand-file-name dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: dahan_uberspace directory" . ,(expand-file-name "dahan_uberspace" dh/dropbox-dir)) yal/launchable-items-emacs)
-    (push `("dropbox: org directory" . ,(expand-file-name "org" dh/dropbox-dir)) yal/launchable-items-emacs)
+  (when (boundp 'dh/beorg-dir)
+    ;; right now my beorg dir is in iCloud Drive
+    (push `("beorg: beorg directory" . ,(expand-file-name dh/beorg-dir)) yal/launchable-items-emacs)
 
     ;; also add my most used org files for task management to yal
     (push `("dired: org-directory" . ,(expand-file-name org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: org-directory" . ,(expand-file-name org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: 0-dh-tasks.org" . ,(expand-file-name "0-dh-tasks.org" org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: refile-beorg.org" . ,(expand-file-name "refile-beorg.org" org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: refile-ifttt.org" . ,(expand-file-name "refile-ifttt.org" org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: refile-drafts.org" . ,(expand-file-name "refile-drafts.org" org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: notes.org" . ,(expand-file-name "notes.org" org-directory)) yal/launchable-items-emacs)
-    (push `("tasks: misc.org" . ,(expand-file-name "misc.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: org-directory" . ,(expand-file-name org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: ACTIONS" . ,(expand-file-name "ACTIONS.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: B-PROJECTS" . ,(expand-file-name "B-PROJECTS.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: C-CHECK-FOR-CANCELLATION" . ,(expand-file-name "C-CHECK-FOR-CANCELLATION.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: H-HABITS" . ,(expand-file-name "H-HABITS.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: refile-beorg" . ,(expand-file-name "refile-beorg.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: refile-drafts" . ,(expand-file-name "refile-drafts.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: misc" . ,(expand-file-name "misc.org" org-directory)) yal/launchable-items-emacs)
+    (push `("beorg: notes" . ,(expand-file-name "notes.org" org-directory)) yal/launchable-items-emacs)
 
     ;; add archive directory of current dir if it exists
     (if (file-directory-p (expand-file-name (format-time-string "%Y") (expand-file-name "archive" org-directory)))
-        (push `("tasks: archive directory current year" . ,(expand-file-name (format-time-string "%Y") (expand-file-name "archive" org-directory))) yal/launchable-items-emacs))
+        (push `("tasks: archive directory current year" . ,(expand-file-name (format-time-string "%Y") (expand-file-name "archive" org-directory))) yal/launchable-items-emacs)))
 
-    ;; other directories are only in some, if one (e.g. dahan_text) is there,
-    ;; the other will also be there
-    (when (boundp 'dh/dropbox-full-available)
-      (push `("dropbox: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
-      (push `("dropbox: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
-      (push `("dropbox: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
-      (push `("dropbox: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
-      (push `("dropbox: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs)))
+    (when (boundp 'dh/dropbox-dir)
+      ;; Dropbox root, org & dahan_uberspace is in all my dropboxes
+      (push `("dropbox: root directory" . ,(expand-file-name dh/dropbox-dir)) yal/launchable-items-emacs)
+      (push `("dropbox: dahan_uberspace directory" . ,(expand-file-name "dahan_uberspace" dh/dropbox-dir)) yal/launchable-items-emacs)
 
-  (when (string-equal system-type "windows-nt")
-    (when (file-directory-p (expand-file-name "D:\\git-repositories"))
-      (push `("dired: git-repositories-dir" . ,(expand-file-name "D:\\git-repositories")) yal/launchable-items-emacs)))
-  ;; yal/launchable-items-system
+      ;; other directories are only in some, if one (e.g. dahan_text) is there,
+      ;; the other will also be there
+      (when (boundp 'dh/dropbox-full-available)
+        (push `("dropbox: dahan_text directory" . ,(expand-file-name "dahan_text" dh/dropbox-dir)) yal/launchable-items-emacs)
+        (push `("dropbox: dahan_notebooks directory" . ,(expand-file-name "dahan_notebooks" dh/dropbox-dir)) yal/launchable-items-emacs)
+        (push `("dropbox: dahan_letters directory" . ,(expand-file-name "dahan_letters" dh/dropbox-dir)) yal/launchable-items-emacs)
+        (push `("dropbox: dahan_ulysses directory" . ,(expand-file-name "dahan_ulysses" dh/dropbox-dir)) yal/launchable-items-emacs)
+        (push `("dropbox: dahan_LaTeX directory" . ,(expand-file-name "dahan_LaTeX" dh/dropbox-dir)) yal/launchable-items-emacs)))
 
-  (when (string-equal system-type "windows-nt")
-    (push `("windows: user directory" . ,(expand-file-name dh/user-dir)) yal/launchable-items-system)
-    (push `("windows: download directory" . ,(expand-file-name "Downloads" dh/user-dir)) yal/launchable-items-system)
-    (push `("windows: picture directory" . ,(expand-file-name "Pictures" dh/user-dir)) yal/launchable-items-system)
-    (push `("windows: appdata directory" . ,(expand-file-name "AppData" dh/user-dir)) yal/launchable-items-system)
-    (push `("windows: desktop directory" . ,(expand-file-name "Desktop" dh/user-dir)) yal/launchable-items-system)
-    (push `("windows: tmp directory" . ,(expand-file-name (getenv "TMPDIR"))) yal/launchable-items-system)
-    (when (boundp 'dh/emacs-portable-dir)
-      (push `("windows: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs))
-    (when (file-directory-p (expand-file-name "D:\\git-repositories"))
-      (push `("windows: git-repositories-dir" . ,(expand-file-name "D:\\git-repositories")) yal/launchable-items-emacs)))
+    (when (string-equal system-type "windows-nt")
+      (when (file-directory-p (expand-file-name "D:\\git-repositories"))
+        (push `("dired: git-repositories-dir" . ,(expand-file-name "D:\\git-repositories")) yal/launchable-items-emacs)))
+    ;; yal/launchable-items-system
 
-  ;; if my full Dropbox is there, that means more directories besides org and dahan_uberspace
-  (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/dropbox-full-available))
-    (push `("ebook: markdown-mode" . ,(expand-file-name "dahan_ebooks/Verlage/LeanPub/markdown-mode.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    ;; (push `("ebook: " . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: little schemer" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/The_Little_Schemer_4th_2.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: seasoned schemer" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/The Seasoned Schemer - Daniel P. Friedman.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: common lisp - krusenotto" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/Funktionale+Programmierung+und+Metaprogr.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: little lisper" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/__The_Little_LISPer___3rd_Edition.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: common lisp - touretzky" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/Common Lisp A Gentle Introduction to Symbolic Computation David Touretzky.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: 57 exercises for programmers" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/exercises-for-programmers_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: tmux 2" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/tmux-2_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: practical vim" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/practical-vim-second-edition_p2_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: modern vim" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/modern-vim_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: mastering emacs" . ,(expand-file-name "dahan_ebooks/Verlage/mastering-emacs-v2.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: the latex companion" . ,(expand-file-name "dahan_ebooks/Verlage/InformIT/TheLaTeXCompanion_2ed.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: working the command line" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/working-the-command-line.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: webfont handbook" . ,(expand-file-name "dahan_ebooks/Verlage/webfont-handbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: on web typography" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/On-Web-Typography.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: making sense of color management" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/making-sense-of-color-management.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: javascript for webdesigners" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/javascript-for-web-designers.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: git for humans" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/git-for-humans.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: learn git (tower)" . ,(expand-file-name "dahan_ebooks/Verlage/learn-git-ebook/learn version control with git.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: demystifying-public-speaking" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/demystifying-public-speaking.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: css3 for web designers" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/CSS3-for-Web-Designers-2e.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Automate the Boring Stuff with Python" . ,(expand-file-name "dahan_ebooks/Verlage/NoStarch/AutomatetheBoringStuffwithPython.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    (when (string-equal system-type "windows-nt")
+      (push `("windows: user directory" . ,(expand-file-name dh/user-dir)) yal/launchable-items-system)
+      (push `("windows: download directory" . ,(expand-file-name "Downloads" dh/user-dir)) yal/launchable-items-system)
+      (push `("windows: picture directory" . ,(expand-file-name "Pictures" dh/user-dir)) yal/launchable-items-system)
+      (push `("windows: appdata directory" . ,(expand-file-name "AppData" dh/user-dir)) yal/launchable-items-system)
+      (push `("windows: desktop directory" . ,(expand-file-name "Desktop" dh/user-dir)) yal/launchable-items-system)
+      (push `("windows: tmp directory" . ,(expand-file-name (getenv "TMPDIR"))) yal/launchable-items-system)
+      (when (boundp 'dh/emacs-portable-dir)
+        (push `("windows: emacs-portable-dir" . ,(expand-file-name dh/emacs-portable-dir)) yal/launchable-items-emacs))
+      (when (file-directory-p (expand-file-name "D:\\git-repositories"))
+        (push `("windows: git-repositories-dir" . ,(expand-file-name "D:\\git-repositories")) yal/launchable-items-emacs)))
 
-    ;; (push `("ebook: " . ,(expand-file-name "apps\O'Reilly Media//.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+    ;; if my full Dropbox is there, that means more directories besides org and dahan_uberspace
+    (when (and (boundp 'dh/dropbox-dir) (boundp 'dh/dropbox-full-available))
+      (push `("ebook: markdown-mode" . ,(expand-file-name "dahan_ebooks/Verlage/LeanPub/markdown-mode.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      ;; (push `("ebook: " . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: little schemer" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/The_Little_Schemer_4th_2.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: seasoned schemer" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/The Seasoned Schemer - Daniel P. Friedman.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: common lisp - krusenotto" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/Funktionale+Programmierung+und+Metaprogr.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: little lisper" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/__The_Little_LISPer___3rd_Edition.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: common lisp - touretzky" . ,(expand-file-name "dahan_ebooks/Lisp_Scheme_Haskell/Common Lisp A Gentle Introduction to Symbolic Computation David Touretzky.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: 57 exercises for programmers" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/exercises-for-programmers_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: tmux 2" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/tmux-2_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: practical vim" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/practical-vim-second-edition_p2_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: modern vim" . ,(expand-file-name "dahan_ebooks/Verlage/PragProg/modern-vim_p1_0.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: mastering emacs" . ,(expand-file-name "dahan_ebooks/Verlage/mastering-emacs-v2.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: the latex companion" . ,(expand-file-name "dahan_ebooks/Verlage/InformIT/TheLaTeXCompanion_2ed.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: working the command line" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/working-the-command-line.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: webfont handbook" . ,(expand-file-name "dahan_ebooks/Verlage/webfont-handbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: on web typography" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/On-Web-Typography.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: making sense of color management" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/making-sense-of-color-management.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: javascript for webdesigners" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/javascript-for-web-designers.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: git for humans" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/git-for-humans.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: learn git (tower)" . ,(expand-file-name "dahan_ebooks/Verlage/learn-git-ebook/learn version control with git.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: demystifying-public-speaking" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/demystifying-public-speaking.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: css3 for web designers" . ,(expand-file-name "dahan_ebooks/Verlage/A Book apart/CSS3-for-Web-Designers-2e.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Automate the Boring Stuff with Python" . ,(expand-file-name "dahan_ebooks/Verlage/NoStarch/AutomatetheBoringStuffwithPython.pdf" dh/dropbox-dir)) yal/launchable-items-system)
 
-    (push `("ebook: Land of Lisp" . ,(expand-file-name "apps/O'Reilly Media/Land of Lisp/Land of Lisp.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Lauren Ipsum" . ,(expand-file-name "apps/O'Reilly Media/Lauren Ipsum/Lauren Ipsum.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Learning GNU Emacs" . ,(expand-file-name "apps/O'Reilly Media/Learning GNU Emacs/Learning GNU Emacs.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Learning the bash Shell" . ,(expand-file-name "apps/O'Reilly Media/Learning the bash Shell/Learning the bash Shell.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Learning JavaScript" . ,(expand-file-name "apps/O'Reilly Media/Learning JavaScript/Learning JavaScript.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Programming Rust" . ,(expand-file-name "apps/O'Reilly Media/Programming Rust/Programming_Rust.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: You’re My Favorite Client" . ,(expand-file-name "apps/O'Reilly Media/You’re My Favorite Client/You’re My Favorite Client.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Writing GNU Emacs Extensions" . ,(expand-file-name "apps/O'Reilly Media/Writing GNU Emacs Extensions/Writing GNU Emacs Extensions.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Think Python" . ,(expand-file-name "apps/O'Reilly Media/Think Python/Think Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Regular Expressions Cookbook" . ,(expand-file-name "apps/O'Reilly Media/Regular Expressions Cookbook/Regular Expressions Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Python Cookbook" . ,(expand-file-name "apps/O'Reilly Media/Python Cookbook/Python Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Introducing Python" . ,(expand-file-name "apps/O'Reilly Media/Introducing Python/Introducing Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Head First Python" . ,(expand-file-name "apps/O'Reilly Media/Head First Python/Head First Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Head First PMP" . ,(expand-file-name "apps/O'Reilly Media/Head First PMP/Head First PMP.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Head First JavaScript Programming" . ,(expand-file-name "apps/O'Reilly Media/Head First JavaScript Programming/Head First JavaScript Programming.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Head First Data Analysis" . ,(expand-file-name "apps/O'Reilly Media/Head First Data Analysis/Head First Data Analysis.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Fluent Python" . ,(expand-file-name "apps/O'Reilly Media/Fluent Python/Fluent Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Discussing Design" . ,(expand-file-name "apps/O'Reilly Media/Discussing Design/Discussing Design.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Design for Real Life" . ,(expand-file-name "apps/O'Reilly Media/Design for Real Life/Design for Real Life.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: Just Enough Research" . ,(expand-file-name "apps/O'Reilly Media/Just Enough Research/Just Enough Research.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: bash Cookbook" . ,(expand-file-name "apps/O'Reilly Media/bash Cookbook/bash Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
-    (push `("ebook: CSS3 The Missing Manual" . ,(expand-file-name "apps/O'Reilly Media/CSS3_ The Missing Manual/CSS3_ The Missing Manual.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      ;; (push `("ebook: " . ,(expand-file-name "apps\O'Reilly Media//.pdf" dh/dropbox-dir)) yal/launchable-items-system)
 
-    )
+      (push `("ebook: Land of Lisp" . ,(expand-file-name "apps/O'Reilly Media/Land of Lisp/Land of Lisp.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Lauren Ipsum" . ,(expand-file-name "apps/O'Reilly Media/Lauren Ipsum/Lauren Ipsum.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Learning GNU Emacs" . ,(expand-file-name "apps/O'Reilly Media/Learning GNU Emacs/Learning GNU Emacs.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Learning the bash Shell" . ,(expand-file-name "apps/O'Reilly Media/Learning the bash Shell/Learning the bash Shell.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Learning JavaScript" . ,(expand-file-name "apps/O'Reilly Media/Learning JavaScript/Learning JavaScript.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Programming Rust" . ,(expand-file-name "apps/O'Reilly Media/Programming Rust/Programming_Rust.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: You’re My Favorite Client" . ,(expand-file-name "apps/O'Reilly Media/You’re My Favorite Client/You’re My Favorite Client.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Writing GNU Emacs Extensions" . ,(expand-file-name "apps/O'Reilly Media/Writing GNU Emacs Extensions/Writing GNU Emacs Extensions.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Think Python" . ,(expand-file-name "apps/O'Reilly Media/Think Python/Think Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Regular Expressions Cookbook" . ,(expand-file-name "apps/O'Reilly Media/Regular Expressions Cookbook/Regular Expressions Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Python Cookbook" . ,(expand-file-name "apps/O'Reilly Media/Python Cookbook/Python Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Introducing Python" . ,(expand-file-name "apps/O'Reilly Media/Introducing Python/Introducing Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Head First Python" . ,(expand-file-name "apps/O'Reilly Media/Head First Python/Head First Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Head First PMP" . ,(expand-file-name "apps/O'Reilly Media/Head First PMP/Head First PMP.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Head First JavaScript Programming" . ,(expand-file-name "apps/O'Reilly Media/Head First JavaScript Programming/Head First JavaScript Programming.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Head First Data Analysis" . ,(expand-file-name "apps/O'Reilly Media/Head First Data Analysis/Head First Data Analysis.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Fluent Python" . ,(expand-file-name "apps/O'Reilly Media/Fluent Python/Fluent Python.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Discussing Design" . ,(expand-file-name "apps/O'Reilly Media/Discussing Design/Discussing Design.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Design for Real Life" . ,(expand-file-name "apps/O'Reilly Media/Design for Real Life/Design for Real Life.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: Just Enough Research" . ,(expand-file-name "apps/O'Reilly Media/Just Enough Research/Just Enough Research.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: bash Cookbook" . ,(expand-file-name "apps/O'Reilly Media/bash Cookbook/bash Cookbook.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+      (push `("ebook: CSS3 The Missing Manual" . ,(expand-file-name "apps/O'Reilly Media/CSS3_ The Missing Manual/CSS3_ The Missing Manual.pdf" dh/dropbox-dir)) yal/launchable-items-system)
+
+      )
 
 
-  ;; yal/launchable-items-url
+    ;; yal/launchable-items-url
 
-  (push '("elisp: Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html") yal/launchable-items-url)
-  (push '("elisp: Xah Elisp Tutorial - hashmaps" . "http://ergoemacs.org/emacs/elisp_hash_table.html") yal/launchable-items-url)
-  (push '("Endless Parentheses: Magit keychords" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html") yal/launchable-items-url)
-  (push '("guide: Pandoc User" . "https://pandoc.org/MANUAL.html") yal/launchable-items-url)
-  (push '("guide: Pandoc-mode" . "https://joostkremers.github.io/pandoc-mode/") yal/launchable-items-url)
-  (push '("emacs-packagedev: Contributing to MELPA" . "https://github.com/melpa/melpa/blob/master/CONTRIBUTING.md") yal/launchable-items-url)
-  (push '("emacs-packagedev: marmalade-package (from webarchive)" . "https://web.archive.org/web/20111120220609/http://marmalade-repo.org/doc-files/package.5.html") yal/launchable-items-url)
-  (push '("emacs-packagedev: elisp conventions" . "https://www.gnu.org/software/emacs/manual/html_node/elisp/Tips.html") yal/launchable-items-url)
-  (push '("emacs-guide: Markdown-mode" . "https://jblevins.org/projects/markdown-mode/") yal/launchable-items-url)
-  (push '("emacs-guide: orgmode manual" . "http://orgmode.org/org.html") yal/launchable-items-url)
-  (push '("emacs-guide: orgmode compact guide" . "http://orgmode.org/guide") yal/launchable-items-url)
-  (push '("emacs-guide: Magit" . "https://magit.vc/manual/magit.html#Top") yal/launchable-items-url)
-  (push '("github: elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground") yal/launchable-items-url)
-  (push '("github: .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d") yal/launchable-items-url)
-  (push '("github: .emacs.d (config.org - raw)" . "https://raw.githubusercontent.com/dahanbn/.emacs.d/master/config.org") yal/launchable-items-url)
-  (push '("github: portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64") yal/launchable-items-url)
-  (push '("github: 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers") yal/launchable-items-url)
-  (push '("github: Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher") yal/launchable-items-url)
-  (push '("Beihilfe - Ansprechpartner und Adresse" . "http://www.bva.bund.de/DE/Organisation/Abteilungen/Abteilung_VII/020_Beihilfe/110_Ansprechpartner/beihilfestelle_DZB_bad_homburg.html?nn=4485804") yal/launchable-items-url)
-  (push '("Beihilfe - Formulare - Anlage Zusammenstellung Belege" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1a_Anlage_Zusammenstellung.html") yal/launchable-items-url)
-  (push '("Beihilfe - Formulare - Antrag auf Beihilfe" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1_Antrag_Beihilfe_FFW.html") yal/launchable-items-url)
+    (push '("elisp: Xah Elisp Tutorial - associated lists" . "http://ergoemacs.org/emacs_manual/elisp/Association-Lists.html") yal/launchable-items-url)
+    (push '("elisp: Xah Elisp Tutorial - hashmaps" . "http://ergoemacs.org/emacs/elisp_hash_table.html") yal/launchable-items-url)
+    (push '("Endless Parentheses: Magit keychords" . "http://endlessparentheses.com/it-s-magit-and-you-re-the-magician.html") yal/launchable-items-url)
+    (push '("guide: Pandoc User" . "https://pandoc.org/MANUAL.html") yal/launchable-items-url)
+    (push '("guide: Pandoc-mode" . "https://joostkremers.github.io/pandoc-mode/") yal/launchable-items-url)
+    (push '("emacs-packagedev: Contributing to MELPA" . "https://github.com/melpa/melpa/blob/master/CONTRIBUTING.md") yal/launchable-items-url)
+    (push '("emacs-packagedev: marmalade-package (from webarchive)" . "https://web.archive.org/web/20111120220609/http://marmalade-repo.org/doc-files/package.5.html") yal/launchable-items-url)
+    (push '("emacs-packagedev: elisp conventions" . "https://www.gnu.org/software/emacs/manual/html_node/elisp/Tips.html") yal/launchable-items-url)
+    (push '("emacs-guide: Markdown-mode" . "https://jblevins.org/projects/markdown-mode/") yal/launchable-items-url)
+    (push '("emacs-guide: orgmode manual" . "http://orgmode.org/org.html") yal/launchable-items-url)
+    (push '("emacs-guide: orgmode compact guide" . "http://orgmode.org/guide") yal/launchable-items-url)
+    (push '("emacs-guide: Magit" . "https://magit.vc/manual/magit.html#Top") yal/launchable-items-url)
+    (push '("github: elisp-playground (url)" . "https://github.com/dahanbn/elisp-playground") yal/launchable-items-url)
+    (push '("github: .emacs.d (url)" . "https://github.com/dahanbn/.emacs.d") yal/launchable-items-url)
+    (push '("github: .emacs.d (config.org - raw)" . "https://raw.githubusercontent.com/dahanbn/.emacs.d/master/config.org") yal/launchable-items-url)
+    (push '("github: portable-emacs-win64 (url)" . "https://github.com/dahanbn/portable-emacs-win64") yal/launchable-items-url)
+    (push '("github: 57 Exercises for Programmers" . "https://github.com/dahanbn/57-Exercises-for-Programmers") yal/launchable-items-url)
+    (push '("github: Yet Another Launcher for Sublime (url)" . "https://github.com/dahanbn/Yet-Another-Launcher") yal/launchable-items-url)
+    (push '("Beihilfe - Ansprechpartner und Adresse" . "http://www.bva.bund.de/DE/Organisation/Abteilungen/Abteilung_VII/020_Beihilfe/110_Ansprechpartner/beihilfestelle_DZB_bad_homburg.html?nn=4485804") yal/launchable-items-url)
+    (push '("Beihilfe - Formulare - Anlage Zusammenstellung Belege" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1a_Anlage_Zusammenstellung.html") yal/launchable-items-url)
+    (push '("Beihilfe - Formulare - Antrag auf Beihilfe" . "http://www.bva.bund.de/SharedDocs/Downloads/DE/DLZ/Vordrucke/Beihilfe/1_Antrag_Beihilfe_FFW.html") yal/launchable-items-url)
 #+end_src
 
 ** yet-another-launcher package-content
@@ -3087,9 +3097,19 @@ launch recentf-cleanup as one of my last commands.
 #+BEGIN_SRC emacs-lisp
   ; LAST COMMAND at work
   (when (boundp 'dh/me-at-work)
-    ;; open my BfN.org file as last command
-    (dh/open-file-in-emacs (expand-file-name "Current_Tasks.org" org-directory)))
+    ;; open my Current_Tasks.org file as last command
+    (dh/open-file-in-emacs org-default-notes-file))
 #+END_SRC
+** Last command at not at work
+#+BEGIN_SRC emacs-lisp
+  ; LAST COMMAND at work
+  (when (and
+         (boundp 'dh/not-at-work)
+         (boundp 'dh/beorg-dir))
+    ;; open my ACTIONS.org file as last command
+    (dh/open-file-in-emacs org-default-notes-file))
+#+END_SRC
+
 
 ** Debugging off
 Turn off debugging, now that initialization has ended

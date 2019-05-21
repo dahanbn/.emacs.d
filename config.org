@@ -2567,7 +2567,7 @@ Trying to use it via Dropbox and [[http://beorgapp.com][beorg]] on iOS.
     (setq org-directory (expand-file-name "org" dh/dropbox-dir))
     (setq org-default-notes-file (expand-file-name "0-dh-tasks.org" org-directory))
     (setq org-todo-keywords
-          '((sequence "ACTION(a!)" "HABIT(t!)" "P_NEW(n!)" "P__IN_PROGRESS(p!)" "P_WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))))
+          '((sequence "ACTION(a!)" "HABIT(t!)" "P_NEW(n!)" "P_IN_PROGRESS(p!)" "P_WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)"))))
 #+end_src
 **** org at work
 #+BEGIN_SRC emacs-lisp

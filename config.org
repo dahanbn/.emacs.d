@@ -166,6 +166,59 @@ To edit various table entries I can use multiple cursors or macros F3 F4
 
 
 
+* Practical VIM
+Here are useful practises and shortcuts to use some of Vim useful motions and techniques.
+
+- [[http://vimdoc.sourceforge.net/htmldoc/][Vim documentation]]
+- [[http://openvim.com/][Interactive Vim tutorial]]
+- [[https://devhints.io/vim][Nice Vim cheatsheet]] (html)
+- [[https://vim.rtorr.com/][Another Vim cheatsheet]] (html)
+ 
+
+** Repeatable Actions and How to reverse them
+
+Source: Tip 4
+
+| *Intent*                         | *Act*                   | *Repeat* | *Reverse* |
+|----------------------------------+-------------------------+----------+-----------|
+| Make a change                    | ~{edit}~                | ~.~      | ~u~       |
+| Scan line for next character     | ~f{char}/t{char}~       | ~;~      | ~,~       |
+| Scan line for previous character | ~F{char}/T{char}~       | ~;~      | ~,~       |
+| Scan document for next match     | ~/pattern<CR>~          | ~n~      | ~N~       |
+| Scan document for previous match | ~?pattern<CR>~          | ~n~      | ~N~       |
+| Perform substitution             | ~:s/target/replacement~ | ~&~      | ~u~       |
+| Execute a sequence of changes    | ~qx{changes}q~          | ~@x~     | ~u~       |
+
+/When facing a repetitive task, we can achieve an optimal editing strategy by making/
+/both the motion and the change repeatable. Vim has a knack for this. It remembers our/
+/actions and keeps the most common ones within close reach so that we can easily replay them./
+
+** Useful motions
+
+Because I mainly write content for it outside of Emacs on other devices the following
+section is in Markdown instead of Org.
+
+#+begin_src markdown :file practical-vim-for-my-emacs.pdf
+  # Practise VIM
+
+  | shortcut | explanation                   |
+  | :--      | :--                           |
+  | `.`      | repeats last command          |
+  | `;`      | repeats last search, e.g. `f` |
+  | `*`      |                               |
+  |          |                               |
+  |          |                               |
+  |          |                               |
+  |          |                               |
+
+  Tabelle 1, Tip 4 einfügen
+
+  - make tasks repeatable (`.` & `;`)
+#+end_src
+
+#+RESULTS:
+file:practical-vim-for-my-emacs.pdf
+
 * Initial settings
 
 Here, I do set some very general settings for my GNU/Emacs.
@@ -1394,6 +1447,10 @@ https://www.emacswiki.org/emacs/DiredDetails
 
 ** normal regexp in emacs
 ~pcre-mode~ allows to use normal regexp inside Emacs instead of escaping.
+
+https://github.com/joddie/pcre2el
+
+~rxt-mode~ or ~rxt-global-mode~ enables the default keybindings.
 
 Now I can use ~.*(jpg|png)~ instead of ~.*\(jpg\|png\)~.
 
@@ -3118,6 +3175,7 @@ Turn off debugging, now that initialization has ended
 #+BEGIN_SRC emacs-lisp
   (setq debug-on-error nil)
 #+END_SRC
+
 
 
 

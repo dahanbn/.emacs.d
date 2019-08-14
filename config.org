@@ -2442,7 +2442,7 @@ _o_rg e_l_isp _e_macs _a_uctex _p_andoc"
   (global-set-key (kbd "C-c k") 'counsel-ag)
   (global-set-key (kbd "C-x l") 'counsel-locate)
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history) 
 #+end_src
 
 ** ivy-hydra

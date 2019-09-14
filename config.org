@@ -1687,6 +1687,26 @@ Provides e.g. in elpy a quickhelp about the function.
       (company-auctex-init)))
 #+END_SRC
 
+** dumb-jump
+Tags-like navigation in programming source files,
+
+more over it here:
+http://irreal.org/blog/?p=6218
+https://github.com/jacktasia/dumb-jump
+
+But beware it needs external tools, e.g. ag or ripgrep. I prefer ripgrep.
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :ensure t
+  :if (executable-find "rg")
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g b" . dumb-jump-back)
+         ("M-g q" . dumb-jump-quick-look)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config (setq dumb-jump-selector 'ivy))
+#+end_src
 ** poporg
 WRITE CODE COMMENTS IN ORG-MODE WITH POPORG
 http://pragmaticemacs.com/emacs/write-code-comments-in-org-mode-with-poporg/

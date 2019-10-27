@@ -1824,6 +1824,22 @@ markup - that is bound to F11.
       (setq markdown-command (executable-find "multimarkdown")))))
 #+end_src
 
+** grip for markdown preview 
+https://github.com/seagle0128/grip-mode
+
+a markdown preview mode for emacs, but it needs python installed and the python module named grip
+
+~pip install grip~
+
+#+BEGIN_SRC emacs-lisp
+(use-package grip-mode
+  :if (boundp 'dh/not-at-work)
+  :ensure t
+  :bind (:map markdown-mode-command-map
+         ("g" . grip-mode))
+)
+#+END_SRC
+
 ** edit-indirect
 Package is used to edit src blocks in
 markdown-mode, usually invoked via ~C-c '~.

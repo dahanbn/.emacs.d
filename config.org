@@ -1677,7 +1677,7 @@ Provides e.g. in elpy a quickhelp about the function.
     (company-quickhelp-mode 1))
 #+END_SRC
 
-** company-auctex
+** DISABLED company-auctex
 #+BEGIN_SRC emacs-lisp
   (use-package company-auctex
     :if (boundp 'dh/not-at-work)
@@ -2617,7 +2617,8 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
 
     ;; change the order of the prompt function, prefer ido
     ;;(setq  yas-prompt-functions '(yas-ido-prompt yas-x-prompt yas-dropdown-prompt yas-completing-prompt yas-no-prompt))
-    (yas-global-mode 1))
+    ;(yas-global-mode 1)
+    )
 #+end_src
 
 
@@ -2826,7 +2827,7 @@ Source: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-bloc
   (setq org-src-fontify-natively t)
 #+END_SRC
 
-*** Fixing YASnippets tab in org 
+*** DISABLED Fixing YASnippets tab in org 
 http://orgmode.org/manual/Conflicts.html
 #+BEGIN_SRC emacs-lisp
   ;; fixing tab-binding for YASnippets in Org-Mode

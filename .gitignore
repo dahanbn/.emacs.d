@@ -1,3 +1,5 @@
+# good intro into .gitignore ==> https://linuxize.com/post/gitignore-ignoring-files-in-git/
+
 # Compiled
 *.elc
 # Packaging

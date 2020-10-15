@@ -282,10 +282,13 @@ and other files (recentf, savespace) should point to there as well.
 
       (defconst dh/user-dir (expand-file-name (getenv "USERPROFILE")) "contains the path to my real operating system user directory")
      ))
-   ;((string-equal system-type "darwin") ; Mac OS X
-   ; (progn
-   ;   (message "Mac OS X")
-   ; ))
+   ((string-equal system-type "darwin") ; Mac OS X
+    (progn
+      (message "Mac OS X")
+      (defconst dh/emacs-local-dir (expand-file-name ".emacs-local" (getenv "HOME")) "contains the path to my device specific emacs files and directories")
+      (defconst dh/user-dir (expand-file-name (getenv "HOME")) "contains the path to my real operating system user directory")
+    ))
+
    ((string-equal system-type "gnu/linux") ; linux
     (progn
       (defconst dh/emacs-local-dir (expand-file-name ".emacs-local" (getenv "HOME")) "contains the path to my device specific emacs files and directories")

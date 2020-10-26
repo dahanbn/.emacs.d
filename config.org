@@ -1016,6 +1016,10 @@ be found here: https://idiocy.org/emacs-fonts-and-fontsets.html
 #+BEGIN_SRC emacs-lisp
   ;; setting fonts, the first find will be choosen
   (cond
+   ((find-font (font-spec :name "CamingoCode"))
+    (set-frame-font "CamingoCode-13")
+    (set-face-attribute 'fixed-pitch nil :font "CamingoCode")
+    (set-face-attribute 'fixed-pitch-serif nil :font "CamingoCode"))
    ((find-font (font-spec :name "IBM Plex Mono"))
     (set-frame-font "IBM Plex Mono-13")
     (set-face-attribute 'fixed-pitch nil :font "IBM Plex Mono")

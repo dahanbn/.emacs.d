@@ -1493,13 +1493,23 @@ https://jblevins.org/log/markdown-imenu
 
 #+begin_src emacs-lisp
 (use-package imenu-list
-  :ensure t
-  :bind (("C-'" . imenu-list-smart-toggle))
-  :config
-  (setq imenu-list-focus-after-activation t
-        imenu-list-auto-resize nil))
+:ensure t
+:bind (("C-'" . imenu-list-smart-toggle))
+:config
+(setq imenu-list-focus-after-activation t
+    imenu-list-auto-resize nil))
 #+end_src
 
+** literate-calc-mode
+Something like Tydlig or Soulver with Emacs calc.
+
+https://github.com/sulami/literate-calc-mode.el
+
+#+begin_src emacs-lisp
+(use-package literate-calc-mode
+:ensure t
+)
+#+end_src
 * ELISP - setting up Lisp editing
 
 ** Eldoc

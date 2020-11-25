@@ -976,8 +976,8 @@ character it is under; i.e. full width of a TAB:
   (when (boundp 'dh/me-at-work)
     ;; order does matter, a few abbrevations are stacked
     (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/_Daniel/" ":I_DANIEL:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/portable_emacs/.emacs.d/" ":ED:") t)
-    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:misc/snippets-work/" ":WORKSNIPPETS:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:Emacs/portable_emacs/.emacs.d/" ":ED:") t)
+    (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:Emacs/snippets-work/" ":WORKSNIPPETS:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:I_DANIEL:!ORG/" ":ORG:") t)
     (add-to-list 'sml/replacer-regexp-list '("^I:/DATEN/BESCHAFF/" ":BESCHAFF:") t)
     (add-to-list 'sml/replacer-regexp-list '("^:BESCHAFF:Beschaffungen_Daniel_in_Arbeit" ":B_INARBEIT:") t)
@@ -2630,7 +2630,7 @@ https://github.com/nonsequitur/git-gutter-plus works also in tty.
         (push (expand-file-name "dahan_uberspace/snippets-work-copy" dh/dropbox-dir) yas-snippet-dirs))
 
     (if (boundp 'dh/me-at-work)
-        (push (expand-file-name "I:/DATEN/_Daniel/misc/snippets-work") yas-snippet-dirs))
+        (push (expand-file-name "I:/DATEN/_Daniel/Emacs/snippets-work") yas-snippet-dirs))
 
     ;; change the order of the prompt function, prefer ido
     ;;(setq  yas-prompt-functions '(yas-ido-prompt yas-x-prompt yas-dropdown-prompt yas-completing-prompt yas-no-prompt))

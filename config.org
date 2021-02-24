@@ -2685,7 +2685,7 @@ Trying to use it via iCloud and [[http://beorgapp.com][beorg]] on iOS.
 
     (setq org-todo-keywords
           '((sequence "NEW(n!)" "IN_PROCESS(p!)" "WAITING_INT(i@/!)" "WAITING_EXT(e@/!)" "|" "DONE(d@)" "DELEGATED(@)" "CANCELLED(c@)")
-            (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_IN_BIDDING(B!)" "O_IN_FORMAL_BIDDING(F!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z1.2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "O_UPLOAD_TO_VIBE(V!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
+            (sequence "O_NEW(N!)" "O_IN_PROCESS(P!)" "O_IN_BIDDING(B!)" "O_IN_FORMAL_BIDDING(F!)" "O_WAITING_INT(I@/!)" "O_WAITING_EXT(E@/!)" "O_APPROVAL(A!)" "O_Z2_APPROVAL(Z!)" "O_ORDERED(O@/!)" "O_DELIVERED(D@/!)" "|" "O_DONE(@)" "O_CANCELLED(@)")
             (sequence "IDEA(!)" "|" "IDEA_APPROVED(a!)" "IDEA_CANCELLED(C!)")
             (sequence "BUG(b!)" "REPORTED(r@/!)" "|" "KNOWNCAUSE(k@)" "FIXED(f@)")))
 
@@ -2726,7 +2726,6 @@ Trying to use it via iCloud and [[http://beorgapp.com][beorg]] on iOS.
             ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
             ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
             ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
-            ("O_UPLOAD_TO_VIBE" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
             ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green
             ("O_CANCELLED" . (:foreground "#75715E" :weight bold)) ; monokai-comments
 
@@ -2774,11 +2773,11 @@ useful: http://orgmode.org/worg/org-configs/org-customization-guide.html
   (setq org-startup-indented t) 
 
   ;; refile - have a look here https://blog.aaronbieber.com/2017/03/19/organizing-notes-with-refile.html
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)) )
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)) )
 
   ;; allow refiling to top-level of a file
-  (setq org-refile-use-outline-path 'file)
-  (setq org-outline-path-complete-in-steps nil)
+  ; (setq org-refile-use-outline-path 'file)
+  ; (setq org-outline-path-complete-in-steps nil)
 
   ;; allow creating new parents through refiling
   ;; to do so you have to add /new heading at the end of the to refiled item

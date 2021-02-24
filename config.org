@@ -2723,7 +2723,7 @@ Trying to use it via iCloud and [[http://beorgapp.com][beorg]] on iOS.
             ("O_WAITING_EXT" . (:foreground "#6b6b6b" :weight bold)) ; monokai-gray-light
             ("O_WAITING_INT" . (:foreground "#6b6b6b" :weight bold :slant italic)) ; monokai-gray-light
             ("O_APPROVAL" . (:foreground "#AE81FF" :weight bold)) ; monokai-violet
-            ("O_Z1.2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
+            ("O_Z2_APPROVAL" . (:foreground "#C2A1FF" :weight bold)) ; monokai-violet-light
             ("O_ORDERED" . (:foreground "#FD971F" :weight bold)) ; monokai-yellow
             ("O_DELIVERED" . (:foreground "#A1EFE4" :weight bold)) ; monokai-cyan
             ("O_DONE" . (:foreground "#A6E22E" :weight bold :slant italic)) ; monokai-green

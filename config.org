@@ -175,6 +175,7 @@ Here are useful practises and shortcuts to use some of Vim useful motions and te
 - [[https://vim.rtorr.com/][Another Vim cheatsheet]] (html)
  
 
+
 ** Repeatable Actions and How to reverse them
 
 Source: Tip 4
@@ -1521,7 +1522,126 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
     :init
     (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1))))
 #+end_src
+
+** DISABLED Emacs: Making a hydra cheatsheet for Lispy
    
+   I wanted to get the hang of Lispy thanks to Leo Vivier's presentation
+   at EmacsSF, but there are [[https://oremacs.com/lispy/][a lot of keyboard shortcuts to explore]].
+   In [[https://karl-voit.at/2021/04/10/GLT21-emacs-org-features/][Karl Voit's demo of Org Mode at GLT21]], he showed how he uses
+   Hydra to make cheat sheets. That makes perfect sense, of course, as
+   Hydra can display text and allow you to run commands while the text
+   is displayed. I wanted to make a Hydra that would show me
+   categorized commands to make it easier to look up and eventually
+   remember them. I also wanted to skip the commands that I already knew or
+   that I didn't want to focus on just yet.
+
+   Fortunately, the function reference had a link to [[https://raw.githubusercontent.com/abo-abo/lispy/gh-pages/index.org][the Org file used to
+   generate it]]. I copied the tables, merged them together, named them
+   with =#+NAME: bindings=, replaced the links with plain text, and added
+   a third column with the category I wanted to put commands into.
+
+   #+begin_export html
+   <details><summary>#bindings</summary>
+   #+end_export 
+
+   #+NAME: bindings
+   | key | function                      | column   |
+   |-----+-------------------------------+----------|
+   | <   | lispy-barf                    |          |
+   | A   | lispy-beginning-of-defun      |          |
+   | j   | lispy-down                    |          |
+   | Z   | lispy-edebug-stop             |          |
+   | B   | lispy-ediff-regions           |          |
+   | G   | lispy-goto-local              |          |
+   | h   | lispy-left                    |          |
+   | N   | lispy-narrow                  |          |
+   | y   | lispy-occur                   |          |
+   | o   | lispy-other-mode              |          |
+   | J   | lispy-outline-next            |          |
+   | K   | lispy-outline-prev            |          |
+   | P   | lispy-paste                   |          |
+   | l   | lispy-right                   |          |
+   | I   | lispy-shifttab                |          |
+   | >   | lispy-slurp                   |          |
+   | SPC | lispy-space                   |          |
+   | xB  | lispy-store-region-and-buffer |          |
+   | u   | lispy-undo                    |          |
+   | k   | lispy-up                      |          |
+   | v   | lispy-view                    |          |
+   | V   | lispy-visit                   |          |
+   | W   | lispy-widen                   |          |
+   | D   | pop-tag-mark                  |          |
+   | x   | see                           |          |
+   | L   | unbound                       |          |
+   | U   | unbound                       |          |
+   | X   | unbound                       |          |
+   | Y   | unbound                       |          |
+   | H   | lispy-ace-symbol-replace      | Edit     |
+   | c   | lispy-clone                   | Edit     |
+   | C   | lispy-convolute               | Edit     |
+   | n   | lispy-new-copy                | Edit     |
+   | O   | lispy-oneline                 | Edit     |
+   | r   | lispy-raise                   | Edit     |
+   | R   | lispy-raise-some              | Edit     |
+   | \   | lispy-splice                  | Edit     |
+   | S   | lispy-stringify               | Edit     |
+   | i   | lispy-tab                     | Edit     |
+   | xj  | lispy-debug-step-in           | Eval     |
+   | xe  | lispy-edebug                  | Eval     |
+   | xT  | lispy-ert                     | Eval     |
+   | e   | lispy-eval                    | Eval     |
+   | E   | lispy-eval-and-insert         | Eval     |
+   | xr  | lispy-eval-and-replace        | Eval     |
+   | p   | lispy-eval-other-window       | Eval     |
+   | q   | lispy-ace-paren               | Move     |
+   | z   | lispy-knight                  | Move     |
+   | s   | lispy-move-down               | Move     |
+   | w   | lispy-move-up                 | Move     |
+   | t   | lispy-teleport                | Move     |
+   | Q   | lispy-ace-char                | Nav      |
+   | -   | lispy-ace-subword             | Nav      |
+   | a   | lispy-ace-symbol              | Nav      |
+   | b   | lispy-back                    | Nav      |
+   | d   | lispy-different               | Nav      |
+   | f   | lispy-flow                    | Nav      |
+   | F   | lispy-follow                  | Nav      |
+   | g   | lispy-goto                    | Nav      |
+   | xb  | lispy-bind-variable           | Refactor |
+   | xf  | lispy-flatten                 | Refactor |
+   | xc  | lispy-to-cond                 | Refactor |
+   | xd  | lispy-to-defun                | Refactor |
+   | xi  | lispy-to-ifs                  | Refactor |
+   | xl  | lispy-to-lambda               | Refactor |
+   | xu  | lispy-unbind-variable         | Refactor |
+   | M   | lispy-multiline               | Other    |
+   | xh  | lispy-describe                | Other    |
+   | m   | lispy-mark-list               | Other    |
+
+   #+begin_export html
+   </details>
+   #+end_export 
+
+   I wrote this Emacs Lisp code with the header arguments =#+begin_src emacs-lisp :var bindings=bindings :colnames yes=:
+
+   #+BEGIN_SRC emacs-lisp
+(eval
+ (append
+  '(defhydra dh/lispy-cheat-sheet (:hint nil :foreign-keys run)
+     ("<f14>" nil :exit t))
+  (cl-loop for x in bindings
+           unless (string= "" (elt x 2))
+           collect
+           (list (car x)
+                 (intern (elt x 1))
+                 (when (string-match "lispy-\\(?:eval-\\)?\\(.+\\)"
+                                     (elt x 1))
+                   (match-string 1 (elt x 1)))
+                 :column
+                 (elt x 2)))))
+(with-eval-after-load "lispy"
+  (define-key lispy-mode-map (kbd "<f14>") 'my/lispy-cheat-sheet/body))
+   #+END_SRC
+
 ** Elisp Slime Navigation
 https://github.com/purcell/elisp-slime-nav
 adds Slime navigation to elisp & ielm
